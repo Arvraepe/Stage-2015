@@ -1,2 +1,2 @@
-# Stage-2015
+# Stage 2015
 A lightweight collaboration tool 
