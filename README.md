@@ -1,6 +1,11 @@
 # Milestones
 * 01 [User Management](https://github.com/Arvraepe/Stage-2015/wiki/01-User-Management)
+. [[issues]](https://github.com/Arvraepe/Stage-2015/milestones/01.%20User%20management)
 * 02 [Project Management](https://github.com/Arvraepe/Stage-2015/wiki/02-Project-Management)
+. [[issues]](https://github.com/Arvraepe/Stage-2015/milestones/02.%20Project%20management)
 * 03 [Board Management](https://github.com/Arvraepe/Stage-2015/wiki/03-Board-Management)
+. [[issues]](https://github.com/Arvraepe/Stage-2015/milestones/03.%20Board%20management)
 * 04 [Task Management](https://github.com/Arvraepe/Stage-2015/wiki/04-Task-Management)
+. [[issues]](https://github.com/Arvraepe/Stage-2015/milestones/04.%20Task%20management)
 * 05 [Notification Management](https://github.com/Arvraepe/Stage-2015/wiki/05-Notification-Management)
+. [[issues]](https://github.com/Arvraepe/Stage-2015/milestones/05.%20Notification%20management)
