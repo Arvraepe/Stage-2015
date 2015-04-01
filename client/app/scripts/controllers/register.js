@@ -8,7 +8,7 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('RegisterCtrl', ['$scope', 'httpFactory',, '$http', function ($scope, httpFactory, $http) {
+  .controller('RegisterCtrl', ['$scope', 'httpFactory', function ($scope, httpFactory) {
     $scope.user = {};
     $scope.register = function () {
       httpFactory.httpPost("/register", $scope.user).success(function (data) {
