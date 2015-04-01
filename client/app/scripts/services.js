@@ -14,7 +14,6 @@ services.factory('httpFactory', ['$http', function ($http) {
         data: data
       });
 
-      // return $http.post(url,data);
     },
     httpGet: function (urlParam) {
       return $http({
