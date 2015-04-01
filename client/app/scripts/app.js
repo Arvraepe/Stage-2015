@@ -38,6 +38,10 @@ angular
         templateUrl: 'views/dashboard.html',
         controller: 'DashboardCtrl'
       })
+      .when('/editUser', {
+        templateUrl: 'views/edituser.html',
+        controller: 'EdituserCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

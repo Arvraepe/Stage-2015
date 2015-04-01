@@ -10,7 +10,9 @@ exports.registerRoutes = function (app) {
 };
 
 function register(req, res, next) {
-    var result = userRep.registerUser(req.params.username, req.params.password, req.params.email, req.params.firstname, req.params.lastname, function(result) {
+    console.log("in register methode");
+    userRep.registerUser(req.params.username, req.params.password, req.params.email, req.params.firstname, req.params.lastname, function(result) {
+        console.log("sending response");
         res.send(result);
     });
     next();
