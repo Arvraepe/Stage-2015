@@ -12,6 +12,7 @@ exports.makeUserLoginResult = function(username, email, _id, firstname, lastname
     })
 };
 
+// commentaar
 function makeUserResultsPrivate(username, email, _id, firstname, lastname, cb) {
     var result =
     {
