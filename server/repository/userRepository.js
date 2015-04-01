@@ -82,8 +82,7 @@ exports.registerUser = function (username, password, email, firstname, lastname,
 exports.loginUser = function (username, password, callback) {
     User.findOne({ username: username}, function(err, user) {
         if(err) console.log(err);
-        md5.md5(password + salt, function (encryptedPW) {
-            console.log(encryptedPW + '      ' + user.password);
+        md5.md5(password + user.salt, function (encryptedPW) {
             if(encryptedPW === user.password) {
                 callback(user);
             }

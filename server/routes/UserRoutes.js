@@ -3,7 +3,7 @@ var userRep = require('./../repository/userRepository')
 exports.registerRoutes = function (app) {
 
     app.post('/register', register);
-    app.post('/user', login);
+    app.post('/login', login);
 };
 
 function register(req, res, next) {
@@ -15,7 +15,6 @@ function register(req, res, next) {
 
 function login(req, res, next) {
     userRep.loginUser(req.params.username, req.params.password, function(result) {
-        console.log(result);
         res.send(result);
     });
     next();
