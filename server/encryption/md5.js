@@ -1,4 +1,4 @@
-exports.md5 = function (str) {
+exports.md5 = function (str, callback) {
     //  discuss at: http://phpjs.org/functions/md5/
     // original by: Webtoolkit.info (http://www.webtoolkit.info/)
     // improved by: Michael White (http://getsprink.com)
@@ -208,5 +208,5 @@ exports.md5 = function (str) {
 
     var temp = wordToHex(a) + wordToHex(b) + wordToHex(c) + wordToHex(d);
 
-    return temp.toLowerCase();
-}
+    callback(temp.toLowerCase());
+};
