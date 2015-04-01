@@ -21,7 +21,7 @@ var User = mongoose.model('User', userSchema);
 
 exports.registerUser = function (username, password, email, firstname, lastname, callback) {
     var result;
-    userExists(username, function (exists) {
+    userExists(username, function (exists) { //todo add email verification (needs to be unique)
         salt.getSalt(password, '', function(salt) { //empty string because the function will build the salt from scratch
             md5.md5(password + salt, function (encryptedPassword) {
                 if (exists) {
@@ -75,6 +75,18 @@ exports.registerUser = function (username, password, email, firstname, lastname,
                 }
 
             });
+        });
+    });
+};
+
+exports.loginUser = function (username, password, callback) {
+    User.findOne({ username: username}, function(err, user) {
+        if(err) console.log(err);
+        md5.md5(password + salt, function (encryptedPW) {
+            console.log(encryptedPW + '      ' + user.password);
+            if(encryptedPW === user.password) {
+                callback(user);
+            }
         });
     });
 };
