@@ -1,4 +1,4 @@
-var userRep = require('./../repository/userRepository')
+var userService = require('./../service/userService');
 
 exports.registerRoutes = function (app) {
 
@@ -7,14 +7,14 @@ exports.registerRoutes = function (app) {
 };
 
 function register(req, res, next) {
-    userRep.registerUser(req.params.username, req.params.password, req.params.email, req.params.firstname, req.params.lastname, function(result) {
+    userService.registerUser(req.params, function(result) {
         res.send(result);
     });
     next();
 }
 
 function login(req, res, next) {
-    userRep.loginUser(req.params.username, req.params.password, function(result) {
+    userService.loginUser(req.params, function(result) {
         res.send(result);
     });
     next();
