@@ -30,7 +30,7 @@ exports.registerUser = function (user, callback) {
         if (err) {
             callback(err);
         } else {
-            callback(null, registeredUser);
+            callback(null, true);
         }
     });
 };
@@ -43,7 +43,7 @@ exports.userExists = function (username, cb) {
 };
 
 exports.findUser = function(username, cb) {
-    User.findOne({username: username}, function(err, user) {
+    User.findOne({username: username}).lean().exec(function(err, user) {
         if(err) console.log(err);
         cb(user);
     });
