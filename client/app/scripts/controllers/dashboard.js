@@ -8,6 +8,7 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('DashboardCtrl', ['loginFactory','$scope', function ($scope, loginFactory) {
+  .controller('DashboardCtrl', ['$scope', 'loginFactory', function ($scope, loginFactory) {
+    //$scope.user = $scope.$parent.currentUser;
     $scope.user = loginFactory.getUser();
   }]);

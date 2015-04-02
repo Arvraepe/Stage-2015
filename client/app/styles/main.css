@@ -3,6 +3,15 @@
   margin-left:2%;
 }
 
+.has-error {
+  color: #a94442;
+}
+
+.help-block {
+  display: inline-block;
+  margin-top: 5px;
+}
+
 /* validation */
 .ng-invalid.ng-dirty {
   border-color: red;

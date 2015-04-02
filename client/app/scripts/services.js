@@ -28,6 +28,7 @@ services.factory('httpFactory', ['$http', function ($http) {
 }]);
 
 
+/*
 services.factory('loginFactory', function () {
   var loggedInUser = {};
 
@@ -43,3 +44,4 @@ services.factory('loginFactory', function () {
     }
   };
 });
+ */

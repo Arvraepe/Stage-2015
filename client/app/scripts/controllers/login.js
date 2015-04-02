@@ -8,16 +8,20 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('LoginCtrl', ['httpFactory','loginFactory', '$scope', function (loginFactory, httpFactory, $scope) {
-    $scope.user = {};
-    $scope.login = function () {
-      alert('op login knop gedrukt');
-      httpFactory.httpPost('/login', $scope.user).success(function (data) {
-        alert('we zijn binneuuu ' + data);
-        loginFactory.setUser(data);
-      }).error(function () {
-        alert('fout bij aanmelden');
-        $scope.user.password = '';
-      })
+  .controller('LoginCtrl', ['$scope', 'loginFactory', '$rootScope', 'AUTHEVENTS', 'AuthService', function ($scope, loginFactory, $rootScope, AUTHEVENTS, AuthService) {
+    $scope.credentials = {
+      username: '',
+      password: ''
+    };
+
+    $scope.login = function (credentials) {
+      console.log('op login knop gedrukt');
+      AuthService.login(credentials, function (user) {
+        $rootScope.$broadcast(AUTHEVENTS.loginSuccess);
+        $scope.setCurrentUser(user);
+        //loginFactory.setUser(user.data.user);
+      });
+
+
     }
   }]);
