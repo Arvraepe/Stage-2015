@@ -22,7 +22,7 @@ exports.registerUser = function (user, callback) {
                     callback(resultFactory.makeResult(false, 'error', 'Unexpected error while saving user credentials.', []))
                 } else {
                     var userResult = resultFactory.makeUserResult(registeredUser);
-                    callback(resultFactory.makeResultNoMessage(true, userResult));
+                    callback(resultFactory.makeResult(true, 'info', 'User registered successfully', userResult));
                 }
             });
         }
