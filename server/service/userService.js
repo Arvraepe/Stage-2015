@@ -37,8 +37,8 @@ exports.loginUser = function (credentials, callback) {
             var encryptedPassword = md5.md5(credentials.password + user.salt);
             if (encryptedPassword === user.password) {
                 var userResult = resultFactory.makeUserLoginResult(user);
-                var conf = makeConfig(true, 'info', 'User logged in successfully.', userResult)
-                console.log(conf);
+                var conf = makeConfig(true, 'info', 'User logged in successfully.', userResult);
+                //console.log(conf);
                 console.log('conf created');
                 callback(resultFactory.makeResult(makeConfig(true, 'info', 'User logged in successfully.', userResult)));
             } else {
