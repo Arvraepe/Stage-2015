@@ -6,6 +6,7 @@ var salt = require('./../encryption/salt');
 var userRepo = require('./../repository/userRepository');
 var resultFactory = require('./../factory/resultFactory');
 var authService = require('./authenticationService');
+var _ = require('underscore');
 
 //userverifier
 
@@ -36,7 +37,7 @@ exports.loginUser = function (credentials, callback) {
         } else {
             var encryptedPassword = md5.md5(credentials.password + user.salt);
             if (encryptedPassword === user.password) {
-                var userResult = resultFactory.makeUserLoginResult(user);
+                var userResult = resultFactory.makeUserLoginResult(filterUser(user));
                 userResult.token = authService.issueToken(user._id);
                 var conf = makeConfig(true, 'info', 'User logged in successfully.', userResult);
                 callback(resultFactory.makeResult(conf));
@@ -49,7 +50,9 @@ exports.loginUser = function (credentials, callback) {
 
 exports.getAllUsers = function(callback) {
     userRepo.getUsers(function(users) {
-        var conf = makeConfig(true, 'info', users.length + ' users fetched', resultFactory.makeUserResult(users));
+        var filteredUsers = filterUsers(users);
+        console.log('gelukt');
+        var conf = makeConfig(true, 'info', users.length + ' users fetched', resultFactory.makeUsersResult(filteredUsers));
         callback(conf);
     });
 };
@@ -58,8 +61,7 @@ exports.updateUser = function(params, calback) {
     authService.verifyToken(params.token, function(err, decoded) {
         if(err) console.log(err);
         userRepo.findOneAndUpdate(decoded, params, function(user) {
-            var userResult = resultFactory.makeUserResult(user);
-            console.log(userResult);
+            var userResult = resultFactory.makeUserResult(filterUser(user));
             var conf = makeConfig(true, 'info', 'user modified successfully', userResult);
             console.log(conf);
             calback(conf);
@@ -79,4 +81,19 @@ function makeConfig(success, code, message, data) {
     var temp = makeConfigNoData(success, code, message);
     temp.data = data;
     return temp;
+}
+
+function filterUser(user) {
+    return _.omit(user, ['password', 'salt', '__v', '_id']);
+}
+
+function filterUsers(users) {
+    if(users.length == 0) {
+        return users;
+    }
+    var user = filterUser(users[0]);
+    users.splice(0,1);
+    var newUsers = filterUsers(users);
+    newUsers.push(user);
+    return newUsers;
 }

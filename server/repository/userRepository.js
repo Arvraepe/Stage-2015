@@ -50,9 +50,8 @@ exports.findUser = function(username, cb) {
 };
 
 exports.findOneAndUpdate = function(id, update, cb) {
-    User.findOneAndUpdate({ _id : id}, {firstname: update.firstname, lastname : update.lastname}, function(err, user) {
+    User.findOneAndUpdate({ _id : id}, {firstname: update.firstname, lastname : update.lastname},{new : true}, function(err, user) {
         if(err) console.log(err);
-        console.log(id);
         cb(user);
     });
 };
