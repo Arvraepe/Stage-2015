@@ -9,9 +9,11 @@
  */
 angular.module('stageprojectApp')
   .service('Session', function () {
-    this.create = function (sessionId, userId, userRole) {
+    this.getId = function () {
+      return this.id;
+    };
+    this.create = function (sessionId, userRole) {
       this.id = sessionId;
-      this.userId = userId;
       this.userRole = userRole;
     };
     this.destroy = function () {

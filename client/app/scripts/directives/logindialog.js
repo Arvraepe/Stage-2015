@@ -10,7 +10,8 @@ angular.module('stageprojectApp')
   .directive('loginDialog', ['AUTHEVENTS', function (AUTHEVENTS) {
     return {
       restrict: 'A',
-      template: '<div ng-if="visible" ng-include = "\'login.html\'" > ',
+      templateUrl: '/views/login.html',
+      controller: 'LoginCtrl',
       link: function (scope) {
         var showDialog = function () {
           scope.visible = true;

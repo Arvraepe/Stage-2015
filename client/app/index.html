@@ -40,26 +40,28 @@
         <a class="navbar-brand" href="#/">Collaboration app</a>
       </div>
       <div class="navbar-right">
-        <div ng-if="currentUser">Welcome, {{currentUser.username}}</div>
-        <div ng-if="isAuthorized(userRoles.user)">You're a user</div>
-        <div ng-switch="currentUser.role">
-          <div ng-switch-when="userRoles.user">You're user.</div>
-          <div ng-switch-when="userRoles.guest">You're guest.</div>
-          <div ng-switch-default>You're something else.</div>
+        <div ng-if="isAuthorized(userRoles.user)">Welcome, {{currentUser.username}}</div>
+        <div ng-if="!isAuthorized(userRoles.user)">
+          <form ng-controller="LoginCtrl" class="navbar-form navbar-right" role="search" name="logForm"
+                ng-submit="logForm.$valid && login(credentials)" novalidate>
+            <div class="form-group">
+              <input type="text" class="form-control" name="username" ng-model="credentials.username"
+                     placeholder="Username"
+                     required>
+            </div>
+            <div class="form-group">
+              <input type="password" class="form-control" name="password" ng-model="credentials.password"
+                     placeholder="Password" required>
+            </div>
+            <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-log-in"></i> Sign in</button>
+          </form>
         </div>
-        <form ng-controller="LoginCtrl" class="navbar-form navbar-right" role="search" name="logForm"
-              ng-submit="logForm.$valid && login(credentials)" novalidate>
-          <div class="form-group">
-            <input type="text" class="form-control" name="username" ng-model="credentials.username"
-                   placeholder="Username"
-                   required>
-          </div>
-          <div class="form-group">
-            <input type="password" class="form-control" name="password" ng-model="credentials.password"
-                   placeholder="Password" required>
-          </div>
-          <button type="submit" class="btn btn-default">Sign In</button>
-        </form>
+        <div ng-if="isAuthorized(userRoles.user)">
+          <button type="button" ng-click="logout()" class="btn btn-default"><i class="glyphicon glyphicon-log-out"></i>
+            Sign out
+          </button>
+        </div>
+
 
       </div>
 
@@ -78,13 +80,13 @@
 <div class="container">
   <div ng-view=""></div>
 </div>
+<div login-dialog ng-if="!isAuthorized(userRoles.user)" ng-if="!isLoginPage"></div>
 
 <div class="footer">
   <div class="container">
     <p>Collaboration Application - iAdvise Internship <span class="glyphicon glyphicon-heart"></span></p>
   </div>
 </div>
-<div login-dialog ng-if="!isLoginPage"></div>
 
 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
 <script>
@@ -115,6 +117,8 @@
 <script src="bower_components/pnotify/pnotify.buttons.js"></script>
 <script src="bower_components/angular-pnotify/src/angular-pnotify.js"></script>
 <script src="bower_components/angular-validation-match/src/angular-input-match.js"></script>
+<script src="bower_components/ng-file-upload/angular-file-upload-shim.min.js"></script>
+<script src="bower_components/ng-file-upload/angular-file-upload.min.js"></script>
 <!-- build:js({.tmp,app}) scripts/scripts.js -->
 <script src="scripts/app.js"></script>
 <script src="scripts/services.js"></script>
@@ -134,6 +138,9 @@
 <script src="scripts/services/loginfactory.js"></script>
 <script src="scripts/services/authinterceptor.js"></script>
 <script src="scripts/directives/logindialog.js"></script>
+<script src="scripts/services/authresolver.js"></script>
+<script src="scripts/controllers/updateuser.js"></script>
+<script src="scripts/controllers/upload.js"></script>
 <!-- endbuild -->
 </body>
 </html>

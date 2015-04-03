@@ -26,19 +26,33 @@ angular.module('stageprojectApp')
         })
       },
 
-      loginUser: function (credentials, getResult, callback) {
+      loginUser: function (credentials, createSession, callback) {
         requestFactory.sendRequest({
           path: 'login',
           method: 'POST',
           data: credentials,
           success: function (response) {
-            Session.create(response.data.sessionid, response.data.user._id, response.data.user.role);
-            getResult(response, callback);
+            createSession(response, callback);
           },
           error: function (response) {
             error(response);
           }
-        }, getResult)
+        }, createSession)
+      },
+
+      updateUser: function (userinfotochange, newUserInfo) {
+        requestFactory.sendRequest({
+          path: 'user/updateuser',
+          method: 'PUT',
+          data: userinfotochange,
+          success: function (response) {
+            console.log(response);
+            newUserInfo(response.data);
+          },
+          error: function (response) {
+            console.error('Something went wrong while registering ' + response);
+          }
+        })
       }
     };
 

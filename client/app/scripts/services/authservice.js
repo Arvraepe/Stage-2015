@@ -8,29 +8,37 @@
  * Factory in the stageprojectApp.
  */
 angular.module('stageprojectApp')
-  .factory('AuthService', ['userFactory', 'Session', '$rootScope', function (userFactory, httpFactory, Session, $rootScope) {
+  .factory('AuthService', ['userFactory', 'Session', '$rootScope', function (userFactory, Session, $rootScope) {
     var authService = {};
-    var antwoord;
     authService.login = function (credentials, callback) {
-      userFactory.loginUser(credentials, getResult, callback);
+      userFactory.loginUser(credentials, createSession, callback);
     };
 
-    function getResult(response, callback) {
+    function createSession(response, callback) {
       //console.log(response);
+      if (response.data != undefined) {
+        Session.create(response.data.token, response.data.user.role);
+        //Session.create(response.data.sessionid, response.data.user._id, response.data.user.role);
+      } else {
+        //todo afhandelen on success:false
+      }
       callback(response);
     }
 
+    authService.logout = function (callback) {
+      Session.destroy();
+      //userFactory.logoutUser(getResult, callback);
+    };
+
 
     authService.isAuthenticated = function () {
-      return !!Session.userId;
+      return !!Session.id;
     };
 
     authService.isAuthorized = function (authorizedRoles) {
       if (!angular.isArray(authorizedRoles)) {
         authorizedRoles = [authorizedRoles];
       }
-      /*var bool1 = authService.isAuthenticated();
-       var bool2 = authorizedRoles.indexOf(Session.userRole) !== -1;*/
       return (authService.isAuthenticated() &&
       authorizedRoles.indexOf(Session.userRole) !== -1);
     };

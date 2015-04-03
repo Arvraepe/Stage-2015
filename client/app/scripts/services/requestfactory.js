@@ -12,7 +12,6 @@ angular.module('stageprojectApp')
     var baseUrl = 'http://localhost:6543';
 
 
-    // Public API here
     return {
       sendRequest: function (config, getResult) {
         $http({

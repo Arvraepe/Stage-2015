@@ -18,8 +18,10 @@ angular.module('stageprojectApp')
       console.log('op login knop gedrukt');
       AuthService.login(credentials, function (user) {
         $rootScope.$broadcast(AUTHEVENTS.loginSuccess);
-        $scope.setCurrentUser(user);
+        $scope.setCurrentUser(user.data.user);
         //loginFactory.setUser(user.data.user);
+      }, function () {
+        $rootScope.$broadcast(AUTHEVENTS.loginFailed);
       });
 
 

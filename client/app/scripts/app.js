@@ -14,7 +14,8 @@ var app = angular.module('stageprojectApp', [
   'ngRoute',
   'ngTouch',
   'jlareau.pnotify',
-  'validation.match'
+  'validation.match',
+  'angularFileUpload'
 ]);
 
 /*angular
@@ -26,7 +27,7 @@ var app = angular.module('stageprojectApp', [
  'services',
  'jlareau.pnotify'
  ])*/
-app.config(function ($routeProvider, USERROLES) {
+app.config(function ($routeProvider, $locationProvider, USERROLES) {
   $routeProvider
     .when('/', {
       templateUrl: 'views/main.html',
@@ -43,6 +44,14 @@ app.config(function ($routeProvider, USERROLES) {
     .when('/register', {
       templateUrl: 'views/register.html',
       controller: 'RegisterCtrl'
+      /*resolve: {
+       auth: function resolveAuthentication(AuthResolver){
+       return AuthResolver.resolve();
+       }
+       }*/
+      /*data: {
+       authorizedRoles: [USERROLES.user]
+       }*/
     })
     .when('/dashboard', {
       templateUrl: 'views/dashboard.html',
@@ -52,7 +61,14 @@ app.config(function ($routeProvider, USERROLES) {
       templateUrl: 'views/edituser.html',
       controller: 'EdituserCtrl',
       data: {
-        authorizedRoles: USERROLES.user
+        authorizedRoles: [USERROLES.user]
+      }
+    })
+    .when('/updateuser', {
+      templateUrl: 'views/updateuser.html',
+      controller: 'UpdateuserCtrl',
+      data: {
+        authorizedRoles: [USERROLES.user]
       }
     })
     .otherwise({
@@ -61,17 +77,17 @@ app.config(function ($routeProvider, USERROLES) {
 });
 
 
-app.run(function ($rootScope, AUTHEVENTS, AuthService) {
+app.run(function ($rootScope, $location, AUTHEVENTS, AuthService) {
   $rootScope.$on('$routeChangeStart', function (event, next) {
-    if (next.data != undefined) {
-      var authorizedRoles = next.data.authorizedRoles;
+    if (next.$$route.data != undefined) {
+      var authorizedRoles = next.$$route.data.authorizedRoles;
       if (!AuthService.isAuthorized(authorizedRoles)) {
         event.preventDefault();
         if (AuthService.isAuthenticated()) {
-          // user is not allowed
-          $rootScope.$broadcast(AUTHEVENTS.notAuthorized);
+          //user is not allowed
+          $rootScope.$broadcast(AUTHEVENTS.notAuthenticated);
         } else {
-          // user is not logged in
+          //user is not logged in
           $rootScope.$broadcast(AUTHEVENTS.notAuthenticated);
         }
       }
@@ -87,5 +103,5 @@ app.config(function ($httpProvider) {
       return $injector.get('AuthInterceptor');
     }
   ]);
-})
+});
 
