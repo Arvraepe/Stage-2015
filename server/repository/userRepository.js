@@ -48,3 +48,18 @@ exports.findUser = function(username, cb) {
         cb(user);
     });
 };
+
+exports.findOneAndUpdate = function(id, update, cb) {
+    User.findOneAndUpdate({ _id : id}, {firstname: update.firstname, lastname : update.lastname}, function(err, user) {
+        if(err) console.log(err);
+        console.log(id);
+        cb(user);
+    });
+};
+
+exports.getUsers = function(cb) {
+    User.find().lean().exec(function (err, users) {
+        if(err) console.log(err);
+        cb(users);
+    })
+};

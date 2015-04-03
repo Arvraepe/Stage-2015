@@ -15,13 +15,13 @@ exports.makeResult = function(config) {//success, code, message, data) {
 
 exports.makeUserResult = function makeUserResult(user) {
     var userResult = {};
-    return userResult.user = _.omit(user, ['password', 'salt']);
+    userResult.user = _.omit(user, ['password', 'salt', '_id', '__v']);
+    return userResult;
 };
 
 exports.makeUserLoginResult = function(user) {
     var result = {};
-    result.user = _.omit(user, ['password', 'salt']);
-    result.sessionid = 5; //todo actually manage sessionids
+    result.user = _.omit(user, ['password', 'salt', '_id', '__v']);
     result.user.role = 'user';
     return result;
 };

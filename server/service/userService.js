@@ -5,7 +5,7 @@ var md5 = require('./../encryption/md5');
 var salt = require('./../encryption/salt');
 var userRepo = require('./../repository/userRepository');
 var resultFactory = require('./../factory/resultFactory');
-
+var authService = require('./authenticationService');
 
 //userverifier
 
@@ -37,16 +37,34 @@ exports.loginUser = function (credentials, callback) {
             var encryptedPassword = md5.md5(credentials.password + user.salt);
             if (encryptedPassword === user.password) {
                 var userResult = resultFactory.makeUserLoginResult(user);
+                userResult.token = authService.issueToken(user._id);
                 var conf = makeConfig(true, 'info', 'User logged in successfully.', userResult);
-                //console.log(conf);
-                console.log('conf created');
-                callback(resultFactory.makeResult(makeConfig(true, 'info', 'User logged in successfully.', userResult)));
+                callback(resultFactory.makeResult(conf));
             } else {
-                console.log('incorrect password');
                 callback(wrongLogin());
             }
         }
     });
+};
+
+exports.getAllUsers = function(callback) {
+    userRepo.getUsers(function(users) {
+        var conf = makeConfig(true, 'info', users.length + ' users fetched', resultFactory.makeUserResult(users));
+        callback(conf);
+    });
+};
+
+exports.updateUser = function(params, calback) {
+    authService.verifyToken(params.token, function(err, decoded) {
+        if(err) console.log(err);
+        userRepo.findOneAndUpdate(decoded, params, function(user) {
+            var userResult = resultFactory.makeUserResult(user);
+            console.log(userResult);
+            var conf = makeConfig(true, 'info', 'user modified successfully', userResult);
+            console.log(conf);
+            calback(conf);
+        })
+    })
 };
 
 function wrongLogin() {
