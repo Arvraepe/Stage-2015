@@ -8,7 +8,7 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('LoginCtrl', ['$scope', 'loginFactory', '$rootScope', 'AUTHEVENTS', 'AuthService', function ($scope, loginFactory, $rootScope, AUTHEVENTS, AuthService) {
+  .controller('LoginCtrl', ['$scope', 'loginFactory', '$rootScope', 'AUTHEVENTS', 'AuthService', 'notificationService', function ($scope, loginFactory, $rootScope, AUTHEVENTS, AuthService, notificationService) {
     $scope.credentials = {
       username: '',
       password: ''
@@ -18,10 +18,20 @@ angular.module('stageprojectApp')
       console.log('op login knop gedrukt');
       AuthService.login(credentials, function (user) {
         $rootScope.$broadcast(AUTHEVENTS.loginSuccess);
-        $scope.setCurrentUser(user.data.user);
+        $scope.setCurrentUser(user.data.user, user.data.token);
+
         //loginFactory.setUser(user.data.user);
-      }, function () {
+      }, function (user) {
         $rootScope.$broadcast(AUTHEVENTS.loginFailed);
+        notificationService.notify({
+          title: 'Login failed.',
+          title_escape: false,
+          text: user.messages.message,
+          text_escape: false,
+          styling: "bootstrap3",
+          type: "error",
+          icon: true
+        });
       });
 
 

@@ -14,6 +14,7 @@ angular.module('stageprojectApp')
     });
 
     $scope.upload = function (files) {
+      console.log(files);
       if (files && files.length) {
         for (var i = 0; i < files.length; i++) {
           var file = files[i];

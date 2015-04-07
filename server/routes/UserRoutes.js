@@ -6,7 +6,6 @@ exports.registerRoutes = function (app) {
     app.post('/login', login);
     app.get('/user/getallusers', getAllUsers);
     app.put('user/updateuser', updateUser);
-    app.post('user/uploadavatar', uploadAvatar)
 };
 
 function register(req, res, next) {
@@ -35,8 +34,4 @@ function updateUser(req, res, next) {
         res.send(result)
     }) ;
     next();
-}
-
-function uploadAvatar(req, res, next) {
-    console.log(req);
 }

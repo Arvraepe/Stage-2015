@@ -18,7 +18,9 @@ angular.module('stageprojectApp')
           419: AUTHEVENTS.sessionTimeout,
           440: AUTHEVENTS.sessionTimeout
         }[response.status], response);
+        console.log(response);
         return $q.reject(response);
+
       }
     };
 

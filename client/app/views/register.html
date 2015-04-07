@@ -1,66 +1,71 @@
-<div class="col-md-12">
+<div class="col-md-12" data-ng-init="getUsernames()">
   <form class="col-md-12 form-horizontal" name="registerForm" ng-submit="registerForm.$valid && register()" novalidate>
-    <div class="form-group">
+    <div class="form-group" show-errors="{showSuccess: true}">
       <label for="firstname" class="col-md-3 control-label">First name</label>
-
       <div class="col-md-5">
         <input type="text" class="form-control" ng-minlength="2" name="firstnameField" ng-model="user.firstname"
                id="firstname" ng-pattern="/^[a-z ,.'-]+$/i" placeholder="Glenn" required>
-        <!--
-                <span class="has-error help-block" ng-show="registerForm.firstnameField.$error.required">This field is required</span>
-        -->
-        <span class="has-error help-block" ng-show="!registerForm.firstnameField.$valid">First name has to contain at least 2 letters.</span>
+
+        <p class="help-block" ng-if="registerForm.firstnameField.$error.minlength">A name needs to have at least 2
+          characters.</p>
+
+        <p class="help-block" ng-if="registerForm.firstnameField.$error.required">First name is required.</p>
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" show-errors="{showSuccess: true}">
       <label for="lastname" class="col-md-3 control-label">Last name</label>
-
       <div class="col-md-5">
         <input type="text" class="form-control" ng-minlength="2" name="lastnameField" ng-model="user.lastname"
                id="lastname" ng-pattern="/^[a-z ,.'-]+$/i" placeholder="Van Looveren" required>
-        <!--
-                <span class="has-error help-block" ng-show="registerForm.lastnameField.$error.required">This field is required</span>
-        -->
-        <span class="has-error help-block" ng-show="!registerForm.lastnameField.$valid">Last name has to contain at least 2 letters.</span>
+
+        <p class="help-block" ng-if="registerForm.lastnameField.$error.required">Last name is required.</p>
+
+        <p class="help-block" ng-if="registerForm.lastnameField.$error.minlength">A name needs to have at least 2
+          characters.</p>
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" show-errors="{showSuccess: true}">
       <label for="email" class="col-md-3 control-label">Email</label>
-
       <div class="col-md-5">
         <input type="email" class="form-control" name="emailField" ng-model="user.email" id="email"
                ng-pattern="/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" placeholder="Email"
                required>
-        <span class="has-error help-block"
-              ng-show="registerForm.emailField.$error.valid">Enter a proper email adres.</span>
+
+        <p class="help-block" ng-if="registerForm.emailField.$error.required">Email is required.</p>
+
+        <p class="help-block" ng-if="registerForm.emailField.$error.pattern">Enter a valid email.</p>
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" show-errors="{showSuccess: true}">
       <label for="username" class="col-md-3 control-label">Username</label>
-
       <div class="col-md-5">
-        <input type="text" class="form-control" name="usernameField" ng-model="user.username" id="username"
+        <input type="text" class="form-control" name="usernameField" unique-username="" ng-model="user.username"
+               id="username"
                placeholder="Glenn123" required>
+
+        <p class="help-block" ng-if="registerForm.usernameField.$error.unique">This username is already taken.</p>
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" show-errors="{showSuccess: true}">
       <label for="password" class="col-md-3 control-label">Password</label>
-
       <div class="col-md-5">
         <input type="password" name="passwordField" class="form-control" ng-model="user.password" id="password"
                ng-pattern="/^[a-zA-Z]\w{7,20}$/" placeholder="IAmAwesome123" required>
+
+        <p class="help-block" ng-if="registerForm.passwordField.$error.required">Password is required.</p>
+
+        <p class="help-block" ng-if="registerForm.passwordField.$error.pattern">A password needs to have at least 7
+          characters.</p>
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" show-errors="{showSuccess: true}">
       <label for="confirmpassword" class="col-md-3 control-label">Confirm password</label>
-
       <div class="col-md-5">
         <input type="password" name="confirmPasswordField" class="form-control" ng-model="confirmpassword"
                match="user.password" id="confirmpassword" ng-pattern="/^[a-zA-Z]\w{7,20}$/" placeholder="IAmAwesome123"
                required>
-        <span class="has-error help-block"
-              ng-show="registerForm.confirmPasswordField.$error.match">Fields do not match</span>
 
+        <p class="help-block" ng-if="registerForm.confirmPasswordField.$error.match">Password fields do not match</p>
       </div>
     </div>
     <div class="form-group">

@@ -9,6 +9,5 @@
  */
 angular.module('stageprojectApp')
   .controller('DashboardCtrl', ['$scope', 'loginFactory', function ($scope, loginFactory) {
-    //$scope.user = $scope.$parent.currentUser;
     $scope.user = loginFactory.getUser();
   }]);

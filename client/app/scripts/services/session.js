@@ -18,7 +18,9 @@ angular.module('stageprojectApp')
     };
     this.destroy = function () {
       this.id = null;
-      this.userId = null;
       this.userRole = null;
     };
+    this.setId = function (token) {
+      this.id = token;
+    }
   });

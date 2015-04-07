@@ -68,9 +68,10 @@
       <div class="collapse navbar-collapse" id="js-navbar-collapse">
 
         <ul class="nav navbar-nav">
-          <li><a href="#/">Home</a></li>
-          <li><a ng-href="#/register">Register</a></li>
-          <li><a ng-href="#/dashboard">Dashboard</a></li>
+          <li><a href="#/"><i class="fa fa-home"></i> Home</a></li>
+          <li ng-if="!isAuthorized(userRoles.user)"><a ng-href="#/register">Register</a></li>
+          <li ng-if="isAuthorized(userRoles.user)"><a ng-href="#/dashboard"><i class="fa fa-tachometer"></i>
+            Dashboard</a></li>
         </ul>
       </div>
     </div>
@@ -80,7 +81,7 @@
 <div class="container">
   <div ng-view=""></div>
 </div>
-<div login-dialog ng-if="!isAuthorized(userRoles.user)" ng-if="!isLoginPage"></div>
+<div login-dialog ng-if="!isLoginPage"></div>
 
 <div class="footer">
   <div class="container">
@@ -119,9 +120,11 @@
 <script src="bower_components/angular-validation-match/src/angular-input-match.js"></script>
 <script src="bower_components/ng-file-upload/angular-file-upload-shim.min.js"></script>
 <script src="bower_components/ng-file-upload/angular-file-upload.min.js"></script>
+<script src="bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
+<script src="bower_components/angular-bootstrap-show-errors/src/showErrors.min.js"></script>
+
 <!-- build:js({.tmp,app}) scripts/scripts.js -->
 <script src="scripts/app.js"></script>
-<script src="scripts/services.js"></script>
 <script src="scripts/controllers/main.js"></script>
 <script src="scripts/controllers/about.js"></script>
 <script src="scripts/controllers/login.js"></script>
@@ -141,6 +144,9 @@
 <script src="scripts/services/authresolver.js"></script>
 <script src="scripts/controllers/updateuser.js"></script>
 <script src="scripts/controllers/upload.js"></script>
+<script src="scripts/directives/showerrors.js"></script>
+<script src="scripts/services/showerrorsconfig.js"></script>
+<script src="scripts/directives/uniqueusername.js"></script>
 <!-- endbuild -->
 </body>
 </html>

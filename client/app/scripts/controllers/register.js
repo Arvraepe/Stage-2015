@@ -8,10 +8,22 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('RegisterCtrl', ['$scope', 'userFactory', '$window', 'notificationService', function ($scope, userFactory, $window, notificationService) {
+  .controller('RegisterCtrl', ['$scope', 'userFactory', '$window', 'notificationService', function ($scope, userFactory, $window, notificationService, auth) {
     $scope.user = {};
     $scope.confirmpassword = "";
+    $scope.allUsernames = [];
 
+    $scope.gekregenVanApp = auth;
+
+    function getAllUsernames() {
+      userFactory.getUsernames(function (userList) {
+        angular.forEach(userList, function (uname) {
+          $scope.allUsernames.push(uname.username);
+        });
+        console.log($scope.allUsernames);
+        //$scope.allUsernames = userList.username;
+      })
+    }
 
     $scope.success = function (response) {
       if (response.success) {
@@ -26,35 +38,26 @@ angular.module('stageprojectApp')
       notificationService.error('Something went wrong, ' + response.messages.message);
     };
     $scope.register = function () {
+      $scope.$broadcast('show-errors-check-validity');
+
       if (angular.equals($scope.confirmpassword, $scope.user.password)) {
         userFactory.registerUser($scope.user, $scope.success, $scope.error);
       }
+      if ($scope.registerForm.$valid) {
+        $scope.reset();
+      }
+    };
 
-
-      /*WERKENDE VERSIE DEZE COMMENT
-       requestFactory.sendRequest({
-       path: 'register',
-       method: 'post',
-       data: $scope.user,
-       success: function (response) {
-       if(response.success){
-       notificationService.success('Register successful');
-       }
-       },
-       error: function(response){
-       console.log("error voorgekomen");
-       console.error(response)
-       }
-       });*/
-      /* httpFactory.httpPost("/register", $scope.user).success(function (data) {
-       notificationService.success('Register succesful');
-       //$window.location.href="";
-
-       }).error(function (err) {
-       notificationService.error('Something went wrong while registering, please try again.');
-        console.log('Something went wrong while registering ' + err);
-       });*/
-
-    }
+    $scope.reset = function () {
+      $scope.$broadcast('show-errors-reset');
+      $scope.user = {
+        firstname: '',
+        lastname: '',
+        email: '',
+        password: '',
+        username: ''
+      }
+    };
+    getAllUsernames();
 
   }]);

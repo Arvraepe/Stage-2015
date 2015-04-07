@@ -15,7 +15,8 @@ var app = angular.module('stageprojectApp', [
   'ngTouch',
   'jlareau.pnotify',
   'validation.match',
-  'angularFileUpload'
+  'angularFileUpload',
+  'LocalStorageModule'
 ]);
 
 /*angular
@@ -31,7 +32,7 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
   $routeProvider
     .when('/', {
       templateUrl: 'views/main.html',
-      controller: 'MainCtrl'
+      controller: 'ApplicationCtrl'
     })
     .when('/about', {
       templateUrl: 'views/about.html',
@@ -44,18 +45,19 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
     .when('/register', {
       templateUrl: 'views/register.html',
       controller: 'RegisterCtrl'
-      /*resolve: {
-       auth: function resolveAuthentication(AuthResolver){
+      /* resolve: {
+       auth: function resolveAuthentication(AuthResolver) {
        return AuthResolver.resolve();
        }
-       }*/
-      /*data: {
-       authorizedRoles: [USERROLES.user]
-       }*/
+       },*/
+
     })
     .when('/dashboard', {
       templateUrl: 'views/dashboard.html',
-      controller: 'DashboardCtrl'
+      controller: 'DashboardCtrl',
+      data: {
+        authorizedRoles: [USERROLES.user]
+      }
     })
     .when('/editUser', {
       templateUrl: 'views/edituser.html',
@@ -77,9 +79,14 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
 });
 
 
-app.run(function ($rootScope, $location, AUTHEVENTS, AuthService) {
+app.run(function ($rootScope, $location, AUTHEVENTS, AuthService, userFactory, Session, localStorageService) {
+  if (localStorageService.get('userInfo') != null) {
+    var userInfo = localStorageService.get('userInfo');
+    Session.create(localStorageService.get('tokenInfo'), userInfo.role);
+  }
+
   $rootScope.$on('$routeChangeStart', function (event, next) {
-    if (next.$$route.data != undefined) {
+    if (next.$$route != undefined && next.$$route.data != undefined) {
       var authorizedRoles = next.$$route.data.authorizedRoles;
       if (!AuthService.isAuthorized(authorizedRoles)) {
         event.preventDefault();
@@ -100,6 +107,7 @@ app.config(function ($httpProvider) {
   $httpProvider.interceptors.push([
     '$injector',
     function ($injector) {
+      console.log($injector.get('AuthInterceptor'));
       return $injector.get('AuthInterceptor');
     }
   ]);

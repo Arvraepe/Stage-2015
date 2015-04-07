@@ -7,14 +7,17 @@
   color: #a94442;
 }
 
-.help-block {
-  display: inline-block;
-  margin-top: 5px;
+.form-group .help-block {
+  display: none;
+}
+
+.form-group.has-error .help-block {
+  display: block;
 }
 
 /* validation */
 .ng-invalid.ng-dirty {
-  border-color: red;
+  border-color: #a94442;
 }
 
 .ng-valid.ng-dirty {

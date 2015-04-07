@@ -8,18 +8,27 @@
  * Factory in the stageprojectApp.
  */
 angular.module('stageprojectApp')
-  .factory('loginFactory', function () {
+  .factory('loginFactory', ['localStorageService', function (localStorageService) {
     var loggedInUser = {};
 
     return {
       getUser: function () {
-        return loggedInUser;
+        if (localStorageService.get('userInfo') != null) {
+          return localStorageService.get('userInfo');
+        }
+        else {
+          return loggedInUser;
+        }
       },
-      setUser: function (value) {
+      setUser: function (value, token) {
         loggedInUser = value;
+        localStorageService.set('userInfo', value);
+        localStorageService.set('tokenInfo', token);
       },
       clearUser: function () {
         loggedInUser = {};
+        localStorageService.remove('userInfo');
+        localStorageService.remove('tokenInfo');
       }
     };
-  });
+  }]);
