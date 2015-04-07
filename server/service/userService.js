@@ -7,6 +7,8 @@ var userRepo = require('./../repository/userRepository');
 var resultFactory = require('./../factory/resultFactory');
 var authService = require('./authenticationService');
 var _ = require('underscore');
+var multipart = require('multiparty');
+var fileHandler = require('./../handler/fileHandler');
 
 //userverifier
 
@@ -70,15 +72,14 @@ exports.updateUser = function(params, calback) {
 };
 
 exports.upload = function(req, callback) {
-    console.log('jej');
-    var data = _.pick(req.body, 'type')
-        , uploadPath = path.normalize('./uploads')
-        , file = req.files.file;
-
-    console.log(file.name); //original name (ie: sunset.png)
-    console.log(file.path); //tmp path (ie: /tmp/12345-xyaz.png)
-    console.log(uploadPath); //uploads directory: (ie: /home/user/data/uploads)
-    callback('success');
+    var token = req.params.data;
+    authService.verifyToken(token, function (err, decoded) {
+        if(err) callback(err);
+        userRepo.findUserById(decoded, function(user) {
+            fileHandler.createFile(req.files.file, user.username);
+        });
+    });
+    callback(null);
 };
 
 function wrongLogin() {

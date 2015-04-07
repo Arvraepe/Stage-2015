@@ -1,12 +1,14 @@
 var userService = require('./../service/userService');
+var resultFactory = require('./../factory/resultFactory');
 
 exports.registerRoutes = function (app) {
 
     app.post('/register', register);
     app.post('/login', login);
     app.get('/user/getallusers', getAllUsers);
-    app.put('user/updateuser', updateUser);
-    app.post('user/uploadavatar', uploadAvatar)
+    app.put('/user/updateuser', updateUser);
+    app.post('/user/uploadavatar', uploadAvatar);
+    app.put('user/changepassword', changePassword)
 };
 
 function register(req, res, next) {
@@ -38,9 +40,18 @@ function updateUser(req, res, next) {
 }
 
 function uploadAvatar(req, res, next) {
-    console.log('binne');
-    userService.upload(req, function(result) {
+    userService.upload(req, function(err) {
+        if(err) console.log(err);
+        var conf = {};
+        conf.success = true;
+        conf.messages.code = 'info';
+        conf.messages.message = 'Avatar uploaded successfully.';
+        var result =resultFactory.makeResult(conf);
         res.send(result);
     });
     next();
+}
+
+function changePassword(req, res, next) {
+
 }

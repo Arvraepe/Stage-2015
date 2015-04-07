@@ -20,7 +20,8 @@ angular.module('stageprojectApp')
           var file = files[i];
           $upload.upload({
             url: 'http://localhost:6543/user/uploadavatar',
-            token: Session.getId(),
+            data: Session.getId(),
+            enctype: 'multipart/form-data',
             file: file
           }).progress(function (evt) {
             var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);

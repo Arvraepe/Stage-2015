@@ -6,11 +6,7 @@
 var restify = require('restify');
 var app = restify.createServer();
 var userRoutes = require('./routes/UserRoutes');
-var multiparty = require('connect-multiparty');
 
-app.use(multiparty({
-    uploadDir: './uploads'
-}));
 app.use(restify.fullResponse());
 app.use(restify.bodyParser());
 app.use(restify.queryParser());

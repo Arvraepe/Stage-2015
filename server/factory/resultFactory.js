@@ -7,14 +7,14 @@ function makeResult(config) {//success, messages, data) {
 }
 
 exports.makeResult = function(config) {//success, code, message, data) {
-    console.log(config);
     config.messages = config.messages || {};
+    config.data = config.data || {};
     return makeResult(config);
 };
 
 exports.makeUserResult = function makeUserResult(user) {
     var userResult = {};
-    userResult.user = user
+    userResult.user = user;
     return userResult;
 };
 
