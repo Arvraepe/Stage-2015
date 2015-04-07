@@ -6,17 +6,15 @@
 var restify = require('restify');
 var app = restify.createServer();
 var userRoutes = require('./routes/UserRoutes');
-var multer = require('multer');
+var multiparty = require('connect-multiparty');
 
+app.use(multiparty({
+    uploadDir: './uploads'
+}));
 app.use(restify.fullResponse());
 app.use(restify.bodyParser());
 app.use(restify.queryParser());
-app.use(multer({
-    dest: './uploads/',
-    rename: function(fieldname, filename) {
-        return filename.replace(/\w+/g, '-').toLowerCase() + Date.now();
-    }
-}));
+
 userRoutes.registerRoutes(app);
 app.listen(6543, function() {
     console.log('%s listening at %s', app.name, app.url);
