@@ -25,23 +25,12 @@ angular.module('stageprojectApp')
       })
     }
 
-    $scope.success = function (response) {
-      if (response.success) {
-        notificationService.success(response.messages.message);
-      }
-      else {
-        notificationService.notice(response.messages.message);
-      }
-    };
-    $scope.error = function (response) {
-      console.log(response);
-      notificationService.error('Something went wrong, ' + response.messages.message);
-    };
+
     $scope.register = function () {
       $scope.$broadcast('show-errors-check-validity');
 
       if (angular.equals($scope.confirmpassword, $scope.user.password)) {
-        userFactory.registerUser($scope.user, $scope.success, $scope.error);
+        userFactory.registerUser($scope.user);
       }
       if ($scope.registerForm.$valid) {
         $scope.reset();

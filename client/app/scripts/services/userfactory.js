@@ -11,17 +11,15 @@ angular.module('stageprojectApp')
   .factory('userFactory', ['requestFactory', 'notificationFactory', function (requestFactory, notificationFactory) {
 
     return {
-      registerUser: function (user, success, error) {
+      registerUser: function (user) {
         requestFactory.sendRequest({
           path: 'register',
           method: 'POST',
           data: user,
           success: function (response) {
             notificationFactory.createNotification(response);
-            success(response);
           },
           error: function (response) {
-            error(response);
           }
 
         })
