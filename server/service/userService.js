@@ -7,6 +7,7 @@ var userRepo = require('./../repository/userRepository');
 var authService = require('./authenticationService');
 var _ = require('underscore');
 var fileHandler = require('./../handler/fileHandler');
+var uuid = require('node-uuid');
 
 //userverifier
 
@@ -57,9 +58,6 @@ exports.updateUser = function(params, calback) {
             if(err) calback(err);
             var filteredUser = filterUser(user);
             calback(null, filteredUser);
-            //var conf = makeConfig(true, 'info', 'user modified successfully', userResult);
-            //console.log(conf);
-            //calback(conf);
         })
     })
 };
@@ -92,6 +90,24 @@ exports.changePassword = function(params, callback) {
                 }
             }
         });
+    });
+};
+
+exports.resetPassword = function(params, callback) {
+    userRepo.findUserByEmail(params.email, function(err, user) {
+        if(err) callback(err);
+        var tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        var uId = uuid.v1();
+        var recovery = {
+            recovery : {
+                date: tomorrow,
+                uuid: uId
+            }
+        };
+        userRepo.findOneAndUpdate(user._id, recovery, function(err, user) {
+
+        })
     });
 };
 

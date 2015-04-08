@@ -13,7 +13,11 @@ var userSchema = mongoose.Schema({
     email: String,
     salt: String,
     firstname: String,
-    lastname: String
+    lastname: String,
+    recovery: {
+        uuid: String,
+        date: Date
+    }
 });
 var User = mongoose.model('User', userSchema);
 
@@ -66,7 +70,18 @@ exports.findOneAndUpdate = function(id, update, cb) {
 
 exports.getUsers = function(cb) {
     User.find().lean().exec(function (err, users) {
-        if(err) cb(err)
+        if(err) cb(err);
         cb(null, users);
     })
 };
+
+exports.findUserByEmail = function(email, cb) {
+    User.find({email : email}).lean().exec(function (err, user) {
+        if(err) cb(err);
+        if(user == null) {
+            cb(new Error('There is no user registered with that email'));
+        } else {
+            cb(null, user);
+        }
+    });
+}

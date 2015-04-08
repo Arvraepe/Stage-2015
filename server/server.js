@@ -10,6 +10,9 @@ var userRoutes = require('./routes/UserRoutes');
 app.use(restify.fullResponse());
 app.use(restify.bodyParser());
 app.use(restify.queryParser());
+app.get(/\/docs\/public\/?.*/, restify.serveStatic({
+    directory: __dirname
+}));
 
 app.get(/\/uploads\/?.*/, restify.serveStatic({
     directory: './uploads',

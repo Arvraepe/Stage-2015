@@ -8,7 +8,8 @@ exports.registerRoutes = function (app) {
     app.get('/user/getallusers', getAllUsers);
     app.put('user/updateuser', updateUser);
     app.post('/user/uploadavatar', uploadAvatar);
-    app.put('/user/changepassword', changePassword)
+    app.put('/user/changepassword', changePassword);
+    app.post('/user/resetPassword', resetPassword);
 };
 
 function register(req, res, next) {
@@ -94,4 +95,10 @@ function changePassword(req, res, next) {
         res.send(result);
     });
     next();
+}
+
+function resetPassword(req, res, next) {
+    userService.resetPassword(req.params, function(err, link) {
+
+    })
 }
