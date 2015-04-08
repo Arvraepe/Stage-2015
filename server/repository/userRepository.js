@@ -28,7 +28,8 @@ exports.registerUser = function (user, callback) {
         salt: user.salt,
         email: user.email,
         firstname: user.firstname,
-        lastname: user.lastname
+        lastname: user.lastname,
+        recovery: {}
     });
     registeredUser.save(function (err, registeredUser) {
         if (err) {
@@ -63,7 +64,6 @@ exports.findUserById = function(id, cb) {
 exports.findOneAndUpdate = function(id, update, cb) {
     User.findOneAndUpdate({_id: id}, update, {new: true}).lean().exec(function (err, user) {
         if(err) cb(err);
-        console.log(update);
         cb(null, user);
     });
 };
@@ -76,7 +76,7 @@ exports.getUsers = function(cb) {
 };
 
 exports.findUserByEmail = function(email, cb) {
-    User.find({email : email}).lean().exec(function (err, user) {
+    User.findOne({email : email}).lean().exec(function (err, user) {
         if(err) cb(err);
         if(user == null) {
             cb(new Error('There is no user registered with that email'));

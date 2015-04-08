@@ -8,6 +8,7 @@ var authService = require('./authenticationService');
 var _ = require('underscore');
 var fileHandler = require('./../handler/fileHandler');
 var uuid = require('node-uuid');
+var mailService = require('./mailService');
 
 //userverifier
 
@@ -106,7 +107,8 @@ exports.resetPassword = function(params, callback) {
             }
         };
         userRepo.findOneAndUpdate(user._id, recovery, function(err, user) {
-
+            if(err) callback(err);
+            callback(null,user.email, user.recovery.uuid);
         })
     });
 };
@@ -119,7 +121,7 @@ function filterUsers(users) {
     if(users.length == 0) {
         return users;
     }
-    var user = users.splice(0,1);
+    var user = filterUser(users.splice(0,1)[0]);
     var newUsers = filterUsers(users);
     newUsers.push(user);
     return newUsers;

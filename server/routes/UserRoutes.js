@@ -1,5 +1,7 @@
 var userService = require('./../service/userService');
 var resultFactory = require('./../response/resultFactory');
+var mailService = require('./../service/mailService');
+var config = require('./../config.json');
 
 exports.registerRoutes = function (app) {
 
@@ -9,7 +11,7 @@ exports.registerRoutes = function (app) {
     app.put('user/updateuser', updateUser);
     app.post('/user/uploadavatar', uploadAvatar);
     app.put('/user/changepassword', changePassword);
-    app.post('/user/resetPassword', resetPassword);
+    app.post('/user/resetpassword', resetPassword);
 };
 
 function register(req, res, next) {
@@ -98,7 +100,21 @@ function changePassword(req, res, next) {
 }
 
 function resetPassword(req, res, next) {
-    userService.resetPassword(req.params, function(err, link) {
-
-    })
+    userService.resetPassword(req.params, function(err, email, uuid) {
+        var result;
+        if(err) {
+            result = resultFactory.makeFailureResult('ERROR', err.message);
+        } else {
+            mailService.sendRecoveryMail(email, config.domain + config.recoverPath + uuid, function(err, info) {
+                //todo use info data
+                if(err) {
+                    result = resultFactory.makeFailureResult('ERROR', err.message);
+                } else {
+                    result = resultFactory.makeSuccessResult('A mail has been sent to your email address');
+                }
+            });
+        }
+        res.send(result);
+    });
+    next();
 }

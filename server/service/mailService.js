@@ -29,6 +29,6 @@ exports.sendRecoveryMail = function (to, link, cb) {
     };
     transport.sendMail(mailOptions, function(err, info) {
         if(err) cb(err);
-        cb(info);
+        cb(null, info);
     });
 };
