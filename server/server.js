@@ -11,6 +11,11 @@ app.use(restify.fullResponse());
 app.use(restify.bodyParser());
 app.use(restify.queryParser());
 
+app.get(/\/uploads\/?.*/, restify.serveStatic({
+    directory: './uploads',
+    default: 'profilepicture.jpg'
+}));
+
 userRoutes.registerRoutes(app);
 app.listen(6543, function() {
     console.log('%s listening at %s', app.name, app.url);

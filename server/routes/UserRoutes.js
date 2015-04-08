@@ -76,7 +76,7 @@ function uploadAvatar(req, res, next) {
         if (err) {
             result = resultFactory.makeFailureResult('ERROR', 'Something went wrong while uploading your file.');
         } else {
-            result = resultFactory.makeSuccessResult('Avater uploaded successfully.');
+            result = resultFactory.makeSuccessResult('Avatar uploaded successfully.');
         }
         res.send(result);
     });
@@ -89,7 +89,7 @@ function changePassword(req, res, next) {
         if (err) {
             result = resultFactory.makeFailureResult('ERROR', err.message);
         } else {
-            result = resultFactory.makeSuccessResult('Avater uploaded successfully.');
+            result = resultFactory.makeSuccessResult('You can now log in with your new password.');
         }
         res.send(result);
     });

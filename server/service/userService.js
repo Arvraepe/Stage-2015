@@ -81,7 +81,7 @@ exports.changePassword = function(params, callback) {
         if(err) callback(err);
         userRepo.findUserById(decoded, function(err, user) {
             if(user != null && !err && validateUser(params.oldPassword, user.salt, user.password)) {
-                var encryptedPassword = encryptPassword(params.newPassword, salt);
+                var encryptedPassword = encryptPassword(params.newPassword, user.salt);
                 userRepo.findOneAndUpdate(decoded, {password: encryptedPassword}, callback);
                 callback();
             } else {

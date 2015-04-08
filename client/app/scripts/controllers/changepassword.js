@@ -10,15 +10,15 @@
 angular.module('stageprojectApp')
   .controller('ChangepasswordCtrl', ['$scope', 'userFactory', 'Session', function ($scope, userFactory, Session) {
     $scope.password = {
-      oldpassword: '',
-      newpassword: ''
+      oldPassword: '',
+      newPassword: ''
     };
 
     $scope.confirmpassword = '';
 
     $scope.changePassword = function (password) {
       $scope.$broadcast('show-errors-check-validity');
-      if (angular.equals($scope.password.newpassword, $scope.confirmpassword)) {
+      if (angular.equals($scope.password.newPassword, $scope.confirmpassword)) {
         userFactory.changePassword(password, function (data) {
           console.log(data);
         });
