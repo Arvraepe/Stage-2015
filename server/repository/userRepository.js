@@ -37,35 +37,35 @@ exports.registerUser = function (user, callback) {
 
 exports.userExists = function (username, cb) {
     User.find({username: username}, function (err, users) {
-        if (err) console.log(err); //todo log
-        cb(users.length >= 1);
+        if (err) cb(err); //todo log
+        cb(null, users.length >= 1);
     });
 };
 
 exports.findUser = function(username, cb) {
     User.findOne({username: username}).lean().exec(function(err, user) {
-        if(err) console.log(err);
-        cb(user);
+        if(err) cb(err);
+        cb(null, user);
     });
 };
 
 exports.findUserById = function(id, cb) {
     User.findOne({_id: id}).lean().exec(function(err, user) {
-        if(err) console.log(err);
-        cb(user);
+        if(err) cb(err);
+        cb(null, user);
     });
 };
 
 exports.findOneAndUpdate = function(id, update, cb) {
     User.findOneAndUpdate({ _id : id}, {firstname: update.firstname, lastname : update.lastname},{new : true}, function(err, user) {
-        if(err) console.log(err);
-        cb(user);
+        if(err) cb(err);
+        cb(null, user);
     });
 };
 
 exports.getUsers = function(cb) {
     User.find().lean().exec(function (err, users) {
-        if(err) console.log(err);
-        cb(users);
+        if(err) cb(err)
+        cb(null, users);
     })
 };
