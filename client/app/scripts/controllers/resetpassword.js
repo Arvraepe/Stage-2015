@@ -9,10 +9,12 @@
  */
 angular.module('stageprojectApp')
   .controller('ResetpasswordCtrl', ['$scope', 'userFactory', function ($scope, userFactory) {
-    $scope.email = '';
+    $scope.user = {
+      email: ''
+    };
 
-    $scope.resetPassword = function (email) {
-      userFactory.resetPassword(email);
+    $scope.resetPassword = function (user) {
+      userFactory.resetPassword(user);
     }
 
   }]);
