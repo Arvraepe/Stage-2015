@@ -106,6 +106,11 @@ exports.resetPassword = function(params, callback) {
                 uuid: uId
             }
         };
+        if(user.recovery != undefined) {
+            callback(new Error('A password reset has already been requested.'));
+            return;
+        }
+        console.log(user);
         userRepo.findOneAndUpdate(user._id, recovery, function(err, user) {
             if(err) callback(err);
             callback(null,user.email, user.recovery.uuid);

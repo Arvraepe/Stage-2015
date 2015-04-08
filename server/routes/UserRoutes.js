@@ -104,6 +104,7 @@ function resetPassword(req, res, next) {
         var result;
         if(err) {
             result = resultFactory.makeFailureResult('ERROR', err.message);
+            res.send(result);
         } else {
             mailService.sendRecoveryMail(email, config.domain + config.recoverPath + uuid, function(err, info) {
                 //todo use info data
@@ -112,9 +113,10 @@ function resetPassword(req, res, next) {
                 } else {
                     result = resultFactory.makeSuccessResult('A mail has been sent to your email address');
                 }
+                res.send(result);
             });
         }
-        res.send(result);
+
     });
     next();
 }
