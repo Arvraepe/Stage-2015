@@ -99,6 +99,10 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
       templateUrl: 'views/resetpassword.html',
       controller: 'ResetpasswordCtrl'
     })
+    .when('/user/recover/:uuid', {
+      templateUrl: 'views/recover.html',
+      controller: 'UserRecoverCtrl'
+    })
     .otherwise({
       redirectTo: '/'
     });

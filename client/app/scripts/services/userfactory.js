@@ -131,6 +131,20 @@ angular.module('stageprojectApp')
             console.log('Something went wrong while resetting password');
           }
         })
+      },
+      recoverPassword: function (recover) {
+        requestFactory.sendRequest({
+          path: 'user/resetpassword/confirm',
+          method: 'PUT',
+          data: recover,
+          success: function (response) {
+            notificationFactory.createNotification(response);
+            console.log(response);
+          },
+          error: function (response) {
+            console.log('Something went wrong while recovering password');
+          }
+        })
       }
     };
 

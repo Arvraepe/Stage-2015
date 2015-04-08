@@ -1,0 +1,45 @@
+<div class="col-md-12">
+  <div class="col-md-2"></div>
+  <form class="col-md-8 form-horizontal" name="recoverPasswordForm"
+        ng-submit="recoverPasswordForm.$valid && recoverPassword(recover)" novalidate>
+    <h2>Recover password</h2>
+
+    <div class="form-group" show-errors="{showSuccess: true}">
+      <label for="newpassword" class="col-md-4 control-label">New password</label>
+
+      <div class="col-md-8">
+        <input type="password" class="form-control" ng-model="recover.newPassword" id="newpassword"
+               placeholder="Password needs to have at least 8 characters" name="newpasswordField"
+               ng-pattern="/^[a-zA-Z]\w{7,20}$/" required>
+
+        <p class="help-block" ng-if="recoverPasswordForm.newpasswordField.$error.pattern">The pattern for this password
+          is not correct.</p>
+
+        <p class="help-block" ng-if="recoverPasswordForm.newpasswordField.$error.required">Password is required.</p>
+      </div>
+    </div>
+    <div class="form-group" show-errors="{showSuccess: true}">
+      <label for="confirmnewpassword" class="col-md-4 control-label">Confirm new password</label>
+
+      <div class="col-md-8">
+        <input type="password" class="form-control" ng-model="confirmPassword" id="confirmnewpassword"
+               name="confirmPasswordField" match="recover.newPassword"
+               ng-pattern="/^[a-zA-Z]\w{7,20}$/" placeholder="Confirm new password" required>
+
+        <p class="help-block" ng-if="recoverPasswordForm.confirmPasswordField.$error.required">This field is
+          required.</p>
+
+        <p class="help-block" ng-if="recoverPasswordForm.confirmPasswordField.$error.match">Passwords aren't the
+          same.</p>
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <div class="col-md-offset-4 col-md-8">
+        <button type="submit" class="btn btn-primary" value="ChangePassword">Make new password</button>
+      </div>
+    </div>
+  </form>
+  <div class="col-md-2"></div>
+</div>
