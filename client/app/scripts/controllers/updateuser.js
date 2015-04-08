@@ -13,14 +13,13 @@ angular.module('stageprojectApp')
       firstname: '',
       lastname: ''
     };
-
+    var sId = Session.getId();
 
     $scope.updateUser = function (userinfotochange) {
-      userinfotochange.token = Session.getId();
       console.log('op update knop gedrukt');
       console.log(userinfotochange);
       userFactory.updateUser(userinfotochange, function (data) {
-        $scope.setCurrentUser(data.user);
+        $scope.setCurrentUser(data.user, sId);
       }, function () {
         console.log('updating user failed');
       });

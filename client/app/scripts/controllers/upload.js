@@ -8,7 +8,7 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('UploadCtrl', ['$scope', '$upload', 'Session', function ($scope, $upload, Session) {
+  .controller('UploadCtrl', ['$scope', '$upload', 'Session', 'loginFactory', 'notificationFactory', function ($scope, $upload, Session, loginFactory, notificationFactory) {
     $scope.$watch('files', function () {
       $scope.upload($scope.files);
     });
@@ -27,6 +27,9 @@ angular.module('stageprojectApp')
             var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
             console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
           }).success(function (data, status, headers, config) {
+            notificationFactory.createNotification(data);
+            console.log('file upload gelukt');
+            console.log(data);
             console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
           });
         }

@@ -1,26 +1,44 @@
 <div class="col-md-12">
   <div class="panel panel-info col-md-12">
-    <figure class="col-md-4">
-      <img class="img-center" src="images/profilepicture.jpg" alt="Profile Picture" height="200px" width="200px">
-      <figcaption>
-        {{user.username}}
-      </figcaption>
-    </figure>
-    <div class="col-md-4">
-      Invite coworkers komt hier
+    <div class="col-md-6 dashboard-panel-left">
+      <figure class="col-md-6">
+        <img class="img-center" src="../../../server/uploads/{{user.username}}.jpg" alt="Profile Picture" height="180px"
+             width="180px">
+
+      </figure>
+      <div class="col-md-5 panel-dashboard">
+        <p>{{user.username}}</p>
+
+        <p>{{user.firstname}} {{user.lastname}}</p>
+
+        <p>{{user.email}}</p>
+      </div>
+      <div class="col-md-1">
+        <div class="btn-group" dropdown>
+          <i class="fa fa-cog dropdown-toggle" dropdown-toggle></i>
+          <ul class="dropdown-menu" role="menu">
+            <li><a ng-href="#/changepassword">Change password</a></li>
+            <li><a href="#">Change email</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      Invite coworkers komt hier lala
     </div>
 
   </div>
 </div>
 <div class="col-md-9"></div>
-<div class="col-md-3 panel panel-default pull-right">
+<div class="col-md-3 panel panel-default pull-right panelNoPadding">
   <div class="panel-heading">
     Pages
   </div>
   <div class="panel-body">
     <ul class="nav nav-pills nav-stacked">
       <li><a ng-href="#/updateuser">Update user information</a></li>
-
+      <li><a ng-href="#/invitecoworkers">Invite coworkers</a></li>
     </ul>
   </div>
 

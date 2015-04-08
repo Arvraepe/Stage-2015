@@ -8,7 +8,7 @@
  * Factory in the stageprojectApp.
  */
 angular.module('stageprojectApp')
-  .factory('userFactory', ['requestFactory', function (requestFactory) {
+  .factory('userFactory', ['requestFactory', 'notificationFactory', function (requestFactory, notificationFactory) {
 
     return {
       registerUser: function (user, success, error) {
@@ -17,6 +17,7 @@ angular.module('stageprojectApp')
           method: 'POST',
           data: user,
           success: function (response) {
+            notificationFactory.createNotification(response);
             success(response);
           },
           error: function (response) {
@@ -32,6 +33,7 @@ angular.module('stageprojectApp')
           method: 'POST',
           data: credentials,
           success: function (response) {
+            notificationFactory.createNotification(response);
             if (response.success) {
               createSession(response, callback);
             }
@@ -51,7 +53,7 @@ angular.module('stageprojectApp')
           method: 'PUT',
           data: userinfotochange,
           success: function (response) {
-            console.log(response);
+            notificationFactory.createNotification(response);
             newUserInfo(response.data);
           },
           error: function (response) {
@@ -64,15 +66,72 @@ angular.module('stageprojectApp')
           path: 'user/getallusers',
           method: 'get',
           success: function (response) {
-            console.log(response);
             usernamesList(response.data.users);
           },
           error: function (response) {
             console.log('Something went wrong while retrieving all usernames' + response);
           }
         })
-      }
+      },
+      changePassword: function (password, callback) {
+        requestFactory.sendRequest({
+          path: 'user/changepassword',
+          method: 'PUT',
+          data: password,
+          success: function (response) {
+            notificationFactory.createNotification(response);
+            console.log(response);
+            //callback(response);
+          },
+          error: function (response) {
+            console.log('Something went wrong while resetting password');
+          }
+        })
+      },
+      changeEmail: function (email, callback) {
+        requestFactory.sendRequest({
+          path: 'user/changeemail',
+          method: 'PUT',
+          data: email,
+          success: function (response) {
+            notificationFactory.createNotification(response);
+            console.log(response);
+            //callback(response)
+          },
+          error: function (response) {
+            console.log('Something went wrong while changing email');
+          }
+        })
+      },
+      inviteCoworkers: function (coworkersToInvite, callback) {
+        requestFactory.sendRequest({
+          path: 'user/invitecoworkers',
+          method: 'POST',
+          data: coworkersToInvite,
+          success: function (response) {
+            notificationFactory.createNotification(response);
+            console.log(response);
+          },
+          error: function (response) {
+            console.log('Something went wrong while inviting coworkers');
+          }
+        })
+      },
 
+      resetPassword: function (email, callback) {
+        requestFactory.sendRequest({
+          path: 'user/resetpassword',
+          method: 'POST',
+          data: email,
+          success: function (response) {
+            notificationFactory.createNotification(response);
+            console.log(response);
+          },
+          error: function (response) {
+            console.log('Something went wrong while resetting password');
+          }
+        })
+      }
     };
 
 

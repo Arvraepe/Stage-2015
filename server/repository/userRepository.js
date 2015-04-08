@@ -57,7 +57,10 @@ exports.findUserById = function(id, cb) {
 };
 
 exports.findOneAndUpdate = function(id, update, cb) {
-    User.findOneAndUpdate({ _id : id}, {firstname: update.firstname, lastname : update.lastname},{new : true}, function(err, user) {
+    User.findOneAndUpdate({_id: id}, {
+        firstname: update.firstname,
+        lastname: update.lastname
+    }, {new: true}).lean().exec(function (err, user) {
         if(err) cb(err);
         cb(null, user);
     });

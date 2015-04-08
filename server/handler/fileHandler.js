@@ -6,6 +6,7 @@ var fs = require('fs');
 exports.createFile = function(file, name) {
     fs.readFile(file.path, function (err, data) {
 
+
         /// If there's an error
         if(!name){
 

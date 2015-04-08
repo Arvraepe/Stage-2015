@@ -1,6 +1,53 @@
 .img-center{
   display:block;
-  margin-left:2%;
+  border-radius: 10px;
+  border: 2px solid #bce8f1;
+}
+
+.panelNoPadding {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 5%;
+}
+
+.welcomeUser {
+  margin-top: 9px;
+  margin-right: 43px;
+}
+
+.normalFontColor {
+  color: #777;
+}
+
+.forgotPassword {
+  font-size: 12px;
+  color: #777;
+}
+
+.loginFrontPage {
+  margin-right: 43px;
+}
+
+.frontPageImage {
+  height: 200px;
+  width: 100%;
+  border-radius: 5px;
+  border: #eee solid 1px;
+}
+
+.dashboard-panel-left {
+  padding-top: 2%;
+  padding-bottom: 2%;
+  font-size: 16px;
+}
+
+.panel-dashboard {
+  padding-top: 2%;
+  padding-bottom: 2%;
 }
 
 .has-error {
@@ -46,8 +93,10 @@ body {
 
 /* Custom page header */
 .header {
-  border-bottom: 1px solid #e5e5e5;
   margin-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
 }
 /* Make the masthead heading the same height as the navigation */
 .header h3 {
@@ -102,9 +151,18 @@ body {
   /* Space out the masthead */
   .header {
     margin-bottom: 30px;
+    padding-left: 10px;
+  !important;
+    padding-right: 10px;
+  !important;
+    padding-top: 20px;
   }
   /* Remove the bottom border on the jumbotron for visual effect */
   .jumbotron {
     border-bottom: 0;
   }
+}
+
+.popover {
+  width: 150px;
 }

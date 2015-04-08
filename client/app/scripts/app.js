@@ -16,7 +16,8 @@ var app = angular.module('stageprojectApp', [
   'jlareau.pnotify',
   'validation.match',
   'angularFileUpload',
-  'LocalStorageModule'
+  'LocalStorageModule',
+  'ui.bootstrap'
 ]);
 
 /*angular
@@ -72,6 +73,31 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
       data: {
         authorizedRoles: [USERROLES.user]
       }
+    })
+    .when('/changepassword', {
+      templateUrl: 'views/changepassword.html',
+      controller: 'ChangepasswordCtrl',
+      data: {
+        authorizedRoles: [USERROLES.user]
+      }
+    })
+    .when('/changeemail', {
+      templateUrl: 'views/changeemail.html',
+      controller: 'ChangeemailCtrl',
+      data: {
+        authorizedRoles: [USERROLES.user]
+      }
+    })
+    .when('/invitecoworkers', {
+      templateUrl: 'views/invitecoworkers.html',
+      controller: 'InvitecoworkersCtrl',
+      data: {
+        authorizedRoles: [USERROLES.user]
+      }
+    })
+    .when('/resetpassword', {
+      templateUrl: 'views/resetpassword.html',
+      controller: 'ResetpasswordCtrl'
     })
     .otherwise({
       redirectTo: '/'

@@ -6,7 +6,7 @@ exports.registerRoutes = function (app) {
     app.post('/register', register);
     app.post('/login', login);
     app.get('/user/getallusers', getAllUsers);
-    app.put('/user/updateuser', updateUser);
+    app.put('user/updateuser', updateUser);
     app.post('/user/uploadavatar', uploadAvatar);
     app.put('/user/changepassword', changePassword)
 };
@@ -59,6 +59,7 @@ function updateUser(req, res, next) {
     userService.updateUser(req.params, function(err, user) {
         var result;
         if(err) {
+            console.log(err);
             result = resultFactory.makeFailureResult('ERROR', err.message);
         } else {
             var userResult = resultFactory.makeUserResult(user);

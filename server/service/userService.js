@@ -6,7 +6,6 @@ var salt = require('./../encryption/salt');
 var userRepo = require('./../repository/userRepository');
 var authService = require('./authenticationService');
 var _ = require('underscore');
-var multipart = require('multiparty');
 var fileHandler = require('./../handler/fileHandler');
 
 //userverifier
@@ -33,7 +32,7 @@ exports.registerUser = function (user, callback) {
 };
 
 exports.loginUser = function (credentials, callback) {
-    userRepo.findUser(credentials.username, function(user) {
+    userRepo.findUser(credentials.username, function (err, user) {
         if (user != null && validateUser(credentials.password, user.salt, user.password)) {
             var token = authService.issueToken(user._id);
             callback(null, token, filterUser(user));
@@ -56,7 +55,8 @@ exports.updateUser = function(params, calback) {
         if(err) calback(err);
         userRepo.findOneAndUpdate(decoded, params, function(err, user) {
             if(err) calback(err);
-            calback(filterUser(user));
+            var filteredUser = filterUser(user);
+            calback(null, filteredUser);
             //var conf = makeConfig(true, 'info', 'user modified successfully', userResult);
             //console.log(conf);
             //calback(conf);

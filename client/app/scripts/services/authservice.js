@@ -23,9 +23,9 @@ angular.module('stageprojectApp')
       callback(response);
     }
 
-    /*function onError(response, onErrorCallback) {
-     onErrorCallback(response);
-     }*/
+    function onError(response, onErrorCallback) {
+      onErrorCallback(response);
+    }
 
     authService.logout = function () {
       Session.destroy();
