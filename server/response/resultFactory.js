@@ -22,6 +22,13 @@ exports.makeFailureResult = function(code, message) {
     return conf;
 };
 
+exports.makeFailureMultipleMessages = function(messages) {
+    var conf = {};
+    conf.success = false;
+    conf.messages = messages;
+    return conf;
+};
+
 exports.makeUserResult = function makeUserResult(user) {
     var userResult = {};
     userResult.user = user;

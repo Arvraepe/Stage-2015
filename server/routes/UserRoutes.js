@@ -17,14 +17,14 @@ exports.registerRoutes = function (app) {
 };
 
 function register(req, res, next) {
-    userService.registerUser(req.params, function(err, success) {
+    userService.registerUser(req.params, function(err, messages, success) {
         var result;
         if(err) {
             result = resultFactory.makeFailureResult('ERROR', err.message);
-        } else {
-            if(success) {
-                result = resultFactory.makeSuccessResult('User registered successfully');
-            }
+        } else if(messages) {
+            result = resultFactory.makeFailureMultipleMessages(messages);
+        } else if(success){
+            result = resultFactory.makeSuccessResult('User registered successfully');
         }
         res.send(result);
     });

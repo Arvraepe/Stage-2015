@@ -8,28 +8,34 @@ var authService = require('./authenticationService');
 var _ = require('underscore');
 var fileHandler = require('./../handler/fileHandler');
 var uuid = require('node-uuid');
+var validator = require('./../validators/userValidator');
 
 //userverifier
 
 exports.registerUser = function (user, callback) {
     //todo verify data from user
-    userRepo.userExists(user.username, function (err, exists) {
-        if(err) callback(err);
-        if (exists) {
-            callback(new Error('Username already exists'));
-        } else {
-            var saltStr = salt.getSalt(user.password, ''); //empty string because the function will build the salt from scratch
-            user.password = encryptPassword(user.password, saltStr);
-            user.salt = saltStr;
-            userRepo.registerUser(user, function (err, success) {
-                if (err) {
-                    callback(err);
-                } else {
-                    callback(null, success);
-                }
-            });
-        }
-    });
+    var messages = validator.validateRegistration(user);
+    if(messages.length === 0) {
+        userRepo.userExists(user.username, function (err, exists) {
+            if (err) callback(err);
+            if (exists) {
+                callback(new Error('Username already exists'));
+            } else {
+                var saltStr = salt.getSalt(user.password, ''); //empty string because the function will build the salt from scratch
+                user.password = encryptPassword(user.password, saltStr);
+                user.salt = saltStr;
+                userRepo.registerUser(user, function (err, success) {
+                    if (err) {
+                        callback(err);
+                    } else {
+                        callback(null, null, success);
+                    }
+                });
+            }
+        });
+    } else {
+        callback(null, messages);
+    }
 };
 
 exports.loginUser = function (credentials, callback) {
