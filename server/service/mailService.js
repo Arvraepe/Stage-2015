@@ -13,11 +13,7 @@ var transport = nodemailer.createTransport({
 });
 
 exports.sendRecoveryMail = function (to, link, cb) {
-    var mailOptions = {
-        from: 'noreply@collab.be',
-        to: to,
-        subject: 'Password recovery',
-        text: "We've received a request to reset your collaboration account password.\n\n" +
+    var text = "We've received a request to reset your collaboration account password.\n\n" +
 
         "To change your password, please click this link:\n\n" +
 
@@ -25,8 +21,9 @@ exports.sendRecoveryMail = function (to, link, cb) {
 
         "Password reset links are valid for only 24 hours. If the link expires, you will need to submit a new request.\n\n" +
 
-        "If you didn't request a change, please disregard this e-mail and your password will stay the same."
-    };
+        "If you didn't request a change, please disregard this e-mail and your password will stay the same.";
+
+    var mailOptions = makeMailOptions('noreply@collab.be', to, 'Password recovery', text)
     transport.sendMail(mailOptions, function(err, info) {
         if(err) cb(err);
         cb(null, info);
@@ -34,11 +31,7 @@ exports.sendRecoveryMail = function (to, link, cb) {
 };
 
 exports.inviteCoworkers = function(to, link, cb) {
-    var mailOptions = {
-        from: 'noreply@collab.be',
-        to: to,
-        subject: 'Please join my team',
-        text: "A coworker has invited you to join his project!\n\n" +
+    var text = "A coworker has invited you to join his project!\n\n" +
 
         "Please use the link below to register a new account.\n\n" +
 
@@ -46,8 +39,8 @@ exports.inviteCoworkers = function(to, link, cb) {
 
         "In the collaboration app you can work together on projects with your friends or coworkers.\n\n" +
 
-        "You can also create and manage your own projects for free! Start collaborating now."
-    };
+        "You can also create and manage your own projects for free! Start collaborating now.";
+    var mailOptions = makeMailOptions('noreply@collab.be', to, 'Join the team!', text);
     transport.sendMail(mailOptions, function(err, info) {
         if(err) cb(err);
         cb(null, info);
