@@ -31,6 +31,7 @@ angular.module('stageprojectApp')
 
       if (angular.equals($scope.confirmpassword, $scope.user.password)) {
         userFactory.registerUser($scope.user);
+        $window.location.href = '#/';
       }
       if ($scope.registerForm.$valid) {
         $scope.reset();

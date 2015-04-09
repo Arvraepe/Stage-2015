@@ -13,6 +13,7 @@ angular.module('stageprojectApp')
       $scope.upload($scope.files);
     });
 
+
     $scope.upload = function (files) {
       console.log(files);
       if (files && files.length) {
@@ -31,6 +32,7 @@ angular.module('stageprojectApp')
             console.log('file upload gelukt');
             console.log(data);
             console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
+
           });
         }
       }

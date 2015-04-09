@@ -20,15 +20,16 @@ angular.module('stageprojectApp')
           return loggedInUser;
         }
       },
-      setUser: function (value, token) {
+      setUser: function (value) {
         loggedInUser = value;
-        localStorageService.set('userInfo', value);
-        localStorageService.set('tokenInfo', token);
       },
       clearUser: function () {
         loggedInUser = {};
         localStorageService.remove('userInfo');
         localStorageService.remove('tokenInfo');
+      },
+      setUserImage: function (file) {
+        loggedInUser.avatar = file;
       }
     };
   }]);

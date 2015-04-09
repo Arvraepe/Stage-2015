@@ -2,6 +2,7 @@ var userService = require('./../service/userService');
 var resultFactory = require('./../response/resultFactory');
 var mailService = require('./../service/mailService');
 var config = require('./../config.json');
+var fs = require('fs');
 
 exports.registerRoutes = function (app) {
 
@@ -12,6 +13,8 @@ exports.registerRoutes = function (app) {
     app.post('/user/uploadavatar', uploadAvatar);
     app.put('/user/changepassword', changePassword);
     app.post('/user/resetpassword', resetPassword);
+    app.get('/user/uploads/:file', getImage);
+
     app.put('/user/resetpassword/confirm', confirmReset);
     app.post('/user/invitecoworkers', inviteCoWorkers);
 };
@@ -153,4 +156,17 @@ function inviteCoWorkers(req, res, next) {
         res.send(result);
     });
     next();
+}
+
+function getImage(req, res, next) {
+
+    var filename = req.params.file;
+    var img = fs.readFile('../server/uploads/' + filename, function (err, data) {
+        if (err) throw err;
+        var base64image = data.toString('base64');
+        console.log(base64image);
+        res.writeHead(200, {'Content-Type': 'image/jpg'});
+        res.end(base64image);
+    });
+    //var file = req.
 }

@@ -2,16 +2,20 @@
   <div class="panel panel-info col-md-12">
     <div class="col-md-6 dashboard-panel-left">
       <figure class="col-md-6">
-        <img class="img-center" src="../../../server/uploads/{{user.username}}.jpg" alt="Profile Picture" height="180px"
+        <img ng-show="!currentUser.avatar || currentUser.avatar==undefined" class="img-center"
+             src="../images/profilepicture.jpg" alt="Profile Picture" height="180px"
              width="180px">
+        <img ng-show="currentUser.avatar" class="img-center" src="data:image/jpg;base64,{{currentUser.avatar}}"
+             alt="huphup">
+
 
       </figure>
       <div class="col-md-5 panel-dashboard">
-        <p>{{user.username}}</p>
+        <p>{{currentUser.username}}</p>
 
-        <p>{{user.firstname}} {{user.lastname}}</p>
+        <p>{{currentUser.firstname}} {{currentUser.lastname}}</p>
 
-        <p>{{user.email}}</p>
+        <p>{{currentUser.email}}</p>
       </div>
       <div class="col-md-1">
         <div class="btn-group" dropdown>

@@ -109,14 +109,16 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
 });
 
 
-app.run(function ($rootScope, $location, AUTHEVENTS, AuthService, userFactory, Session, localStorageService) {
+app.run(function ($rootScope, $location, AUTHEVENTS, AuthService, userFactory, Session, localStorageService, loginFactory) {
   if (localStorageService.get('userInfo') != null) {
     var userInfo = localStorageService.get('userInfo');
+    loginFactory.setUser(userInfo);
     Session.create(localStorageService.get('tokenInfo'), userInfo.role);
   }
 
   $rootScope.$on('$routeChangeStart', function (event, next) {
     if (next.$$route != undefined && next.$$route.data != undefined) {
+
       var authorizedRoles = next.$$route.data.authorizedRoles;
       if (!AuthService.isAuthorized(authorizedRoles)) {
         event.preventDefault();

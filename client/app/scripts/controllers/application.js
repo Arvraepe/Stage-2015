@@ -9,29 +9,39 @@
  */
 angular.module('stageprojectApp')
   .controller('ApplicationCtrl', ['$scope', 'USERROLES', 'AuthService', 'loginFactory', '$rootScope', 'AUTHEVENTS', 'Session',
-    '$window', function ($scope, USERROLES, AuthService, loginFactory, $rootScope, AUTHEVENTS, Session, $window) {
+    '$window', 'userFactory', 'localStorageService', function ($scope, USERROLES, AuthService, loginFactory, $rootScope,
+                                                               AUTHEVENTS, Session, $window, userFactory, localStorageService) {
 
-      $scope.currentUser = loginFactory.getUser();
-      console.log($scope.currentUser);
+      //console.log($scope.currentUser);
       $scope.userRoles = USERROLES;
       $scope.isAuthorized = AuthService.isAuthorized;
       $scope.isLoginPage = true;
-      $scope.visible = false;
+      //$scope.visible = false;
 
 
-      $scope.setCurrentUser = function (user, token) {
+      $scope.setCurrentUser = function (user, token, file) {
         //$scope.currentUser = user;
-        loginFactory.setUser(user, token);
+        $scope.currentUser = user;
+        $scope.currentUser.avatar = file;
+        localStorageService.set('userInfo', $scope.currentUser);
+        localStorageService.set('tokenInfo', token);
+        //loginFactory.setUser(user, token, file);
         Session.setId(token);
       };
 
       $scope.logout = function () {
         AuthService.logout();
+        localStorageService.remove('userInfo');
+        localStorageService.remove('tokenInfo');
         $rootScope.$broadcast(AUTHEVENTS.logoutSuccess);
-        loginFactory.clearUser();
+        $scope.currentUser = {};
         $window.location.href = "#/main";
 
-      }
+      };
+
+
+      $scope.currentUser = loginFactory.getUser();
+
 
 
     }]);

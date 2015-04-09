@@ -1,4 +1,3 @@
-
 <div class="col-md-12">
   <div class="col-md-2"></div>
   <!--
@@ -12,20 +11,31 @@
         ng-submit="updateUserForm.$valid && updateUser(userinfotochange)" novalidate>
     <h2 class="text-center">Update profile settings</h2>
 
-    <div class="form-group">
+    <div class="form-group" show-errors="{showSuccess: true}">
       <label for="firstname" class="col-md-4 control-label pull-left text-left">First name</label>
 
       <div class="col-md-6">
-        <input type="text" class="form-control" ng-model="userinfotochange.firstname" id="firstname"
-               placeholder="New first name" required>
+        <input type="text" class="form-control" ng-minlength="2" ng-model="userinfotochange.firstname" id="firstname"
+               placeholder="New first name" name="firstnameField" required>
+
+        <p class="help-block" ng-if="updateUserForm.firstnameField.$error.minlength">A name needs to have at least 2
+          characters.</p>
+
+        <p class="help-block" ng-if="updateUserForm.firstnameField.$error.required">First name is required.</p>
       </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" show-errors="{showSuccess: true}">
       <label for="lastname" class="col-md-4 control-label">Last name</label>
 
       <div class="col-md-6">
-        <input type="text" class="form-control" ng-model="userinfotochange.lastname" id="lastname"
-               placeholder="New last name" required>
+        <input type="text" class="form-control" ng-minlength="2" ng-model="userinfotochange.lastname" id="lastname"
+               placeholder="New last name" name="lastnameField" required>
+
+        <p class="help-block" ng-if="updateUserForm.lastnameField.$error.minlength">A name needs to have at least 2
+          characters.</p>
+
+        <p class="help-block" ng-if="updateUserForm.lastnameField.$error.required">Last name is required.</p>
+
       </div>
     </div>
     <div class="form-group">
@@ -33,11 +43,14 @@
         <button type="submit" class="btn btn-primary" value="Update user"><i class="fa fa-pencil"></i> Update!</button>
       </div>
     </div>
+    <div ng-controller="UploadCtrl" class="form-group">
+      <div class="col-md-offset-4 col-md-5">
+        <div class="btn btn-success" ng-file-select ng-model="files"><i class="fa fa-upload"></i> Upload avatar</div>
+      </div>
+    </div>
   </form>
   <div class="col-md-2"></div>
 
-  <div ng-controller="UploadCtrl" class="col-md-8">
-    <div class="btn btn-success col-md-offset-4" ng-file-select ng-model="files">Upload avatar</div>
-  </div>
+
   <div class="col-md-2"></div>
 </div>

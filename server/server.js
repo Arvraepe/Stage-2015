@@ -10,14 +10,26 @@ var userRoutes = require('./routes/UserRoutes');
 app.use(restify.fullResponse());
 app.use(restify.bodyParser());
 app.use(restify.queryParser());
-app.get(/\/docs\/public\/?.*/, restify.serveStatic({
+/*
+ app.get(/\/docs\/public\/?.*//*
+ , restify.serveStatic({
     directory: __dirname
 }));
+ */
 
-app.get(/\/uploads\/?.*/, restify.serveStatic({
-    directory: './uploads',
-    default: 'profilepicture.jpg'
-}));
+/*
+ app.get(/\/uploads\/?.*//*
+ , restify.serveStatic({
+ directory: './uploads'
+
+ }));
+ */
+
+/*app.get(/.*//*, restify.serveStatic({
+ directory: __dirname+'\\uploads',
+ default: 'zoompie.jpg'
+ }));*/
+
 
 userRoutes.registerRoutes(app);
 app.listen(6543, function() {

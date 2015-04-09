@@ -8,7 +8,7 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('ChangepasswordCtrl', ['$scope', 'userFactory', 'Session', function ($scope, userFactory, Session) {
+  .controller('ChangepasswordCtrl', ['$scope', 'userFactory', 'Session', '$window', function ($scope, userFactory, Session, $window) {
     $scope.password = {
       oldPassword: '',
       newPassword: ''
@@ -17,25 +17,15 @@ angular.module('stageprojectApp')
     $scope.confirmpassword = '';
 
     $scope.changePassword = function (password) {
-      $scope.$broadcast('show-errors-check-validity');
       if (angular.equals($scope.password.newPassword, $scope.confirmpassword)) {
         userFactory.changePassword(password, function (data) {
           console.log(data);
         });
+        $window.location.href = '#/';
       }
-      if ($scope.changePasswordForm.$valid) {
-        $scope.reset();
-      }
+
 
     };
 
-    $scope.reset = function () {
-      $scope.$broadcast('show-errors-reset');
-      $scope.password = {
-        oldpassword: '',
-        newpassword: ''
-      };
-      $scope.confirmpassword = '';
-    }
 
   }]);

@@ -8,7 +8,7 @@
  * Factory in the stageprojectApp.
  */
 angular.module('stageprojectApp')
-  .factory('userFactory', ['requestFactory', 'notificationFactory', function (requestFactory, notificationFactory) {
+  .factory('userFactory', ['requestFactory', 'notificationFactory', 'notificationService', function (requestFactory, notificationFactory, notificationService) {
 
     return {
       registerUser: function (user) {
@@ -20,6 +20,7 @@ angular.module('stageprojectApp')
             notificationFactory.createNotification(response);
           },
           error: function (response) {
+            notificationService.error('Something went wrong while trying to register. Server might be down.')
           }
 
         })
@@ -55,7 +56,7 @@ angular.module('stageprojectApp')
             newUserInfo(response.data);
           },
           error: function (response) {
-            console.error('Something went wrong while registering ' + response);
+            notificationService.error('Something went wrong while trying to update your profile. Server might be down.')
           }
         })
       },
@@ -67,7 +68,8 @@ angular.module('stageprojectApp')
             usernamesList(response.data.users);
           },
           error: function (response) {
-            console.log('Something went wrong while retrieving all usernames' + response);
+            notificationService.error('Something went wrong while trying to retrieve users in order to validate your' +
+            'registration. Server might be down.')
           }
         })
       },
@@ -82,7 +84,7 @@ angular.module('stageprojectApp')
             //callback(response);
           },
           error: function (response) {
-            console.log('Something went wrong while resetting password');
+            notificationService.error('Something went wrong while trying to change your password. Server might be down.')
           }
         })
       },
@@ -97,7 +99,7 @@ angular.module('stageprojectApp')
             //callback(response)
           },
           error: function (response) {
-            console.log('Something went wrong while changing email');
+            notificationService.error('Something went wrong while trying to change your email. Server might be down.')
           }
         })
       },
@@ -111,7 +113,7 @@ angular.module('stageprojectApp')
             console.log(response);
           },
           error: function (response) {
-            console.log('Something went wrong while inviting coworkers');
+            notificationService.error('Something went wrong while trying to invite coworkers. Server might be down.')
           }
         })
       },
@@ -126,7 +128,7 @@ angular.module('stageprojectApp')
             console.log(response);
           },
           error: function (response) {
-            console.log('Something went wrong while resetting password');
+            notificationService.error('Something went wrong while trying to reset your password. Server might be down.')
           }
         })
       },
@@ -140,7 +142,19 @@ angular.module('stageprojectApp')
             console.log(response);
           },
           error: function (response) {
-            console.log('Something went wrong while recovering password');
+            notificationService.error('Something went wrong while making your new password. Server might be down.')
+          }
+        })
+      },
+      getImageForCurrentUser: function (username, callback) {
+        requestFactory.sendRequest({
+          path: 'user/uploads/' + username + '.jpg',
+          method: 'get',
+          success: function (response) {
+            callback(response);
+          },
+          error: function (response) {
+            callback(response);
           }
         })
       }

@@ -16,8 +16,6 @@ angular.module('stageprojectApp')
     var sId = Session.getId();
 
     $scope.updateUser = function (userinfotochange) {
-      console.log('op update knop gedrukt');
-      console.log(userinfotochange);
       userFactory.updateUser(userinfotochange, function (data) {
         $scope.setCurrentUser(data.user, sId);
       }, function () {
