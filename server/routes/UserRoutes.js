@@ -13,8 +13,7 @@ exports.registerRoutes = function (app) {
     app.post('/user/uploadavatar', uploadAvatar);
     app.put('/user/changepassword', changePassword);
     app.post('/user/resetpassword', resetPassword);
-    app.get('/user/uploads/:file', getImage);
-
+    app.get('/user/uploads/:username', getImage);
     app.put('/user/resetpassword/confirm', confirmReset);
     app.post('/user/invitecoworkers', inviteCoWorkers);
 };
@@ -66,7 +65,6 @@ function updateUser(req, res, next) {
     userService.updateUser(req.params, function(err, messages, user) {
         var result;
         if(err) {
-            console.log(err);
             result = resultFactory.makeFailureResult('ERROR', err.message);
         } else if (messages) {
             result = resultFactory.makeFailureMultipleMessages(messages);
@@ -161,14 +159,13 @@ function inviteCoWorkers(req, res, next) {
 }
 
 function getImage(req, res, next) {
-
-    var filename = req.params.file;
-    var img = fs.readFile('../server/uploads/' + filename, function (err, data) {
-        if (err) throw err;
-        var base64image = data.toString('base64');
-        console.log(base64image);
-        res.writeHead(200, {'Content-Type': 'image/jpg'});
-        res.end(base64image);
+    var username = req.params.username;
+    userService.getImage(username, function(err, base64Str, ext) {
+        if(err) {
+            res.send(resultFactory.makeFailureResult('ERROR', err.message));
+        } else {
+            res.writeHead(200, {'Content-Type': 'image/' + ext});
+            res.end(base64Str);
+        }
     });
-    //var file = req.
 }

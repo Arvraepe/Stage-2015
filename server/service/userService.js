@@ -8,9 +8,7 @@ var authService = require('./authenticationService');
 var _ = require('underscore');
 var fileHandler = require('./../handler/fileHandler');
 var uuid = require('node-uuid');
-var validator = require('././userValidator');
-
-//userverifier
+var validator = require('./../validator/userValidator');
 
 exports.registerUser = function (user, callback) {
     var messages = validator.validateRegistration(user);
@@ -64,7 +62,7 @@ exports.getAllUsers = function (callback) {
 
 exports.updateUser = function (params, calback) {
     var messages = validator.validateUpdate(params);
-    if(messages.length === 0) {
+    if(messages.length === undefined) {
         authService.verifyToken(params.token, function (err, decoded) {
             if (err) calback(err);
             userRepo.findOneAndUpdate(decoded, params, function (err, user) {
@@ -84,10 +82,15 @@ exports.upload = function (req, callback) {
         if (err) callback(err);
         userRepo.findUserById(decoded, function (err, user) {
             if (err) callback(err);
-            fileHandler.createFile(req.files.file, user.username);
+            fileHandler.createFile(req.files.file, user.username, function(err, ext) {
+                if(err)callback(err);
+                userRepo.findOneAndUpdate(decoded, { imageExtension: ext}, function(err, user) {
+                    if(err) callback(err);
+                    callback();
+                })
+            });
         });
     });
-    callback(null);
 };
 
 exports.getUserFromToken = function(token, callback) {
@@ -163,6 +166,16 @@ exports.confirmReset = function (params, callback) {
     } else {
         callback(new Error('The provided password is not valid.'))
     }
+};
+
+exports.getImageExt = function(username, callback) {
+    userRepo.findUser(username, function(err, user) {
+        if(err)callback(err);
+        fileHandler.getImage(username, user.imageExtension, function(err, base64str) {
+            if(err) callback(err);
+            callback(null, base64str);
+        });
+    });
 };
 
 function filterUser(user) {

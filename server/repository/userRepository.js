@@ -14,6 +14,7 @@ var userSchema = mongoose.Schema({
     salt: String,
     firstname: String,
     lastname: String,
+    imageExtension: String,
     recovery: {
         uuid: String,
         date: Date
@@ -71,6 +72,9 @@ exports.findUserById = function(id, cb) {
 exports.findOneAndUpdate = function(id, update, cb) {
     User.findOneAndUpdate({_id: id}, update, {new: true}).lean().exec(function (err, user) {
         if(err) cb(err);
+        if(user == null) {
+            cb(new Error('No such User'));
+        }
         cb(null, user);
     });
 };
