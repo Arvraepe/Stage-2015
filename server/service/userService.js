@@ -8,7 +8,7 @@ var authService = require('./authenticationService');
 var _ = require('underscore');
 var fileHandler = require('./../handler/fileHandler');
 var uuid = require('node-uuid');
-var validator = require('./../validators/userValidator');
+var validator = require('././userValidator');
 
 //userverifier
 
@@ -90,6 +90,16 @@ exports.upload = function (req, callback) {
     callback(null);
 };
 
+exports.getUserFromToken = function(token, callback) {
+    authService.verifyToken(token, function(err, decoded) {
+        if(err) callback(err);
+        userRepo.findUserById(decoded, function(err, user) {
+            if(err)callback(err);
+            callback(null, filterUser(user));
+        })
+    })
+};
+
 exports.changePassword = function (params, callback) {
     if(validator.validateChangedPassword(params.password)) {
         authService.verifyToken(params.token, function (err, decoded) {
@@ -126,13 +136,17 @@ exports.resetPassword = function (params, callback) {
             }
         };
         if (user.recovery != undefined) {
-            callback(new Error('A password reset has already been requested.'));
-            return;
+            if(user.recovery.date < new Date()) {
+                user.recovery = undefined;
+            } else {
+                callback(new Error('A password reset has already been requested.'));
+                return;
+            }
         }
         userRepo.findOneAndUpdate(user._id, recovery, function (err, user) {
             if (err) callback(err);
             callback(null, user.email, user.recovery.uuid);
-        })
+        });
     });
 };
 

@@ -143,6 +143,8 @@ function inviteCoWorkers(req, res, next) {
         emails += entry.email +', ';
     });
     emails = emails.replace(/,\s*$/, "");
+    var name ='';
+    userService.getUserFromToken
     mailService.inviteCoworkers(emails, config.domain + config.registerPath, function(err, info) {
         var result;
         if(err) {
