@@ -15,20 +15,26 @@ var validator = require('./../validators/userValidator');
 exports.registerUser = function (user, callback) {
     //todo verify data from user
     var messages = validator.validateRegistration(user);
-    if(messages.length === 0) {
+    if (messages.length === 0) {
         userRepo.userExists(user.username, function (err, exists) {
             if (err) callback(err);
             if (exists) {
                 callback(new Error('Username already exists'));
             } else {
-                var saltStr = salt.getSalt(user.password, ''); //empty string because the function will build the salt from scratch
-                user.password = encryptPassword(user.password, saltStr);
-                user.salt = saltStr;
-                userRepo.registerUser(user, function (err, success) {
-                    if (err) {
-                        callback(err);
-                    } else {
-                        callback(null, null, success);
+                userRepo.emailExists(user.email, function (err, emailExists) {
+                    if (err) callback(err);
+                    if (emailExists) callback(new Error('A user has already registered using this email.'));
+                    else {
+                        var saltStr = salt.getSalt(user.password, ''); //empty string because the function will build the salt from scratch
+                        user.password = encryptPassword(user.password, saltStr);
+                        user.salt = saltStr;
+                        userRepo.registerUser(user, function (err, success) {
+                            if (err) {
+                                callback(err);
+                            } else {
+                                callback(null, null, success);
+                            }
+                        });
                     }
                 });
             }
@@ -49,47 +55,47 @@ exports.loginUser = function (credentials, callback) {
     });
 };
 
-exports.getAllUsers = function(callback) {
-    userRepo.getUsers(function(err, users) {
-        if(err) callback(err);
+exports.getAllUsers = function (callback) {
+    userRepo.getUsers(function (err, users) {
+        if (err) callback(err);
         var filteredUsers = filterUsers(users);
         callback(null, filteredUsers);
     });
 };
 
-exports.updateUser = function(params, calback) {
-    authService.verifyToken(params.token, function(err, decoded) {
-        if(err) calback(err);
-        userRepo.findOneAndUpdate(decoded, params, function(err, user) {
-            if(err) calback(err);
+exports.updateUser = function (params, calback) {
+    authService.verifyToken(params.token, function (err, decoded) {
+        if (err) calback(err);
+        userRepo.findOneAndUpdate(decoded, params, function (err, user) {
+            if (err) calback(err);
             var filteredUser = filterUser(user);
             calback(null, filteredUser);
         })
     })
 };
 
-exports.upload = function(req, callback) {
+exports.upload = function (req, callback) {
     var token = req.params.data;
     authService.verifyToken(token, function (err, decoded) {
-        if(err) callback(err);
-        userRepo.findUserById(decoded, function(err, user) {
-            if(err) callback(err);
+        if (err) callback(err);
+        userRepo.findUserById(decoded, function (err, user) {
+            if (err) callback(err);
             fileHandler.createFile(req.files.file, user.username);
         });
     });
     callback(null);
 };
 
-exports.changePassword = function(params, callback) {
-    authService.verifyToken(params.token, function(err, decoded) {
-        if(err) callback(err);
-        userRepo.findUserById(decoded, function(err, user) {
-            if(user != null && !err && validateUser(params.oldPassword, user.salt, user.password)) {
+exports.changePassword = function (params, callback) {
+    authService.verifyToken(params.token, function (err, decoded) {
+        if (err) callback(err);
+        userRepo.findUserById(decoded, function (err, user) {
+            if (user != null && !err && validateUser(params.oldPassword, user.salt, user.password)) {
                 var encryptedPassword = encryptPassword(params.newPassword, user.salt);
                 userRepo.findOneAndUpdate(decoded, {password: encryptedPassword}, callback);
                 callback();
             } else {
-                if(err) {
+                if (err) {
                     callback(err)
                 } else {
                     callback(new Error('The password you provided was wrong!'));
@@ -99,35 +105,35 @@ exports.changePassword = function(params, callback) {
     });
 };
 
-exports.resetPassword = function(params, callback) {
-    userRepo.findUserByEmail(params.email, function(err, user) {
-        if(err) callback(err);
+exports.resetPassword = function (params, callback) {
+    userRepo.findUserByEmail(params.email, function (err, user) {
+        if (err) callback(err);
         var tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         var uId = uuid.v1();
         var recovery = {
-            recovery : {
+            recovery: {
                 date: tomorrow,
                 uuid: uId
             }
         };
-        if(user.recovery != undefined) {
+        if (user.recovery != undefined) {
             callback(new Error('A password reset has already been requested.'));
             return;
         }
-        userRepo.findOneAndUpdate(user._id, recovery, function(err, user) {
-            if(err) callback(err);
-            callback(null,user.email, user.recovery.uuid);
+        userRepo.findOneAndUpdate(user._id, recovery, function (err, user) {
+            if (err) callback(err);
+            callback(null, user.email, user.recovery.uuid);
         })
     });
 };
 
-exports.confirmReset = function(params, callback) {
-    userRepo.findUserByUuid(params.uuid, function(err, user) {
-        if(err) callback(err);
+exports.confirmReset = function (params, callback) {
+    userRepo.findUserByUuid(params.uuid, function (err, user) {
+        if (err) callback(err);
         var encryptedPW = encryptPassword(params.newPassword, user.salt);
-        userRepo.findOneAndUpdate(user._id, {password: encryptedPW}, function(err, updatedUser) {
-            if(err) callback(err);
+        userRepo.findOneAndUpdate(user._id, {password: encryptedPW}, function (err, updatedUser) {
+            if (err) callback(err);
             callback();
         });
     });
@@ -138,10 +144,10 @@ function filterUser(user) {
 }
 
 function filterUsers(users) {
-    if(users.length == 0) {
+    if (users.length == 0) {
         return users;
     }
-    var user = filterUser(users.splice(0,1)[0]);
+    var user = filterUser(users.splice(0, 1)[0]);
     var newUsers = filterUsers(users);
     newUsers.push(user);
     return newUsers;
