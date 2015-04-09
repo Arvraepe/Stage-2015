@@ -8,7 +8,6 @@ var authService = require('./authenticationService');
 var _ = require('underscore');
 var fileHandler = require('./../handler/fileHandler');
 var uuid = require('node-uuid');
-var mailService = require('./mailService');
 
 //userverifier
 
@@ -110,7 +109,6 @@ exports.resetPassword = function(params, callback) {
             callback(new Error('A password reset has already been requested.'));
             return;
         }
-        console.log(user);
         userRepo.findOneAndUpdate(user._id, recovery, function(err, user) {
             if(err) callback(err);
             callback(null,user.email, user.recovery.uuid);
@@ -118,8 +116,19 @@ exports.resetPassword = function(params, callback) {
     });
 };
 
+exports.confirmReset = function(params, callback) {
+    userRepo.findUserByUuid(params.uuid, function(err, user) {
+        if(err) callback(err);
+        var encryptedPW = encryptPassword(params.newPassword, user.salt);
+        userRepo.findOneAndUpdate(user._id, {password: encryptedPW}, function(err, updatedUser) {
+            if(err) callback(err);
+            callback();
+        });
+    });
+};
+
 function filterUser(user) {
-    return _.omit(user, ['password', 'salt', '__v', '_id']);
+    return _.omit(user, ['password', 'salt', '__v', '_id', 'recovery']);
 }
 
 function filterUsers(users) {
@@ -133,7 +142,7 @@ function filterUsers(users) {
 }
 
 function validateUser(submittedPassword, salt, password) {
-    var encryptedPassword = md5.md5(submittedPassword + salt);
+    var encryptedPassword = encryptPassword(submittedPassword, salt);
     return encryptedPassword === password;
 }
 

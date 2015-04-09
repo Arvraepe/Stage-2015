@@ -84,4 +84,19 @@ exports.findUserByEmail = function(email, cb) {
             cb(null, user);
         }
     });
-}
+};
+
+exports.findUserByUuid = function(uuid, cb) {
+    User.findOne({'recovery.uuid': uuid}).exec(function(err, user) {
+        if(err) cb(err);
+        if(user != null && user.recovery.date > new Date()) {
+            user.recovery = undefined;
+            user.save(function(err, user) {
+                if(err) cb(err);
+                cb(null, user);
+            });
+        } else {
+            cb(new Error('you clicked an invalid link'))
+        }
+    })
+};

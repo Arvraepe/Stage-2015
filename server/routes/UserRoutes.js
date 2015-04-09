@@ -12,6 +12,8 @@ exports.registerRoutes = function (app) {
     app.post('/user/uploadavatar', uploadAvatar);
     app.put('/user/changepassword', changePassword);
     app.post('/user/resetpassword', resetPassword);
+    app.put('/user/resetpassword/confirm', confirmReset);
+    app.post('/user/invitecoworkers', inviteCoWorkers);
 };
 
 function register(req, res, next) {
@@ -50,7 +52,6 @@ function getAllUsers(req, res, next) {
         if(err) {
             result = resultFactory.makeFailureResult('ERROR', err.message);
         } else {
-            var usersResult = resultFactory.makeUsersResult(users);
             result = resultFactory.makeSuccessResult(users.length + ' users fetched.', resultFactory.makeUsersResult(users));
         }
         res.send(result);
@@ -117,6 +118,37 @@ function resetPassword(req, res, next) {
             });
         }
 
+    });
+    next();
+}
+
+function confirmReset(req, res, next) {
+    userService.confirmReset(req.params, function(err) {
+        var result;
+        if(err) {
+            result = resultFactory.makeFailureResult('ERROR', err.message);
+        } else {
+            result = resultFactory.makeSuccessResult('You can now log in using your new password.');
+        }
+        res.send(result);
+    });
+    next();
+}
+
+function inviteCoWorkers(req, res, next) {
+    var emails = '';
+    req.params.forEach(function (entry) {
+        emails += entry.email +', ';
+    });
+    emails = emails.replace(/,\s*$/, "");
+    mailService.inviteCoworkers(emails, config.domain + config.registerPath, function(err, info) {
+        var result;
+        if(err) {
+            result = resultFactory.makeFailureResult('ERROR', 'Something went wrong while sending out the mails.');
+        } else {
+            result = resultFactory.makeSuccessResult('Emails have been sent.');
+        }
+        res.send(result);
     });
     next();
 }
