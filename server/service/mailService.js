@@ -40,11 +40,11 @@ exports.inviteCoworkers = function(to, link, cb) {
         subject: 'Please join my team',
         text: "A coworker has invited you to join his project!\n\n" +
 
-        "Please use the link below to register a new account\n\n" +
+        "Please use the link below to register a new account.\n\n" +
 
         link + "\n\n" +
 
-        "In the collaboration app you can work together on projects with your friends or coworkers\n\n" +
+        "In the collaboration app you can work together on projects with your friends or coworkers.\n\n" +
 
         "You can also create and manage your own projects for free! Start collaborating now."
     };

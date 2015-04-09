@@ -13,7 +13,6 @@ var validator = require('./../validators/userValidator');
 //userverifier
 
 exports.registerUser = function (user, callback) {
-    //todo verify data from user
     var messages = validator.validateRegistration(user);
     if (messages.length === 0) {
         userRepo.userExists(user.username, function (err, exists) {
@@ -64,14 +63,19 @@ exports.getAllUsers = function (callback) {
 };
 
 exports.updateUser = function (params, calback) {
-    authService.verifyToken(params.token, function (err, decoded) {
-        if (err) calback(err);
-        userRepo.findOneAndUpdate(decoded, params, function (err, user) {
+    var messages = validator.validateUpdate(params);
+    if(messages.length === 0) {
+        authService.verifyToken(params.token, function (err, decoded) {
             if (err) calback(err);
-            var filteredUser = filterUser(user);
-            calback(null, filteredUser);
+            userRepo.findOneAndUpdate(decoded, params, function (err, user) {
+                if (err) calback(err);
+                var filteredUser = filterUser(user);
+                calback(null, null, filteredUser);
+            })
         })
-    })
+    } else {
+        calback(null, messages);
+    }
 };
 
 exports.upload = function (req, callback) {
@@ -87,22 +91,26 @@ exports.upload = function (req, callback) {
 };
 
 exports.changePassword = function (params, callback) {
-    authService.verifyToken(params.token, function (err, decoded) {
-        if (err) callback(err);
-        userRepo.findUserById(decoded, function (err, user) {
-            if (user != null && !err && validateUser(params.oldPassword, user.salt, user.password)) {
-                var encryptedPassword = encryptPassword(params.newPassword, user.salt);
-                userRepo.findOneAndUpdate(decoded, {password: encryptedPassword}, callback);
-                callback();
-            } else {
-                if (err) {
-                    callback(err)
+    if(validator.validateChangedPassword(params.password)) {
+        authService.verifyToken(params.token, function (err, decoded) {
+            if (err) callback(err);
+            userRepo.findUserById(decoded, function (err, user) {
+                if (user != null && !err && validateUser(params.oldPassword, user.salt, user.password)) {
+                    var encryptedPassword = encryptPassword(params.newPassword, user.salt);
+                    userRepo.findOneAndUpdate(decoded, {password: encryptedPassword}, callback);
+                    callback();
                 } else {
-                    callback(new Error('The password you provided was wrong!'));
+                    if (err) {
+                        callback(err)
+                    } else {
+                        callback(new Error('The password you provided was wrong!'));
+                    }
                 }
-            }
+            });
         });
-    });
+    } else {
+        callback(new Error('The provided password is not valid.'));
+    }
 };
 
 exports.resetPassword = function (params, callback) {
@@ -129,14 +137,18 @@ exports.resetPassword = function (params, callback) {
 };
 
 exports.confirmReset = function (params, callback) {
-    userRepo.findUserByUuid(params.uuid, function (err, user) {
-        if (err) callback(err);
-        var encryptedPW = encryptPassword(params.newPassword, user.salt);
-        userRepo.findOneAndUpdate(user._id, {password: encryptedPW}, function (err, updatedUser) {
+    if(validator.validateChangedPassword(params.newPassword)) {
+        userRepo.findUserByUuid(params.uuid, function (err, user) {
             if (err) callback(err);
-            callback();
+            var encryptedPW = encryptPassword(params.newPassword, user.salt);
+            userRepo.findOneAndUpdate(user._id, {password: encryptedPW}, function (err, updatedUser) {
+                if (err) callback(err);
+                callback();
+            });
         });
-    });
+    } else {
+        callback(new Error('The provided password is not valid.'))
+    }
 };
 
 function filterUser(user) {

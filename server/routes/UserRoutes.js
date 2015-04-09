@@ -60,11 +60,13 @@ function getAllUsers(req, res, next) {
 }
 
 function updateUser(req, res, next) {
-    userService.updateUser(req.params, function(err, user) {
+    userService.updateUser(req.params, function(err, messages, user) {
         var result;
         if(err) {
             console.log(err);
             result = resultFactory.makeFailureResult('ERROR', err.message);
+        } else if (messages) {
+            result = resultFactory.makeFailureMultipleMessages(messages);
         } else {
             var userResult = resultFactory.makeUserResult(user);
             result = resultFactory.makeSuccessResult('User modified successfully.', userResult);
