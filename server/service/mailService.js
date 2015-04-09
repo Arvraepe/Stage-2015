@@ -32,3 +32,28 @@ exports.sendRecoveryMail = function (to, link, cb) {
         cb(null, info);
     });
 };
+
+exports.inviteCoworkers = function(to, link, cb) {
+    var mailOptions = {
+        from: 'noreply@collab.be',
+        to: to,
+        subject: 'Please join my team',
+        text: "A coworker has invited you to join his project!\n\n" +
+
+        "Please use the link below to register a new account.\n\n" +
+
+        link + "\n\n" +
+
+        "In the collaboration app you can work together on projects with your friends or coworkers.\n\n" +
+
+        "You can also create and manage your own projects for free! Start collaborating now."
+    };
+    transport.sendMail(mailOptions, function(err, info) {
+        if(err) cb(err);
+        cb(null, info);
+    });
+};
+
+function makeMailOptions(from, to, subject, text) {
+    return { from: from, to: to, subject: subject, text: text };
+}
