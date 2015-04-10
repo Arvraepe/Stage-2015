@@ -82,6 +82,8 @@ exports.upload = function (req, callback) {
         if (err) callback(err);
         userRepo.findUserById(decoded, function (err, user) {
             if (err) callback(err);
+            console.log(user);
+            //console.log(req.files.file);
             fileHandler.createFile(req.files.file, user.username, function(err, ext) {
                 if(err)callback(err);
                 userRepo.findOneAndUpdate(decoded, { imageExtension: ext}, function(err, user) {

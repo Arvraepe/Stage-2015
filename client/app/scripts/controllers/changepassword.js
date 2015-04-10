@@ -21,7 +21,7 @@ angular.module('stageprojectApp')
         userFactory.changePassword(password, function (data) {
           console.log(data);
         });
-        $window.location.href = '#/';
+        $window.location.href = '#/dashboard';
       }
 
 

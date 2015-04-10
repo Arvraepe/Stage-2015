@@ -4,13 +4,14 @@
 var fs = require('fs');
 
 exports.createFile = function(file, name, callback) {
+    console.log('geraakt em daar');
     fs.readFile(file.path, function (err, data) {
         /// If there's an error
         if(!name){
             callback(err);
         } else {
             var ext = file.name.split('.')[1];
-            var newPath = "./uploads/" + name + '.jpg';
+            var newPath = "./uploads/" + name + '.' + ext;
 
             /// write file to uploads folder
             fs.writeFile(newPath, data, function (err) {

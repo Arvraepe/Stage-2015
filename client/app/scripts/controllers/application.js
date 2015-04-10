@@ -29,6 +29,10 @@ angular.module('stageprojectApp')
         Session.setId(token);
       };
 
+      $scope.setAvatarForCurrentUser = function (file) {
+        $scope.currentUser.avatar = file;
+      };
+
       $scope.logout = function () {
         AuthService.logout();
         localStorageService.remove('userInfo');

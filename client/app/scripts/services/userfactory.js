@@ -148,7 +148,7 @@ angular.module('stageprojectApp')
       },
       getImageForCurrentUser: function (username, callback) {
         requestFactory.sendRequest({
-          path: 'user/uploads/' + username + '.jpg',
+          path: 'user/uploads/' + username,
           method: 'get',
           success: function (response) {
             callback(response);

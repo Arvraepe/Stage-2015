@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc directive
- * @name clientApp.directive:uniqueUsername
+ * @name stageprojectApp.directive:uniqueEmail
  * @description
- * # uniqueUsername
+ * # uniqueEmail
  */
 angular.module('stageprojectApp')
-  .directive('uniqueUsername', function () {
+  .directive('uniqueEmail', function () {
     return {
       restrict: 'A',
       require: 'ngModel',
@@ -18,18 +18,13 @@ angular.module('stageprojectApp')
           ngModel.$loading = true;
           inputNgElement = angular.element(element);
           inputValue = inputNgElement.val();
-          angular.forEach(scope.allUsernames, function (username) {
-            if (username == inputValue) {
+          angular.forEach(scope.allEmails, function (email) {
+            if (email == inputValue) {
               ngModel.$setValidity('unique', false);
-
             }
           });
           ngModel.$loading = false;
-
-
-        });
+        })
       }
     };
   });
-
-

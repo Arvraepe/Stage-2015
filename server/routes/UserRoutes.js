@@ -164,8 +164,10 @@ function getImage(req, res, next) {
         if(err) {
             res.send(resultFactory.makeFailureResult('ERROR', err.message));
         } else {
+            console.log('ici');
             res.writeHead(200, {'Content-Type': 'image/' + ext});
             res.end(base64Str);
         }
     });
+    next();
 }

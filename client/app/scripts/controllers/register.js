@@ -12,6 +12,7 @@ angular.module('stageprojectApp')
     $scope.user = {};
     $scope.confirmpassword = "";
     $scope.allUsernames = [];
+    $scope.allEmails = [];
 
     $scope.gekregenVanApp = auth;
 
@@ -19,8 +20,8 @@ angular.module('stageprojectApp')
       userFactory.getUsernames(function (userList) {
         angular.forEach(userList, function (uname) {
           $scope.allUsernames.push(uname.username);
+          $scope.allEmails.push(uname.email);
         });
-        console.log($scope.allUsernames);
         //$scope.allUsernames = userList.username;
       })
     }

@@ -90,7 +90,7 @@
       <div class="collapse navbar-collapse" id="js-navbar-collapse">
 
         <ul class="nav navbar-nav">
-          <li><a href="#/"><i class="fa fa-home"></i> Home</a></li>
+          <li ng-if="!isAuthorized(userRoles.user)"><a href="#/"><i class="fa fa-home"></i> Home</a></li>
           <li ng-if="!isAuthorized(userRoles.user)"><a ng-href="#/register"><i class="fa fa-user-plus"></i> Register</a>
           </li>
           <li ng-if="isAuthorized(userRoles.user)"><a ng-href="#/dashboard"><i class="fa fa-tachometer"></i>
@@ -179,6 +179,7 @@
 <script src="scripts/controllers/invitecoworkers.js"></script>
 <script src="scripts/controllers/resetpassword.js"></script>
 <script src="scripts/controllers/user/recover.js"></script>
+<script src="scripts/directives/uniqueemail.js"></script>
 <!-- endbuild -->
 </body>
 </html>

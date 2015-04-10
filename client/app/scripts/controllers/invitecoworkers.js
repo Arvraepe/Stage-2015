@@ -9,7 +9,9 @@
  */
 angular.module('stageprojectApp')
   .controller('InvitecoworkersCtrl', ['$scope', 'userFactory', function ($scope, userFactory) {
-    $scope.coworkersToInvite = [];
+    $scope.coworkersToInvite = [{
+      email: ''
+    }];
 
     $scope.invite = function (coworkersToInvite) {
       userFactory.inviteCoworkers(coworkersToInvite)

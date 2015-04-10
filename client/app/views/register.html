@@ -31,12 +31,14 @@
       <div class="col-md-5">
         <input type="email" class="form-control" name="emailField" ng-model="user.email" id="email"
                ng-pattern="/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/"
-               placeholder="Enter a valid email"
+               placeholder="Enter a valid email" unique-email=""
                required>
 
         <p class="help-block" ng-if="registerForm.emailField.$error.required">Email is required.</p>
 
         <p class="help-block" ng-if="registerForm.emailField.$error.pattern">Enter a valid email.</p>
+
+        <p class="help-block" ng-if="registerForm.emailField.$error.unique">This email has been registered already.</p>
       </div>
     </div>
     <div class="form-group" show-errors="{showSuccess: true}">
@@ -45,6 +47,8 @@
         <input type="text" class="form-control" name="usernameField" unique-username="" ng-model="user.username"
                id="username"
                placeholder="Username needs to be unique" required>
+
+        <p class="help-block" ng-if="registerForm.usernameField.$error.required">Username is required.</p>
 
         <p class="help-block" ng-if="registerForm.usernameField.$error.unique">This username is already taken.</p>
       </div>

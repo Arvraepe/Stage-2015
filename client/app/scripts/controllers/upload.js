@@ -8,7 +8,8 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('UploadCtrl', ['$scope', '$upload', 'Session', 'loginFactory', 'notificationFactory', function ($scope, $upload, Session, loginFactory, notificationFactory) {
+  .controller('UploadCtrl', ['$scope', '$upload', 'Session', 'loginFactory', 'notificationFactory',
+    'userFactory', function ($scope, $upload, Session, loginFactory, notificationFactory, userFactory) {
     $scope.$watch('files', function () {
       $scope.upload($scope.files);
     });
@@ -32,6 +33,14 @@ angular.module('stageprojectApp')
             console.log('file upload gelukt');
             console.log(data);
             console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
+            userFactory.getImageForCurrentUser($scope.currentUser.username, function (file) {
+              if (file.code === 'InternalError') {
+
+              }
+              else {
+                $scope.setAvatarForCurrentUser(file);
+              }
+            });
 
           });
         }

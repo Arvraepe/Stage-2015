@@ -16,11 +16,10 @@
 
       <div class="col-md-6">
         <input type="text" class="form-control" ng-minlength="2" ng-model="userinfotochange.firstname" id="firstname"
-               placeholder="New first name" name="firstnameField" required>
+               placeholder="{{currentUser.firstname}}" name="firstnameField" required>
 
         <p class="help-block" ng-if="updateUserForm.firstnameField.$error.minlength">A name needs to have at least 2
           characters.</p>
-
         <p class="help-block" ng-if="updateUserForm.firstnameField.$error.required">First name is required.</p>
       </div>
     </div>
@@ -29,11 +28,10 @@
 
       <div class="col-md-6">
         <input type="text" class="form-control" ng-minlength="2" ng-model="userinfotochange.lastname" id="lastname"
-               placeholder="New last name" name="lastnameField" required>
+               placeholder="{{currentUser.lastname}}" name="lastnameField" required>
 
         <p class="help-block" ng-if="updateUserForm.lastnameField.$error.minlength">A name needs to have at least 2
           characters.</p>
-
         <p class="help-block" ng-if="updateUserForm.lastnameField.$error.required">Last name is required.</p>
 
       </div>

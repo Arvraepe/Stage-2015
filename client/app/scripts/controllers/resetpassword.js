@@ -8,13 +8,14 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('ResetpasswordCtrl', ['$scope', 'userFactory', function ($scope, userFactory) {
+  .controller('ResetpasswordCtrl', ['$scope', 'userFactory', '$window', function ($scope, userFactory, $window) {
     $scope.user = {
       email: ''
     };
 
     $scope.resetPassword = function (user) {
       userFactory.resetPassword(user);
+      $window.location.href = '#/';
     }
 
   }]);

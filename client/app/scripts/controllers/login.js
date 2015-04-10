@@ -32,15 +32,7 @@ angular.module('stageprojectApp')
           //loginFactory.setUser(user.data.user);
         }, function (user) {
           $rootScope.$broadcast(AUTHEVENTS.loginFailed);
-          notificationService.notify({
-            title: 'Login failed.',
-            title_escape: false,
-            text: user.messages.message,
-            text_escape: false,
-            styling: "bootstrap3",
-            type: "error",
-            icon: true
-          });
+
         });
 
 

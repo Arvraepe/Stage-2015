@@ -8,7 +8,7 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('UserRecoverCtrl', ['$scope', 'userFactory', '$routeParams', function ($scope, userFactory, $routeParams) {
+  .controller('UserRecoverCtrl', ['$scope', 'userFactory', '$routeParams', '$window', function ($scope, userFactory, $routeParams, $window) {
     $scope.recover = {
       newPassword: '',
       uuid: $routeParams.uuid
@@ -16,5 +16,6 @@ angular.module('stageprojectApp')
     $scope.confirmPassword = '';
     $scope.recoverPassword = function (recover) {
       userFactory.recoverPassword(recover);
+      $window.location.href = '#/';
     }
   }]);
