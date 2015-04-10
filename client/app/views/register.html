@@ -31,7 +31,7 @@
       <div class="col-md-5">
         <input type="email" class="form-control" name="emailField" ng-model="user.email" id="email"
                ng-pattern="/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i"
-               placeholder="Enter a valid email"
+               placeholder="Enter a valid email" unique-email=""
                required>
 
         <p class="help-block" ng-if="registerForm.emailField.$error.required">Email is required.</p>

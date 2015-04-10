@@ -1,15 +1,10 @@
 <div class="col-md-12">
   <div class="col-md-2"></div>
-  <!--
-    <h2>Update profile settings</h2>
-  -->
-  <!--
-    <div class="col-md-2"></div>
-  -->
+
 
   <form class="col-md-8 form-horizontal" name="updateUserForm"
-        ng-submit="updateUserForm.$valid && updateUser(userinfotochange)" novalidate>
-    <h2 class="text-center">Update profile settings</h2>
+        ng-submit="updateUser(userinfotochange)" novalidate>
+    <h2 class="text-center">Update profile</h2>
 
     <div class="form-group" show-errors="{showSuccess: true}">
       <label for="firstname" class="col-md-4 control-label pull-left text-left">First name</label>
@@ -20,6 +15,7 @@
 
         <p class="help-block" ng-if="updateUserForm.firstnameField.$error.minlength">A name needs to have at least 2
           characters.</p>
+
         <p class="help-block" ng-if="updateUserForm.firstnameField.$error.required">First name is required.</p>
       </div>
     </div>
@@ -32,13 +28,88 @@
 
         <p class="help-block" ng-if="updateUserForm.lastnameField.$error.minlength">A name needs to have at least 2
           characters.</p>
+
         <p class="help-block" ng-if="updateUserForm.lastnameField.$error.required">Last name is required.</p>
 
       </div>
     </div>
+    <div class="form-group" show-errors="{showSuccess: true}">
+      <label for="email" class="col-md-4 control-label">Email</label>
+
+      <div class="col-md-6">
+        <input type="email" class="form-control"
+               ng-pattern="/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i"
+               ng-model="userinfotochange.email" id="email"
+               placeholder="{{currentUser.email}}" name="emailField" required>
+
+        <p class="help-block" ng-if="updateUserForm.emailField.$error.pattern">Enter a valid email.</p>
+
+        <p class="help-block" ng-if="updateUserForm.emailField.$error.required">Last name is required.</p>
+
+      </div>
+    </div>
+    <hr/>
+
+    <div class="well wellPaddingVertical">
+      <ng-form name="passwordForm">
+        <div class="form-group toBeValidated" show-errors="{showSuccess: true}">
+          <label for="oldpassword" class="col-md-4 control-label">Old password</label>
+
+          <div class="col-md-6">
+            <input type="password" class="form-control toBeValidated"
+                   ng-model="userinfotochange.oldPassword"
+                   id="oldpassword"
+                   placeholder="Old password" name="oldpasswordField" ng-pattern="/^[a-zA-Z]\w{7,20}$/">
+
+            <p class="help-block" ng-if="passwordForm.oldpasswordField.$error.pattern">A password needs to have at
+              least 8
+              characters. We do not support special characters except for _. </p>
+
+            <p class="help-block" ng-if="passwordForm.oldpasswordField.$error.required">Last name is required.</p>
+
+          </div>
+        </div>
+        <div class="form-group" show-errors="{showSuccess: true}">
+          <label for="newpasword" class="col-md-4 control-label">New password</label>
+
+          <div class="col-md-6">
+            <input type="password" class="form-control" ng-minlength="2" ng-model="userinfotochange.newPassword"
+                   id="newpasword"
+                   placeholder="New password" name="newpasswordField" ng-pattern="/^[a-zA-Z]\w{7,20}$/">
+
+            <p class="help-block" ng-if="passwordForm.newpasswordField.$error.pattern">A password needs to have at
+              least 8
+              characters. We do not support special characters except for _.</p>
+
+            <p class="help-block" ng-if="passwordForm.newpasswordField.$error.required">New password is required.</p>
+
+          </div>
+        </div>
+        <div class="form-group" show-errors="{showSuccess: true}">
+          <label for="confirmpassword" class="col-md-4 control-label">Confirm password</label>
+
+          <div class="col-md-6">
+            <input type="password" class="form-control" ng-minlength="2" ng-model="confirmpassword"
+                   id="confirmpassword" match="userinfotochange.newPassword"
+                   placeholder="Confirm new password" name="confirmPasswordField" ng-pattern="/^[a-zA-Z]\w{7,20}$/">
+
+            <p class="help-block" ng-if="passwordForm.confirmPasswordField.$error.pattern">A password needs to have at
+              least 8
+              characters. We do not support special characters except for _. </p>
+
+            <p class="help-block" ng-if="passwordForm.confirmPasswordField.$error.match">Password fields do not
+              match</p>
+
+          </div>
+        </div>
+      </ng-form>
+
+
+    </div>
     <div class="form-group">
       <div class="col-md-offset-4 col-md-5">
-        <button type="submit" class="btn btn-primary" value="Update user"><i class="fa fa-pencil"></i> Update!</button>
+        <button type="submit" class="btn btn-primary" value="Update user"><i class="fa fa-pencil"></i> Update!
+        </button>
       </div>
     </div>
     <div ng-controller="UploadCtrl" class="form-group">
@@ -46,6 +117,7 @@
         <div class="btn btn-success" ng-file-select ng-model="files"><i class="fa fa-upload"></i> Upload avatar</div>
       </div>
     </div>
+
   </form>
   <div class="col-md-2"></div>
 
