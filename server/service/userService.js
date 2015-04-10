@@ -71,7 +71,7 @@ exports.updateUser = function (params, calback) {
                 userRepo.findUserById(decoded, function(err, user) {
                     if(err) calback(err);
                     if(validateUser(params.oldPassword, user.salt, user.password)) {
-                        params.password = params.newPassword;
+                        params.password = encryptPassword(params.newPassword, user.salt);
                         userRepo.findOneAndUpdate(decoded, params, function(err, user) {
                             if (err) calback(err);
                             var filteredUser = filterUser(user);
