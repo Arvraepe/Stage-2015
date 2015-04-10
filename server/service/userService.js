@@ -65,11 +65,28 @@ exports.updateUser = function (params, calback) {
     if(messages.length === undefined) {
         authService.verifyToken(params.token, function (err, decoded) {
             if (err) calback(err);
-            userRepo.findOneAndUpdate(decoded, params, function (err, user) {
-                if (err) calback(err);
-                var filteredUser = filterUser(user);
-                calback(null, null, filteredUser);
-            })
+            if(params.newPassword != undefined) {
+                params.oldPassword = params.oldPassword || '';
+                userRepo.findUserById(decoded, function(err, user) {
+                    if(err) calback(err);
+                    if(validateUser(params.oldPassword, user.salt, user.password)) {
+                        params.password = params.newPassword;
+                        userRepo.findOneAndUpdate(decoded, params, function(err, user) {
+                            if (err) calback(err);
+                            var filteredUser = filterUser(user);
+                            calback(null, null, filteredUser);
+                        });
+                    } else {
+                        calback(new Error('Your password was incorrect, no changes have been made.'));
+                    }
+                });
+            } else {
+                userRepo.findOneAndUpdate(decoded, params, function (err, user) {
+                    if (err) calback(err);
+                    var filteredUser = filterUser(user);
+                    calback(null, null, filteredUser);
+                });
+            }
         })
     } else {
         calback(null, messages);
@@ -82,8 +99,6 @@ exports.upload = function (req, callback) {
         if (err) callback(err);
         userRepo.findUserById(decoded, function (err, user) {
             if (err) callback(err);
-            console.log(user);
-            //console.log(req.files.file);
             fileHandler.createFile(req.files.file, user.username, function(err, ext) {
                 if(err)callback(err);
                 userRepo.findOneAndUpdate(decoded, { imageExtension: ext}, function(err, user) {

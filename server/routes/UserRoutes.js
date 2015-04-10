@@ -48,18 +48,18 @@ function login(req, res, next) {
     next();
 }
 
-function getAllUsers(req, res, next) {
-    userService.getAllUsers(function(err, users) {
-        var result;
-        if(err) {
-            result = resultFactory.makeFailureResult('ERROR', err.message);
-        } else {
-            result = resultFactory.makeSuccessResult(users.length + ' users fetched.', resultFactory.makeUsersResult(users));
-        }
-        res.send(result);
-    });
-    next();
-}
+//function getAllUsers(req, res, next) {
+//    userService.getAllUsers(function(err, users) {
+//        var result;
+//        if(err) {
+//            result = resultFactory.makeFailureResult('ERROR', err.message);
+//        } else {
+//            result = resultFactory.makeSuccessResult(users.length + ' users fetched.', resultFactory.makeUsersResult(users));
+//        }
+//        res.send(result);
+//    });
+//    next();
+//}
 
 function updateUser(req, res, next) {
     userService.updateUser(req.params, function(err, messages, user) {
@@ -144,8 +144,6 @@ function inviteCoWorkers(req, res, next) {
         emails += entry.email +', ';
     });
     emails = emails.replace(/,\s*$/, "");
-    var name ='';
-    userService.getUserFromToken
     mailService.inviteCoworkers(emails, config.domain + config.registerPath, function(err, info) {
         var result;
         if(err) {
@@ -181,6 +179,5 @@ function userExists(req, res, next) {
         }
         res.send(result);
     });
-    next();
     next();
 }
