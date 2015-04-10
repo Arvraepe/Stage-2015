@@ -44,7 +44,7 @@
 
         <p class="help-block" ng-if="updateUserForm.emailField.$error.pattern">Enter a valid email.</p>
 
-        <p class="help-block" ng-if="updateUserForm.emailField.$error.required">Last name is required.</p>
+        <p class="help-block" ng-if="updateUserForm.emailField.$error.required">Email is required.</p>
 
       </div>
     </div>
@@ -59,7 +59,7 @@
             <input type="password" class="form-control toBeValidated"
                    ng-model="userinfotochange.oldPassword"
                    id="oldpassword"
-                   placeholder="Old password" name="oldpasswordField" ng-pattern="/^[a-zA-Z]\w{7,20}$/">
+                   placeholder="Old password" name="oldpasswordField" ng-pattern="/^[a-zA-Z]\w{7,20}$/" required>
 
             <p class="help-block" ng-if="passwordForm.oldpasswordField.$error.pattern">A password needs to have at
               least 8
@@ -75,7 +75,7 @@
           <div class="col-md-6">
             <input type="password" class="form-control" ng-minlength="2" ng-model="userinfotochange.newPassword"
                    id="newpasword"
-                   placeholder="New password" name="newpasswordField" ng-pattern="/^[a-zA-Z]\w{7,20}$/">
+                   placeholder="New password" name="newpasswordField" ng-pattern="/^[a-zA-Z]\w{7,20}$/" required>
 
             <p class="help-block" ng-if="passwordForm.newpasswordField.$error.pattern">A password needs to have at
               least 8
@@ -91,7 +91,7 @@
           <div class="col-md-6">
             <input type="password" class="form-control" ng-minlength="2" ng-model="confirmpassword"
                    id="confirmpassword" match="userinfotochange.newPassword"
-                   placeholder="Confirm new password" name="confirmPasswordField" ng-pattern="/^[a-zA-Z]\w{7,20}$/">
+                   placeholder="Confirm new password" name="confirmPasswordField" ng-pattern="/^[a-zA-Z]\w{7,20}$/" required>
 
             <p class="help-block" ng-if="passwordForm.confirmPasswordField.$error.pattern">A password needs to have at
               least 8

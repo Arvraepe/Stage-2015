@@ -9,7 +9,7 @@
  */
 angular.module('stageprojectApp')
   .controller('UpdateuserCtrl', ['$scope', 'userFactory', 'Session', '$window', function ($scope, userFactory, Session, $window) {
-    $scope.userinfotochange = $scope.currentUser;
+    $scope.userinfotochange = angular.copy($scope.currentUser);
     $scope.confirmpassword= '';
     var sId = Session.getId();
 
@@ -39,8 +39,12 @@ angular.module('stageprojectApp')
         $scope.copyOfUserInfoToChange.oldPassword = userinfotochange.oldPassword;
         $scope.copyOfUserInfoToChange.newPassword = userinfotochange.newPassword;
         userFactory.updateUser($scope.copyOfUserInfoToChange, function (data) {
-          $scope.setCurrentUser(data.user, sId);
-          $window.location.href = '#/dashboard';
+          console.log($scope.currentUser);
+          if(data!=undefined){
+            $scope.setCurrentUser(data.user, sId);
+            $window.location.href = '#/dashboard';
+          }
+
         });
       }
     }

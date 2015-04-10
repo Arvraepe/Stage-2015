@@ -8,13 +8,15 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('RegisterCtrl', ['$scope', 'userFactory', '$window', 'notificationService', function ($scope, userFactory, $window, notificationService, auth) {
+  .controller('RegisterCtrl', ['$scope','$rootScope' ,'userFactory', '$window', 'notificationService', 'AuthService', 'AUTHEVENTS'
+    ,function ($scope,$rootScope ,userFactory, $window, notificationService, AuthService, AUTHEVENTS) {
     $scope.user = {};
     $scope.confirmpassword = "";
     $scope.allUsernames = [];
     $scope.allEmails = [];
 
-    $scope.gekregenVanApp = auth;
+
+
 
     function getAllUsernames() {
       userFactory.getUsernames(function (userList) {
@@ -22,7 +24,6 @@ angular.module('stageprojectApp')
           $scope.allUsernames.push(uname.username);
           $scope.allEmails.push(uname.email);
         });
-        //$scope.allUsernames = userList.username;
       })
     }
 
@@ -31,13 +32,17 @@ angular.module('stageprojectApp')
       $scope.$broadcast('show-errors-check-validity');
 
       if (angular.equals($scope.confirmpassword, $scope.user.password)) {
-        userFactory.registerUser($scope.user);
+        userFactory.registerUser($scope.user, function(credentials){
+          AuthService.login(credentials, function (user){
+            $rootScope.$broadcast(AUTHEVENTS.loginSuccess);
+            $scope.setCurrentUser(user.data.user, user.data.token);
+          })
+        });
         $window.location.href = '#/';
       }
-      if ($scope.registerForm.$valid) {
-        $scope.reset();
-      }
+
     };
+
 
     $scope.reset = function () {
       $scope.$broadcast('show-errors-reset');
@@ -49,6 +54,6 @@ angular.module('stageprojectApp')
         username: ''
       }
     };
-    getAllUsernames();
+    //getAllUsernames();
 
   }]);

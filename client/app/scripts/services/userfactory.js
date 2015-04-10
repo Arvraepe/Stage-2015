@@ -8,15 +8,21 @@
  * Factory in the stageprojectApp.
  */
 angular.module('stageprojectApp')
-  .factory('userFactory', ['requestFactory', 'notificationFactory', 'notificationService', function (requestFactory, notificationFactory, notificationService) {
+  .factory('userFactory', ['requestFactory', 'notificationFactory', 'notificationService',function (requestFactory, notificationFactory, notificationService) {
 
     return {
-      registerUser: function (user) {
+      registerUser: function (user, callback) {
         requestFactory.sendRequest({
           path: 'register',
           method: 'POST',
           data: user,
           success: function (response) {
+            var credentials = {
+              username: user.username,
+              password: user.password
+            };
+            callback(credentials);
+            //userFactory.loginUser(credentials);
             notificationFactory.createNotification(response);
           },
           error: function (response) {
@@ -32,7 +38,9 @@ angular.module('stageprojectApp')
           method: 'POST',
           data: credentials,
           success: function (response) {
-            notificationFactory.createNotification(response);
+            if(!response.success){
+              notificationFactory.createNotification(response);
+            }
             if (response.success) {
               createSession(response, callback);
             }
