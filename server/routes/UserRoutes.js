@@ -11,7 +11,7 @@ exports.registerRoutes = function (app) {
     app.get('/user/exists', userExists);
     app.put('user/updateuser', updateUser);
     app.post('/user/uploadavatar', uploadAvatar);
-    app.put('/user/changepassword', changePassword);
+    //app.put('/user/changepassword', changePassword);
     app.post('/user/resetpassword', resetPassword);
     app.get('/user/uploads/:username', getImage);
     app.put('/user/resetpassword/confirm', confirmReset);
@@ -90,18 +90,18 @@ function uploadAvatar(req, res, next) {
     next();
 }
 
-function changePassword(req, res, next) {
-    userService.changePassword(req.params, function(err) {
-        var result;
-        if (err) {
-            result = resultFactory.makeFailureResult('ERROR', err.message);
-        } else {
-            result = resultFactory.makeSuccessResult('You can now log in with your new password.');
-        }
-        res.send(result);
-    });
-    next();
-}
+//function changePassword(req, res, next) {
+//    userService.changePassword(req.params, function(err) {
+//        var result;
+//        if (err) {
+//            result = resultFactory.makeFailureResult('ERROR', err.message);
+//        } else {
+//            result = resultFactory.makeSuccessResult('You can now log in with your new password.');
+//        }
+//        res.send(result);
+//    });
+//    next();
+//}
 
 function resetPassword(req, res, next) {
     userService.resetPassword(req.params, function(err, email, uuid) {
@@ -139,19 +139,22 @@ function confirmReset(req, res, next) {
 }
 
 function inviteCoWorkers(req, res, next) {
-    var emails = '';
-    req.params.forEach(function (entry) {
-        emails += entry.email +', ';
-    });
-    emails = emails.replace(/,\s*$/, "");
-    mailService.inviteCoworkers(emails, config.domain + config.registerPath, function(err, info) {
-        var result;
-        if(err) {
-            result = resultFactory.makeFailureResult('ERROR', 'Something went wrong while sending out the mails.');
-        } else {
-            result = resultFactory.makeSuccessResult('Emails have been sent.');
-        }
-        res.send(result);
+    userService.confirmEmails(req.params, function(err, vEmails, number) {
+        mailService.inviteCoworkers(vEmails, config.domain + config.registerPath, function (err, info) {
+            var result;
+            if (err) {
+                result = resultFactory.makeFailureResult('ERROR', 'Something went wrong while sending out the mails.');
+            } else {
+                var message;
+                if(number === 1) {
+                    message = '1 email has been sent.';
+                } else {
+                    message = number + ' emails have been sent.';
+                }
+                result = resultFactory.makeSuccessResult(message);
+            }
+            res.send(result);
+        });
     });
     next();
 }

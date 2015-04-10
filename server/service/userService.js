@@ -9,6 +9,7 @@ var _ = require('underscore');
 var fileHandler = require('./../handler/fileHandler');
 var uuid = require('node-uuid');
 var validator = require('./../validator/userValidator');
+var async = require('async');
 
 exports.registerUser = function (user, callback) {
     var messages = validator.validateRegistration(user);
@@ -120,28 +121,28 @@ exports.getUserFromToken = function(token, callback) {
     })
 };
 
-exports.changePassword = function (params, callback) {
-    if(validator.validateChangedPassword(params.password)) {
-        authService.verifyToken(params.token, function (err, decoded) {
-            if (err) callback(err);
-            userRepo.findUserById(decoded, function (err, user) {
-                if (user != null && !err && validateUser(params.oldPassword, user.salt, user.password)) {
-                    var encryptedPassword = encryptPassword(params.newPassword, user.salt);
-                    userRepo.findOneAndUpdate(decoded, {password: encryptedPassword}, callback);
-                    callback();
-                } else {
-                    if (err) {
-                        callback(err)
-                    } else {
-                        callback(new Error('The password you provided was wrong!'));
-                    }
-                }
-            });
-        });
-    } else {
-        callback(new Error('The provided password is not valid.'));
-    }
-};
+//exports.changePassword = function (params, callback) {
+//    if(validator.validateChangedPassword(params.password)) {
+//        authService.verifyToken(params.token, function (err, decoded) {
+//            if (err) callback(err);
+//            userRepo.findUserById(decoded, function (err, user) {
+//                if (user != null && !err && validateUser(params.oldPassword, user.salt, user.password)) {
+//                    var encryptedPassword = encryptPassword(params.newPassword, user.salt);
+//                    userRepo.findOneAndUpdate(decoded, {password: encryptedPassword}, callback);
+//                    callback();
+//                } else {
+//                    if (err) {
+//                        callback(err)
+//                    } else {
+//                        callback(new Error('The password you provided was wrong!'));
+//                    }
+//                }
+//            });
+//        });
+//    } else {
+//        callback(new Error('The provided password is not valid.'));
+//    }
+//};
 
 exports.resetPassword = function (params, callback) {
     userRepo.findUserByEmail(params.email, function (err, user) {
@@ -206,6 +207,34 @@ exports.userExists = function(params, callback) {
         userRepo.userExists({email: email}, callback);
     }
 };
+
+exports.confirmEmails = function(emails, callback) {
+    var vEmails = '';
+    var number = 0;
+    var asyncTasks = [];
+    emails.forEach(function(entry) {
+        asyncTasks.push(function (cb) {
+            userRepo.userExists(entry, cb);
+        });
+    });
+    async.parallel(asyncTasks, function(err, result) {
+        var counter = 0;
+        result.forEach(function (exists) {
+
+            console.log(exists);
+            console.log(emails[counter]);
+            if(!exists) {
+                vEmails += emails[counter].email + ', ';
+                number++;
+            }
+            counter++;
+        });
+        vEmails = vEmails.replace(/,\s*$/, "");
+        console.log(vEmails);
+        callback(null, vEmails, number);
+    });
+};
+
 
 function filterUser(user) {
     return _.omit(user, ['password', 'salt', '__v', '_id', 'recovery']);
