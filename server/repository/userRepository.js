@@ -48,8 +48,8 @@ exports.emailExists = function(email, cb) {
     })
 };
 
-exports.userExists = function (username, cb) {
-    User.find({username: username}, function (err, users) {
+exports.userExists = function (condition, cb) {
+    User.find(condition, function (err, users) {
         if (err) cb(err);
         cb(null, users.length >= 1);
     });
@@ -79,12 +79,12 @@ exports.findOneAndUpdate = function(id, update, cb) {
     });
 };
 
-exports.getUsers = function(cb) {
-    User.find().lean().exec(function (err, users) {
-        if(err) cb(err);
-        cb(null, users);
-    })
-};
+//exports.getUsers = function(cb) {
+//    User.find().lean().exec(function (err, users) {
+//        if(err) cb(err);
+//        cb(null, users);
+//    })
+//};
 
 exports.findUserByEmail = function(email, cb) {
     User.findOne({email : email}).lean().exec(function (err, user) {

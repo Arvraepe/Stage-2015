@@ -30,8 +30,8 @@
       <label for="email" class="col-md-3 control-label">Email</label>
       <div class="col-md-5">
         <input type="email" class="form-control" name="emailField" ng-model="user.email" id="email"
-               ng-pattern="/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/"
-               placeholder="Enter a valid email" unique-email=""
+               ng-pattern="/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i"
+               placeholder="Enter a valid email"
                required>
 
         <p class="help-block" ng-if="registerForm.emailField.$error.required">Email is required.</p>

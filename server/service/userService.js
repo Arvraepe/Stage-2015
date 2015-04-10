@@ -13,7 +13,7 @@ var validator = require('./../validator/userValidator');
 exports.registerUser = function (user, callback) {
     var messages = validator.validateRegistration(user);
     if (messages.length === 0) {
-        userRepo.userExists(user.username, function (err, exists) {
+        userRepo.userExists({username: user.username}, function (err, exists) {
             if (err) callback(err);
             if (exists) {
                 callback(new Error('Username already exists'));
@@ -52,13 +52,13 @@ exports.loginUser = function (credentials, callback) {
     });
 };
 
-exports.getAllUsers = function (callback) {
-    userRepo.getUsers(function (err, users) {
-        if (err) callback(err);
-        var filteredUsers = filterUsers(users);
-        callback(null, filteredUsers);
-    });
-};
+//exports.getAllUsers = function (callback) {
+//    userRepo.getUsers(function (err, users) {
+//        if (err) callback(err);
+//        var filteredUsers = filterUsers(users);
+//        callback(null, filteredUsers);
+//    });
+//};
 
 exports.updateUser = function (params, calback) {
     var messages = validator.validateUpdate(params);
@@ -178,6 +178,18 @@ exports.getImageExt = function(username, callback) {
             callback(null, base64str);
         });
     });
+};
+
+exports.userExists = function(params, callback) {
+    console.log(params);
+    var username = params.username || '';
+    var email = params.email || '';
+    if(username.length > 2) {
+        userRepo.userExists({username: username}, callback);
+    }
+    if(email.length > 5) {
+        userRepo.userExists({email: email}, callback);
+    }
 };
 
 function filterUser(user) {

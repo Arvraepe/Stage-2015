@@ -8,7 +8,7 @@ exports.registerRoutes = function (app) {
 
     app.post('/register', register);
     app.post('/login', login);
-    app.get('/user/getallusers', getAllUsers);
+    app.get('/user/exists', userExists);
     app.put('user/updateuser', updateUser);
     app.post('/user/uploadavatar', uploadAvatar);
     app.put('/user/changepassword', changePassword);
@@ -164,10 +164,23 @@ function getImage(req, res, next) {
         if(err) {
             res.send(resultFactory.makeFailureResult('ERROR', err.message));
         } else {
-            console.log('ici');
             res.writeHead(200, {'Content-Type': 'image/' + ext});
             res.end(base64Str);
         }
     });
+    next();
+}
+
+function userExists(req, res, next) {
+    userService.userExists(req.params, function(err, exists) {
+        var result;
+        if(err) {
+            result = resultFactory.makeFailureResult('ERROR', err.message);
+        } else {
+            result = resultFactory.makeSuccessResult(null, {exists: exists});
+        }
+        res.send(result);
+    });
+    next();
     next();
 }
