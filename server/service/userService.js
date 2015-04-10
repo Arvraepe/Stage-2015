@@ -160,7 +160,7 @@ exports.resetPassword = function (params, callback) {
             if(user.recovery.date < new Date()) {
                 user.recovery = undefined;
             } else {
-                callback(new Error('A password reset has already been requested.'));
+                callback(null, user.email, user.recovery.uuid);
                 return;
             }
         }
