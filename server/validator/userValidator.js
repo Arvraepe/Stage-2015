@@ -17,7 +17,16 @@ exports.validateRegistration = function(user) {
 };
 
 exports.validateUpdate = function(params) {
-    return validateName(params.firstname, params.lastname)
+    var messages =  validateName(params.firstname, params.lastname) || {};
+    if(!validateEmail(params.email)) {
+        messages.push(createMessage('email'));
+    }
+    if(params.newPassword != undefined) {
+        if(!validatePassword(params.newPassword)) {
+            messages.push(createMessage('password'));
+        }
+    }
+    return messages;
 };
 
 exports.validateChangedPassword = function(password) {
