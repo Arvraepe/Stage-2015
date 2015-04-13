@@ -39,7 +39,7 @@ function login(req, res, next) {
         if(err) {
             result = resultFactory.makeFailureResult('ERROR', err.message);
         } else {
-            var data = resultFactory.makeUserLoginResult(user);
+            var data = resultFactory.makeUserResult(user);
             data.token = token;
             result = resultFactory.makeSuccessResult('User logged in successfully.', data);
         }

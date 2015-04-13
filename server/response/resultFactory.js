@@ -35,18 +35,6 @@ exports.makeFailureMultipleMessages = function (messages) {
 exports.makeUserResult = function makeUserResult(user) {
     var userResult = {};
     userResult.user = user;
+    userResult.user.role = 'user';
     return userResult;
-};
-
-exports.makeUsersResult = function (users) {
-    var usersResult = {};
-    usersResult.users = users;
-    return usersResult;
-};
-
-exports.makeUserLoginResult = function (user) {
-    var result = {};
-    result.user = user;
-    result.user.role = 'user';
-    return result;
 };
