@@ -130,7 +130,7 @@ function confirmReset(req, res, next) {
         if(err) {
             result = resultFactory.makeFailureResult('ERROR', err.message);
         } else {
-            result = resultFactory.makeSuccessResult('You can now log in using your new password.', user);
+            result = resultFactory.makeSuccessResult('You can now log in using your new password.', resultFactory.makeUserResult(user));
         }
         res.send(result);
     });

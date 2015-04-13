@@ -41,13 +41,6 @@ exports.registerUser = function (user, callback) {
     });
 };
 
-exports.emailExists = function(email, cb) {
-    User.find({email: email}, function(err, users) {
-        if(err) cb(err);
-        cb(null, users.length >= 1);
-    })
-};
-
 exports.userExists = function (condition, cb) {
     User.find(condition, function (err, users) {
         if (err) cb(err);

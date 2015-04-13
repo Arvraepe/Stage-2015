@@ -17,7 +17,7 @@ app.use(restify.queryParser());
 }));
  */
 app.get(/.public/, restify.serveStatic({
-directory: 'public',
+directory: 'upload',
  default: 'profilepicture.jpg'
 }));
 /*

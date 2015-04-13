@@ -19,7 +19,7 @@ exports.registerUser = function (user, callback) {
             if (exists) {
                 callback(new Error('Username already exists'));
             } else {
-                userRepo.emailExists(user.email, function (err, emailExists) {
+                userRepo.userExists({email : user.email}, function (err, emailExists) {
                     if (err) callback(err);
                     if (emailExists) callback(new Error('A user has already registered using this email.'));
                     else {
@@ -63,31 +63,37 @@ exports.loginUser = function (credentials, callback) {
 
 exports.updateUser = function (params, calback) {
     var messages = validator.validateUpdate(params);
-    if(messages.length === undefined) {
+    if (messages.length === undefined) {
         authService.verifyToken(params.token, function (err, decoded) {
             if (err) calback(err);
-            if(params.newPassword != undefined) {
-                params.oldPassword = params.oldPassword || '';
-                userRepo.findUserById(decoded, function(err, user) {
-                    if(err) calback(err);
-                    if(validateUser(params.oldPassword, user.salt, user.password)) {
-                        params.password = encryptPassword(params.newPassword, user.salt);
-                        userRepo.findOneAndUpdate(decoded, params, function(err, user) {
-                            if (err) calback(err);
-                            var filteredUser = filterUser(user);
-                            calback(null, null, filteredUser);
-                        });
+            userRepo.findUserById(decoded, function (err, user) {
+                userRepo.userExists({email : user.email}, function(err, exists) {
+                    if (err) calback(err);
+                    if(exists) {
+                        calback(new Error('A user has already registered using this email.'));
                     } else {
-                        calback(new Error('Your password was incorrect, no changes have been made.'));
+                        if (params.newPassword != undefined) {
+                            params.oldPassword = params.oldPassword || '';
+                            if (validateUser(params.oldPassword, user.salt, user.password)) {
+                                params.password = encryptPassword(params.newPassword, user.salt);
+                                userRepo.findOneAndUpdate(decoded, params, function (err, user) {
+                                    if (err) calback(err);
+                                    var filteredUser = filterUser(user);
+                                    calback(null, null, filteredUser);
+                                });
+                            } else {
+                                calback(new Error('Your password was incorrect, no changes have been made.'));
+                            }
+                        } else {
+                            userRepo.findOneAndUpdate(decoded, params, function (err, user) {
+                                if (err) calback(err);
+                                var filteredUser = filterUser(user);
+                                calback(null, null, filteredUser);
+                            });
+                        }
                     }
                 });
-            } else {
-                userRepo.findOneAndUpdate(decoded, params, function (err, user) {
-                    if (err) calback(err);
-                    var filteredUser = filterUser(user);
-                    calback(null, null, filteredUser);
-                });
-            }
+            });
         })
     } else {
         calback(null, messages);
@@ -96,15 +102,14 @@ exports.updateUser = function (params, calback) {
 
 exports.upload = function (req, callback) {
     var token = req.params.data;
-    console.log(req);
     authService.verifyToken(token, function (err, decoded) {
         if (err) callback(err);
         userRepo.findUserById(decoded, function (err, user) {
             if (err) callback(err);
-            fileHandler.createFile(req.files.file, user.username, function(err, ext) {
-                if(err)callback(err);
-                userRepo.findOneAndUpdate(decoded, { imageExtension: ext}, function(err, updatedUser) {
-                    if(err) callback(err);
+            fileHandler.createFile(req.files.file, user.username, function (err, ext) {
+                if (err)callback(err);
+                userRepo.findOneAndUpdate(decoded, {imageExtension: ext}, function (err, updatedUser) {
+                    if (err) callback(err);
                     callback(null, filterUser(updatedUser));
                 })
             });
@@ -112,11 +117,11 @@ exports.upload = function (req, callback) {
     });
 };
 
-exports.getUserFromToken = function(token, callback) {
-    authService.verifyToken(token, function(err, decoded) {
-        if(err) callback(err);
-        userRepo.findUserById(decoded, function(err, user) {
-            if(err)callback(err);
+exports.getUserFromToken = function (token, callback) {
+    authService.verifyToken(token, function (err, decoded) {
+        if (err) callback(err);
+        userRepo.findUserById(decoded, function (err, user) {
+            if (err)callback(err);
             callback(null, filterUser(user));
         })
     })
@@ -158,7 +163,7 @@ exports.resetPassword = function (params, callback) {
             }
         };
         if (user.recovery != undefined) {
-            if(user.recovery.date < new Date()) {
+            if (user.recovery.date < new Date()) {
                 user.recovery = undefined;
             } else {
                 callback(null, user.email, user.recovery.uuid);
@@ -173,7 +178,7 @@ exports.resetPassword = function (params, callback) {
 };
 
 exports.confirmReset = function (params, callback) {
-    if(validator.validateChangedPassword(params.newPassword)) {
+    if (validator.validateChangedPassword(params.newPassword)) {
         userRepo.findUserByUuid(params.uuid, function (err, user) {
             if (err) callback(err);
             var encryptedPW = encryptPassword(params.newPassword, user.salt);
@@ -187,43 +192,31 @@ exports.confirmReset = function (params, callback) {
     }
 };
 
-exports.getImageExt = function(username, callback) {
-    userRepo.findUser(username, function(err, user) {
-        if(err)callback(err);
-        fileHandler.getImage(username, user.imageExtension, function(err, base64str) {
-            if(err) callback(err);
-            callback(null, base64str);
-        });
-    });
-};
-
-exports.userExists = function(params, callback) {
+exports.userExists = function (params, callback) {
     console.log(params);
     var username = params.username || '';
     var email = params.email || '';
-    console.log(username);
-    console.log(email);
-    if(username.length > 2) {
+    if (username.length > 2) {
         userRepo.userExists({username: username}, callback);
     }
-    if(email.length > 5) {
+    if (email.length > 5) {
         userRepo.userExists({email: email}, callback);
     }
 };
 
-exports.confirmEmails = function(emails, callback) {
+exports.confirmEmails = function (emails, callback) {
     var vEmails = [];
     var number = 0;
     var asyncTasks = [];
-    emails.forEach(function(entry) {
+    emails.forEach(function (entry) {
         asyncTasks.push(function (cb) {
             userRepo.userExists(entry, cb);
         });
     });
-    async.parallel(asyncTasks, function(err, result) {
+    async.parallel(asyncTasks, function (err, result) {
         var counter = 0;
         result.forEach(function (exists) {
-            if(!exists) {
+            if (!exists) {
                 vEmails.push(emails[counter].email);
                 number++;
             }

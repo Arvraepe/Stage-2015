@@ -26,11 +26,3 @@ exports.createFile = function(file, name, callback) {
         }
     });
 };
-
-exports.getImage = function(username, ext, callback) {
-    fs.readFile('../server/uploads/' + username + ext, function (err, data) {
-        if (err) callback(err);
-        ext = ext.replace('.', '');
-        callback(null, data.toString('base64'), ext);
-    });
-};
