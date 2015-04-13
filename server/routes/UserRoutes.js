@@ -78,12 +78,12 @@ function updateUser(req, res, next) {
 }
 
 function uploadAvatar(req, res, next) {
-    userService.upload(req, function(err) {
+    userService.upload(req, function(err, user) {
         var result;
         if (err) {
             result = resultFactory.makeFailureResult('ERROR', err.message);
         } else {
-            result = resultFactory.makeSuccessResult('Avatar uploaded successfully.');
+            result = resultFactory.makeSuccessResult('Avatar uploaded successfully.', user);
         }
         res.send(result);
     });
