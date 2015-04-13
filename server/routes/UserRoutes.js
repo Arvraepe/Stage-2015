@@ -83,7 +83,7 @@ function uploadAvatar(req, res, next) {
         if (err) {
             result = resultFactory.makeFailureResult('ERROR', err.message);
         } else {
-            result = resultFactory.makeSuccessResult('Avatar uploaded successfully.', user);
+            result = resultFactory.makeSuccessResult('Avatar uploaded successfully.', resultFactory.makeUserResult(user));
         }
         res.send(result);
     });
