@@ -10,6 +10,7 @@ var fileHandler = require('./../handler/fileHandler');
 var uuid = require('node-uuid');
 var validator = require('./../validator/userValidator');
 var async = require('async');
+var config  = require('./../config.json');
 
 exports.registerUser = function (user, callback) {
     var messages = validator.validateRegistration(user);
@@ -68,6 +69,9 @@ exports.updateUser = function (params, calback) {
             if (err) calback(err);
             userRepo.findUserById(decoded, function (err, user) {
                 userRepo.userExists({email : user.email}, function(err, exists) {
+                    if(user.email == params.email) {
+                        exists = false;
+                    }
                     if (err) calback(err);
                     if(exists) {
                         calback(new Error('A user has already registered using this email.'));
@@ -108,7 +112,7 @@ exports.upload = function (req, callback) {
             if (err) callback(err);
             fileHandler.createFile(req.files.file, user.username, function (err, ext) {
                 if (err)callback(err);
-                userRepo.findOneAndUpdate(decoded, {imageExtension: ext}, function (err, updatedUser) {
+                userRepo.findOneAndUpdate(decoded, {imageUrl: config.imageUrl + user.username + ext}, function (err, updatedUser) {
                     if (err) callback(err);
                     callback(null, filterUser(updatedUser));
                 })

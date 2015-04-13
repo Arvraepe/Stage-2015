@@ -2,9 +2,9 @@
   <h2 class="text-center">Update profile</h2>
 
   <div class="col-md-3">
-    <img ng-show="currentUser.imageExtension" src="http://localhost:6543/public/{{currentUser.username}}{{currentUser.imageExtension}}"
+    <img ng-show="currentUser.imageUrl" src="{{currentUser.imageUrl}}"
          alt="UserAvatarImage" class="img-center">
-    <img ng-show="!currentUser.imageExtension || currentUser.imageExtension == undefined"
+    <img ng-show="!currentUser.imageUrl || currentUser.imageUrl == undefined"
       src="http://localhost:6543/public/profilepicture.jpg" alt="StandardProfileImage" class="img-center">
     <div ng-controller="UploadCtrl" class="form-group marginTop50">
       <div class="col-md-offset-4 col-md-5">

@@ -14,7 +14,7 @@ var userSchema = mongoose.Schema({
     salt: String,
     firstname: String,
     lastname: String,
-    imageExtension: String,
+    imageUrl: String,
     recovery: {
         uuid: String,
         date: Date
