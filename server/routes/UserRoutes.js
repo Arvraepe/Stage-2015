@@ -11,9 +11,7 @@ exports.registerRoutes = function (app) {
     app.get('/user/exists', userExists);
     app.put('user/updateuser', updateUser);
     app.post('/user/uploadavatar', uploadAvatar);
-    //app.put('/user/changepassword', changePassword);
     app.post('/user/resetpassword', resetPassword);
-    app.get('/user/img/:username', getImage);
     app.put('/user/resetpassword/confirm', confirmReset);
     app.post('/user/invitecoworkers', inviteCoWorkers);
 };
@@ -48,19 +46,6 @@ function login(req, res, next) {
     next();
 }
 
-//function getAllUsers(req, res, next) {
-//    userService.getAllUsers(function(err, users) {
-//        var result;
-//        if(err) {
-//            result = resultFactory.makeFailureResult('ERROR', err.message);
-//        } else {
-//            result = resultFactory.makeSuccessResult(users.length + ' users fetched.', resultFactory.makeUsersResult(users));
-//        }
-//        res.send(result);
-//    });
-//    next();
-//}
-
 function updateUser(req, res, next) {
     userService.updateUser(req.params, function(err, messages, user) {
         var result;
@@ -89,19 +74,6 @@ function uploadAvatar(req, res, next) {
     });
     next();
 }
-
-//function changePassword(req, res, next) {
-//    userService.changePassword(req.params, function(err) {
-//        var result;
-//        if (err) {
-//            result = resultFactory.makeFailureResult('ERROR', err.message);
-//        } else {
-//            result = resultFactory.makeSuccessResult('You can now log in with your new password.');
-//        }
-//        res.send(result);
-//    });
-//    next();
-//}
 
 function resetPassword(req, res, next) {
     userService.resetPassword(req.params, function(err, email, uuid) {
@@ -143,7 +115,7 @@ function inviteCoWorkers(req, res, next) {
         mailService.inviteCoworkers(vEmails, config.domain + config.registerPath, function (err, results) {
             var result;
             if (err) {
-                result = resultFactory.makeFailureResult('ERROR', 'Something went wrong while sending out the mails.');
+                result = resultFactory.makeFailureResult('ERROR', err.message);
             } else {
                 var message;
                 if(number === 1) {
@@ -155,19 +127,6 @@ function inviteCoWorkers(req, res, next) {
             }
             res.send(result);
         });
-    });
-    next();
-}
-
-function getImage(req, res, next) {
-    var username = req.params.username;
-    userService.getImage(username, function(err, ext) {
-        if(err) {
-            res.send(resultFactory.makeFailureResult('ERROR', err.message));
-        } else {
-            res.writeHead(200, {'Content-Type': 'image/' + ext});
-            res.end(base64Str);
-        }
     });
     next();
 }
