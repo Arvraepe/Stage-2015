@@ -96,6 +96,7 @@ exports.updateUser = function (params, calback) {
 
 exports.upload = function (req, callback) {
     var token = req.params.data;
+    console.log(req);
     authService.verifyToken(token, function (err, decoded) {
         if (err) callback(err);
         userRepo.findUserById(decoded, function (err, user) {
@@ -200,6 +201,8 @@ exports.userExists = function(params, callback) {
     console.log(params);
     var username = params.username || '';
     var email = params.email || '';
+    console.log(username);
+    console.log(email);
     if(username.length > 2) {
         userRepo.userExists({username: username}, callback);
     }

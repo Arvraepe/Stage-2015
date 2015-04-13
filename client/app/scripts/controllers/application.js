@@ -19,10 +19,12 @@ angular.module('stageprojectApp')
       //$scope.visible = false;
 
 
-      $scope.setCurrentUser = function (user, token, file) {
+      $scope.setCurrentUser = function (user, token) {
+        if(token ==undefined){
+          token = Session.getId();
+        }
         //$scope.currentUser = user;
         $scope.currentUser = user;
-        $scope.currentUser.avatar = file;
         localStorageService.set('userInfo', $scope.currentUser);
         localStorageService.set('tokenInfo', token);
         //loginFactory.setUser(user, token, file);

@@ -1,10 +1,21 @@
 <div class="col-md-12">
-  <div class="col-md-2"></div>
+  <h2 class="text-center">Update profile</h2>
+
+  <div class="col-md-3">
+    <img ng-show="currentUser.imageExtension" src="http://localhost:6543/public/{{currentUser.username}}{{currentUser.imageExtension}}"
+         alt="UserAvatarImage" class="img-center">
+    <img ng-show="!currentUser.imageExtension || currentUser.imageExtension == undefined"
+      src="http://localhost:6543/public/profilepicture.jpg" alt="StandardProfileImage" class="img-center">
+    <div ng-controller="UploadCtrl" class="form-group marginTop50">
+      <div class="col-md-offset-4 col-md-5">
+        <div class="btn btn-success" ng-file-select ng-model="files"><i class="fa fa-upload"></i> Upload avatar</div>
+      </div>
+    </div>
+  </div>
 
 
-  <form class="col-md-8 form-horizontal" name="updateUserForm"
+  <form class="col-md-9 form-horizontal" name="updateUserForm"
         ng-submit="updateUser(userinfotochange)" novalidate>
-    <h2 class="text-center">Update profile</h2>
     <ng-form name="userForm">
       <div class="form-group" show-errors="{showSuccess: true}">
         <label for="firstname" class="col-md-4 control-label pull-left text-left">First name</label>
@@ -115,15 +126,8 @@
         </button>
       </div>
     </div>
-    <div ng-controller="UploadCtrl" class="form-group">
-      <div class="col-md-offset-4 col-md-5">
-        <div class="btn btn-success" ng-file-select ng-model="files"><i class="fa fa-upload"></i> Upload avatar</div>
-      </div>
-    </div>
 
   </form>
-  <div class="col-md-2"></div>
 
 
-  <div class="col-md-2"></div>
 </div>

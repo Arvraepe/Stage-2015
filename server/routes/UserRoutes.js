@@ -138,6 +138,7 @@ function confirmReset(req, res, next) {
 }
 
 function inviteCoWorkers(req, res, next) {
+    console.log('ik ben er');
     userService.confirmEmails(req.params, function(err, vEmails, number) {
         mailService.inviteCoworkers(vEmails, config.domain + config.registerPath, function (err, results) {
             var result;
@@ -172,6 +173,8 @@ function getImage(req, res, next) {
 }
 
 function userExists(req, res, next) {
+    console.log('in userExists call');
+    console.log(req.params);
     userService.userExists(req.params, function(err, exists) {
         var result;
         if(err) {

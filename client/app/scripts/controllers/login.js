@@ -18,14 +18,8 @@ angular.module('stageprojectApp')
       $scope.login = function (credentials) {
         AuthService.login(credentials, function (user) {
           $rootScope.$broadcast(AUTHEVENTS.loginSuccess);
-          userFactory.getImageForCurrentUser(user.data.user.username, function (file) {
-            if (file.code === 'InternalError') {
-              $scope.setCurrentUser(user.data.user, user.data.token);
-            }
-            else {
-              $scope.setCurrentUser(user.data.user, user.data.token, file);
-            }
-          });
+
+          $scope.setCurrentUser(user.data.user, user.data.token);
           $window.location.href = '#/dashboard';
 
 

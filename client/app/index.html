@@ -41,14 +41,16 @@
       </div>
       <div class="navbar-right">
         <div class="welcomeUser normalFontColor" ng-if="isAuthorized(userRoles.user)">Welcome, {{currentUser.username}}
+          <img ng-show="currentUser.imageExtension" src="http://localhost:6543/public/{{currentUser.username}}{{currentUser.imageExtension}}" alt="ProfilePic" class="smallAvatar">
+          <img ng-show="!currentUser.imageExtension" src="http://localhost:6543/public/profilepicture.jpg" alt="ProfilePic" class="smallAvatar">
+
           <div class="btn-group" dropdown>
             <button class="btn btn-default dropdown-toggle normalFontColor" dropdown-toggle>
               <i class="fa fa-cog"></i>
               <i class="fa fa-caret-down"></i>
             </button>
             <ul class="dropdown-menu" role="menu">
-              <li><a ng-href="#/changepassword">Change password</a></li>
-              <li><a href="#/changeemail">Change email</a></li>
+              <li><a ng-href="#/updateuser">Update profile</a></li>
             </ul>
 
           </div>

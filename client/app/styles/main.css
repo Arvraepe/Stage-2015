@@ -1,15 +1,26 @@
 .img-center{
   display:block;
   border-radius: 10px;
-  border: 2px solid #bce8f1;
-  height: 180px;
+  border: 2px solid #e3e3e3;  height: 180px;
   width: 180px;
+  margin-left:auto;
+}
+
+.smallAvatar{
+  border: 2px solid #e7e7e7;
+  border-radius: 5px;
+  height:25px;
+  width:25px;
 }
 
 .blockNoPadding{
   display:block;
   padding-right: 0;
   padding-left:0;
+}
+
+.marginTop50{
+  margin-top:30px;
 }
 
 .formBackground{
