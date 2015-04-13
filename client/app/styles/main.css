@@ -1,16 +1,15 @@
 .img-center{
   display:block;
   border-radius: 10px;
-  border: 2px solid #e3e3e3;  height: 180px;
+  height: 180px;
   width: 180px;
   margin-left:auto;
 }
 
 .smallAvatar{
-  border: 2px solid #e7e7e7;
   border-radius: 5px;
-  height:25px;
-  width:25px;
+  height:33px;
+  width:33px;
 }
 
 .blockNoPadding{

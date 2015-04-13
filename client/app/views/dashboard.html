@@ -2,11 +2,11 @@
   <div class="panel panel-info col-md-12">
     <div class="col-md-6 dashboard-panel-left">
       <figure class="col-md-6">
-        <img ng-show="!currentUser.imageExtension || currentUser.imageExtension==undefined" src="http://localhost:6543/public/profilepicture.jpg" class="img-center" alt="Standard profile">
+        <img ng-show="!currentUser.imageUrl || currentUser.imageUrl==undefined" src="http://localhost:6543/public/profilepicture.jpg" class="img-center" alt="Standard profile">
         <!--<img ng-show="!currentUser.avatar || currentUser.avatar==undefined" class="img-center"
              src="../images/profilepicture.jpg" alt="Profile Picture" height="180px"
              width="180px">-->
-        <img ng-show="currentUser.imageExtension" class="img-center" src="http://localhost:6543/public/{{currentUser.username}}{{currentUser.imageExtension}}"
+        <img ng-show="currentUser.imageUrl" class="img-center" src="{{currentUser.imageUrl}}"
              alt="huphup">
 
 

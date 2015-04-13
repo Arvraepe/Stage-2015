@@ -140,13 +140,14 @@ angular.module('stageprojectApp')
           }
         })
       },
-      recoverPassword: function (recover) {
+      recoverPassword: function (recover, callback) {
         requestFactory.sendRequest({
           path: 'user/resetpassword/confirm',
           method: 'PUT',
           data: recover,
           success: function (response) {
             notificationFactory.createNotification(response);
+            callback(response);
             console.log(response);
           },
           error: function (response) {

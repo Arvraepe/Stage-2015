@@ -5,13 +5,13 @@
 
 var restify = require('restify');
 var app = restify.createServer();
-var userRoutes = require('./routes/UserRoutes');
+var userRoutes = require('./routes/userRoutes');
 
 app.use(restify.fullResponse());
 app.use(restify.bodyParser());
 app.use(restify.queryParser());
 /*
- app.get(/\/docs\/public\/?.*//*
+ app.get(/\/docs\/upload\/?.*//*
  , restify.serveStatic({
     directory: __dirname
 }));

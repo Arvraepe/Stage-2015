@@ -9,8 +9,16 @@
  */
 angular.module('stageprojectApp')
   .controller('RegisterCtrl', ['$scope','$rootScope' ,'userFactory', '$window', 'notificationService', 'AuthService', 'AUTHEVENTS'
-    ,function ($scope,$rootScope ,userFactory, $window, notificationService, AuthService, AUTHEVENTS) {
-    $scope.user = {};
+    ,'$routeParams'
+    ,function ($scope,$rootScope ,userFactory, $window, notificationService, AuthService, AUTHEVENTS, $routeParams) {
+      if($routeParams.email==undefined){
+        $scope.user = {};
+      }
+      else{
+        $scope.user = {
+          email : $routeParams.email
+        }
+      }
     $scope.confirmpassword = "";
     $scope.allUsernames = [];
     $scope.allEmails = [];
@@ -34,8 +42,8 @@ angular.module('stageprojectApp')
       if (angular.equals($scope.confirmpassword, $scope.user.password)) {
         userFactory.registerUser($scope.user, function(credentials){
           AuthService.login(credentials, function (user){
-            $rootScope.$broadcast(AUTHEVENTS.loginSuccess);
             $scope.setCurrentUser(user.data.user, user.data.token);
+            $rootScope.$broadcast(AUTHEVENTS.loginSuccess);
           })
         });
         $window.location.href = '#/';

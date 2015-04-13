@@ -103,6 +103,10 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
       templateUrl: 'views/recover.html',
       controller: 'UserRecoverCtrl'
     })
+    .when('/register/:email', {
+      templateUrl: 'views/registeremail.html',
+      controller: 'RegisterCtrl'
+    })
     .otherwise({
       redirectTo: '/'
     });
