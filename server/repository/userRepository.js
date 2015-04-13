@@ -2,25 +2,8 @@
  * Created by Glenn on 31-3-2015.
  */
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/AgCollab');
 
-var db = mongoose.connection;
-db.on('error', function (err) {
-});
-var userSchema = mongoose.Schema({
-    username: String,
-    password: String,
-    email: String,
-    salt: String,
-    firstname: String,
-    lastname: String,
-    imageUrl: String,
-    recovery: {
-        uuid: String,
-        date: Date
-    }
-});
-var User = mongoose.model('User', userSchema);
+User = mongoose.model('User');
 
 exports.registerUser = function (user, callback) {
     var registeredUser = new User({

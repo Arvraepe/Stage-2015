@@ -4,6 +4,13 @@
 
 
 var restify = require('restify');
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/AgCollab');
+userSchema = require('./models/user').User;
+mongoose.model('User', userSchema);
+projectSchema = require('./models/project').Project;
+mongoose.model('Project', projectSchema);
+
 var app = restify.createServer();
 var userRoutes = require('./routes/userRoutes');
 

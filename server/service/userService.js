@@ -197,7 +197,6 @@ exports.confirmReset = function (params, callback) {
 };
 
 exports.userExists = function (params, callback) {
-    console.log(params);
     var username = params.username || '';
     var email = params.email || '';
     if (username.length > 2) {
