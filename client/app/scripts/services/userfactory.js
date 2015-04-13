@@ -168,8 +168,9 @@ angular.module('stageprojectApp')
       },
       userExists : function(usernameOrEmail, callback){
         requestFactory.sendRequest({
-          path:'user/exists/' + usernameOrEmail,
+          path:'user/exists',
           method: 'get',
+          params: usernameOrEmail,
           success: function(response){
             callback(response);
           },

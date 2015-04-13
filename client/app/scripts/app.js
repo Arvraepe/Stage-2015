@@ -135,7 +135,7 @@ app.run(function ($rootScope, $location, AUTHEVENTS, AuthService, userFactory, S
   });
 });
 
-app.config(function ($httpProvider) {
+/*app.config(function ($httpProvider) {
   $httpProvider.interceptors.push([
     '$injector',
     function ($injector) {
@@ -143,5 +143,5 @@ app.config(function ($httpProvider) {
       return $injector.get('AuthInterceptor');
     }
   ]);
-});
+});*/
 

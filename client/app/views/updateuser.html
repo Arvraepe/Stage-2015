@@ -40,9 +40,10 @@
           <input type="email" class="form-control"
                  ng-pattern="/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i"
                  ng-model="userinfotochange.email" id="email"
-                 placeholder="{{currentUser.email}}" name="emailField" required>
+                 placeholder="{{currentUser.email}}" name="emailField" required unique-email="">
 
           <p class="help-block" ng-if="userForm.emailField.$error.pattern">Enter a valid email.</p>
+          <p class="help-block" ng-if="userForm.emailField.$error.unique">This email has been registered already.</p>
 
           <p class="help-block" ng-if="userForm.emailField.$error.required">Email is required.</p>
 

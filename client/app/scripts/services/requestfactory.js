@@ -21,7 +21,8 @@ angular.module('stageprojectApp')
           url: baseUrl + '/' + config.path,
           method: config.method,
           dataType: 'json',
-          data: config.data
+          data: config.data,
+          params: config.params
         }).success(config.success, getResult).error(config.error);
       }
     };
