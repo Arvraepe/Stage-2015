@@ -13,7 +13,7 @@ exports.registerRoutes = function (app) {
     app.post('/user/uploadavatar', uploadAvatar);
     //app.put('/user/changepassword', changePassword);
     app.post('/user/resetpassword', resetPassword);
-    app.get('/user/uploads/:username', getImage);
+    app.get('/user/img/:username', getImage);
     app.put('/user/resetpassword/confirm', confirmReset);
     app.post('/user/invitecoworkers', inviteCoWorkers);
 };
@@ -81,7 +81,7 @@ function uploadAvatar(req, res, next) {
     userService.upload(req, function(err) {
         var result;
         if (err) {
-            result = resultFactory.makeFailureResult('ERROR', 'Something went wrong while uploading your file.');
+            result = resultFactory.makeFailureResult('ERROR', err.message);
         } else {
             result = resultFactory.makeSuccessResult('Avatar uploaded successfully.');
         }
@@ -125,12 +125,12 @@ function resetPassword(req, res, next) {
 }
 
 function confirmReset(req, res, next) {
-    userService.confirmReset(req.params, function(err) {
+    userService.confirmReset(req.params, function(err, user) {
         var result;
         if(err) {
             result = resultFactory.makeFailureResult('ERROR', err.message);
         } else {
-            result = resultFactory.makeSuccessResult('You can now log in using your new password.');
+            result = resultFactory.makeSuccessResult('You can now log in using your new password.', user);
         }
         res.send(result);
     });
@@ -160,7 +160,7 @@ function inviteCoWorkers(req, res, next) {
 
 function getImage(req, res, next) {
     var username = req.params.username;
-    userService.getImage(username, function(err, base64Str, ext) {
+    userService.getImage(username, function(err, ext) {
         if(err) {
             res.send(resultFactory.makeFailureResult('ERROR', err.message));
         } else {

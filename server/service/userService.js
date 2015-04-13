@@ -102,9 +102,9 @@ exports.upload = function (req, callback) {
             if (err) callback(err);
             fileHandler.createFile(req.files.file, user.username, function(err, ext) {
                 if(err)callback(err);
-                userRepo.findOneAndUpdate(decoded, { imageExtension: ext}, function(err, user) {
+                userRepo.findOneAndUpdate(decoded, { imageExtension: ext}, function(err, updatedUser) {
                     if(err) callback(err);
-                    callback();
+                    callback(null, updatedUser);
                 })
             });
         });
@@ -178,7 +178,7 @@ exports.confirmReset = function (params, callback) {
             var encryptedPW = encryptPassword(params.newPassword, user.salt);
             userRepo.findOneAndUpdate(user._id, {password: encryptedPW}, function (err, updatedUser) {
                 if (err) callback(err);
-                callback();
+                callback(null, filterUser(updatedUser));
             });
         });
     } else {
