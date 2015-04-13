@@ -209,7 +209,7 @@ exports.userExists = function(params, callback) {
 };
 
 exports.confirmEmails = function(emails, callback) {
-    var vEmails = '';
+    var vEmails = [];
     var number = 0;
     var asyncTasks = [];
     emails.forEach(function(entry) {
@@ -220,17 +220,12 @@ exports.confirmEmails = function(emails, callback) {
     async.parallel(asyncTasks, function(err, result) {
         var counter = 0;
         result.forEach(function (exists) {
-
-            console.log(exists);
-            console.log(emails[counter]);
             if(!exists) {
-                vEmails += emails[counter].email + ', ';
+                vEmails.push(emails[counter].email);
                 number++;
             }
             counter++;
         });
-        vEmails = vEmails.replace(/,\s*$/, "");
-        console.log(vEmails);
         callback(null, vEmails, number);
     });
 };

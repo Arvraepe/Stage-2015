@@ -120,7 +120,6 @@ function resetPassword(req, res, next) {
                 res.send(result);
             });
         }
-
     });
     next();
 }
@@ -140,7 +139,7 @@ function confirmReset(req, res, next) {
 
 function inviteCoWorkers(req, res, next) {
     userService.confirmEmails(req.params, function(err, vEmails, number) {
-        mailService.inviteCoworkers(vEmails, config.domain + config.registerPath, function (err, info) {
+        mailService.inviteCoworkers(vEmails, config.domain + config.registerPath, function (err, results) {
             var result;
             if (err) {
                 result = resultFactory.makeFailureResult('ERROR', 'Something went wrong while sending out the mails.');

@@ -16,7 +16,9 @@ app.use(restify.queryParser());
     directory: __dirname
 }));
  */
-
+app.get(/.public/, restify.serveStatic({
+directory: 'public'
+}));
 /*
  app.get(/\/uploads\/?.*//*
  , restify.serveStatic({
