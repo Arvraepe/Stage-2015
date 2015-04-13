@@ -6,6 +6,25 @@
   width: 180px;
 }
 
+.blockNoPaddingRight{
+  display:block;
+  padding-right: 0px;
+}
+
+.formBackground{
+  background-color: #f8f8f8;
+  border:solid #e7e7e7 1px;
+  border-radius: 5px;
+  padding-top: 25px;
+  margin-bottom:30px;
+}
+
+.formButtonsNoPadding{
+  padding-right: 0px;
+  padding-left:0px;
+  margin-bottom:30px;
+}
+
 .panelNoPadding {
   padding-left: 0;
   padding-right: 0;
@@ -175,3 +194,5 @@ body {
 .popover {
   width: 150px;
 }
+
+

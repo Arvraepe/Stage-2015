@@ -5,49 +5,51 @@
   <form class="col-md-8 form-horizontal" name="updateUserForm"
         ng-submit="updateUser(userinfotochange)" novalidate>
     <h2 class="text-center">Update profile</h2>
+    <ng-form name="userForm">
+      <div class="form-group" show-errors="{showSuccess: true}">
+        <label for="firstname" class="col-md-4 control-label pull-left text-left">First name</label>
 
-    <div class="form-group" show-errors="{showSuccess: true}">
-      <label for="firstname" class="col-md-4 control-label pull-left text-left">First name</label>
+        <div class="col-md-6">
+          <input type="text" class="form-control" ng-minlength="2" ng-model="userinfotochange.firstname" id="firstname"
+                 placeholder="{{currentUser.firstname}}" name="firstnameField" required>
 
-      <div class="col-md-6">
-        <input type="text" class="form-control" ng-minlength="2" ng-model="userinfotochange.firstname" id="firstname"
-               placeholder="{{currentUser.firstname}}" name="firstnameField" required>
+          <p class="help-block" ng-if="userForm.firstnameField.$error.minlength">A name needs to have at least 2
+            characters.</p>
 
-        <p class="help-block" ng-if="updateUserForm.firstnameField.$error.minlength">A name needs to have at least 2
-          characters.</p>
-
-        <p class="help-block" ng-if="updateUserForm.firstnameField.$error.required">First name is required.</p>
+          <p class="help-block" ng-if="userForm.firstnameField.$error.required">First name is required.</p>
+        </div>
       </div>
-    </div>
-    <div class="form-group" show-errors="{showSuccess: true}">
-      <label for="lastname" class="col-md-4 control-label">Last name</label>
+      <div class="form-group" show-errors="{showSuccess: true}">
+        <label for="lastname" class="col-md-4 control-label">Last name</label>
 
-      <div class="col-md-6">
-        <input type="text" class="form-control" ng-minlength="2" ng-model="userinfotochange.lastname" id="lastname"
-               placeholder="{{currentUser.lastname}}" name="lastnameField" required>
+        <div class="col-md-6">
+          <input type="text" class="form-control" ng-minlength="2" ng-model="userinfotochange.lastname" id="lastname"
+                 placeholder="{{currentUser.lastname}}" name="lastnameField" required>
 
-        <p class="help-block" ng-if="updateUserForm.lastnameField.$error.minlength">A name needs to have at least 2
-          characters.</p>
+          <p class="help-block" ng-if="userForm.lastnameField.$error.minlength">A name needs to have at least 2
+            characters.</p>
 
-        <p class="help-block" ng-if="updateUserForm.lastnameField.$error.required">Last name is required.</p>
+          <p class="help-block" ng-if="userForm.lastnameField.$error.required">Last name is required.</p>
 
+        </div>
       </div>
-    </div>
-    <div class="form-group" show-errors="{showSuccess: true}">
-      <label for="email" class="col-md-4 control-label">Email</label>
+      <div class="form-group" show-errors="{showSuccess: true}">
+        <label for="email" class="col-md-4 control-label">Email</label>
 
-      <div class="col-md-6">
-        <input type="email" class="form-control"
-               ng-pattern="/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i"
-               ng-model="userinfotochange.email" id="email"
-               placeholder="{{currentUser.email}}" name="emailField" required>
+        <div class="col-md-6">
+          <input type="email" class="form-control"
+                 ng-pattern="/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i"
+                 ng-model="userinfotochange.email" id="email"
+                 placeholder="{{currentUser.email}}" name="emailField" required>
 
-        <p class="help-block" ng-if="updateUserForm.emailField.$error.pattern">Enter a valid email.</p>
+          <p class="help-block" ng-if="userForm.emailField.$error.pattern">Enter a valid email.</p>
 
-        <p class="help-block" ng-if="updateUserForm.emailField.$error.required">Email is required.</p>
+          <p class="help-block" ng-if="userForm.emailField.$error.required">Email is required.</p>
 
+        </div>
       </div>
-    </div>
+    </ng-form>
+
     <hr/>
 
     <div class="well wellPaddingVertical">

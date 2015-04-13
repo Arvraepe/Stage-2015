@@ -7,17 +7,20 @@
  * # uniqueEmail
  */
 angular.module('stageprojectApp')
-  .directive('uniqueEmail', function () {
+  .directive('uniqueEmail', ['userFactory', function (userFactory) {
     return {
       restrict: 'A',
       require: 'ngModel',
       link: function postLink(scope, element, attrs, ngModel) {
-        element.bind('blur', function () {
+        element.bind('keydown keypress', function () {
           var inputNgElement, inputValue;
           ngModel.$setValidity('unique', true);
           ngModel.$loading = true;
           inputNgElement = angular.element(element);
           inputValue = inputNgElement.val();
+          if(inputNgElement.length>5){
+            userFactory.userExists(inputValue)
+          }
           angular.forEach(scope.allEmails, function (email) {
             if (email == inputValue) {
               ngModel.$setValidity('unique', false);
@@ -27,4 +30,4 @@ angular.module('stageprojectApp')
         })
       }
     };
-  });
+  }]);

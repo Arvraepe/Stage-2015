@@ -165,6 +165,18 @@ angular.module('stageprojectApp')
             callback(response);
           }
         })
+      },
+      userExists : function(usernameOrEmail, callback){
+        requestFactory.sendRequest({
+          path:'user/exists/' + usernameOrEmail,
+          method: 'get',
+          success: function(response){
+            callback(response);
+          },
+          error: function(response){
+            callback(response);
+          }
+        })
       }
     };
 
