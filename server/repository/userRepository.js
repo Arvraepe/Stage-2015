@@ -64,9 +64,8 @@ exports.findOneAndUpdate = function(id, update, cb) {
 
 exports.findUserByEmail = function(email, cb) {
     User.findOne({email : email}).lean().exec(function (err, user) {
-        if(err) cb(err);
-        if(user == null) {
-            cb(new Error('There is no user registered with that email'));
+        if(err) {
+            cb(err);
         } else {
             cb(null, user);
         }
@@ -85,5 +84,11 @@ exports.findUserByUuid = function(uuid, cb) {
         } else {
             cb(new Error('you clicked an invalid link'))
         }
-    })
+    });
 };
+
+exports.findLike = function (username, cb) {
+    User.find({username : new RegExp(username, 'i')}).limit(20).lean().exec(function(err, users) {
+        cb(err, users);
+    })
+}

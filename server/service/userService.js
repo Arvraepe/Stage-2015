@@ -12,6 +12,12 @@ var validator = require('./../validator/userValidator');
 var async = require('async');
 var config  = require('./../config.json');
 
+
+/**
+ *
+ * @param user
+ * @param callback = function(err, messages, success) if messages is an object the server will send an error response with all the messages inside this object.
+ */
 exports.registerUser = function (user, callback) {
     var messages = validator.validateRegistration(user);
     if (messages.length === 0) {
@@ -43,6 +49,11 @@ exports.registerUser = function (user, callback) {
     }
 };
 
+/**
+ *
+ * @param credentials
+ * @param callback = function(err, token, user) token is a json web token for session management, user is a user object who is now logged in.
+ */
 exports.loginUser = function (credentials, callback) {
     userRepo.findUser(credentials.username, function (err, user) {
         if (user != null && validateUser(credentials.password, user.salt, user.password)) {
@@ -54,14 +65,12 @@ exports.loginUser = function (credentials, callback) {
     });
 };
 
-//exports.getAllUsers = function (callback) {
-//    userRepo.getUsers(function (err, users) {
-//        if (err) callback(err);
-//        var filteredUsers = filterUsers(users);
-//        callback(null, filteredUsers);
-//    });
-//};
 
+/**
+ *
+ * @param params
+ * @param calback
+ */
 exports.updateUser = function (params, calback) {
     var messages = validator.validateUpdate(params);
     if (messages.length === undefined) {
@@ -157,27 +166,31 @@ exports.getUserFromToken = function (token, callback) {
 exports.resetPassword = function (params, callback) {
     userRepo.findUserByEmail(params.email, function (err, user) {
         if (err) callback(err);
-        var tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        var uId = uuid.v1();
-        var recovery = {
-            recovery: {
-                date: tomorrow,
-                uuid: uId
+        if(user == null) {
+            callback(new Error('There is no user registered with that email'));
+        } else {
+            var tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            var uId = uuid.v1();
+            var recovery = {
+                recovery: {
+                    date: tomorrow,
+                    uuid: uId
+                }
+            };
+            if (user.recovery != undefined) {
+                if (user.recovery.date < new Date()) {
+                    user.recovery = undefined;
+                } else {
+                    callback(null, user.email, user.recovery.uuid);
+                    return;
+                }
             }
-        };
-        if (user.recovery != undefined) {
-            if (user.recovery.date < new Date()) {
-                user.recovery = undefined;
-            } else {
+            userRepo.findOneAndUpdate(user._id, recovery, function (err, user) {
+                if (err) callback(err);
                 callback(null, user.email, user.recovery.uuid);
-                return;
-            }
+            });
         }
-        userRepo.findOneAndUpdate(user._id, recovery, function (err, user) {
-            if (err) callback(err);
-            callback(null, user.email, user.recovery.uuid);
-        });
     });
 };
 
@@ -226,6 +239,43 @@ exports.confirmEmails = function (emails, callback) {
             counter++;
         });
         callback(null, vEmails, number);
+    });
+};
+
+exports.findCollaborators = function (users, callback) {
+    var tasks = [];
+    users.forEach(function (entry) {
+        if(entry.indexOf("@") > -1) {
+            tasks.push(function(cb) {
+                userRepo.findUserByEmail(entry, cb);
+            });
+        } else {
+            tasks.push(function(cb) {
+                userRepo.findUser(entry, cb);
+            });
+        }
+    });
+    async.parallel(tasks, function(err, results) {
+        var counter = 0;
+        var result = [];
+        results.forEach(function (entry) {
+            if (entry == null) {
+                if(users[counter].indexOf("@") > -1) {
+                    result.push({exists : false, email: users[counter]});
+                } else {
+                    result.push({exists : false, message: users[counter] + 'does not exist'});
+                }
+            } else {
+                result.push({exists : true, user: entry});
+            }
+        });
+        callback(err, result);
+    });
+};
+
+exports.findALike = function(username, callback) {
+    userRepo.findLike(username, function(err, users) {
+        callback(err, filterUsers(users));
     });
 };
 

@@ -32,7 +32,7 @@ exports.makeFailureMultipleMessages = function (messages) {
     return conf;
 };
 
-exports.makeUserResult = function makeUserResult(user) {
+exports.makeUserResult = function (user) {
     var userResult = {};
     userResult.user = user;
     userResult.user.role = 'user';

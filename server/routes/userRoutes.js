@@ -14,6 +14,7 @@ exports.registerRoutes = function (app) {
     app.post('/user/resetpassword', resetPassword);
     app.put('/user/resetpassword/confirm', confirmReset);
     app.post('/user/invitecoworkers', inviteCoWorkers);
+    app.get('/user/findlike', findLike);
 };
 
 function register(req, res, next) {
@@ -141,4 +142,16 @@ function userExists(req, res, next) {
         res.send(result);
     });
     next();
+}
+
+function findLike(req, res, next) {
+    userService.findALike(req.params.username, function(err, users) {
+        var result;
+        if(err) {
+            result = resultFactory.makeFailureResult('ERROR', err.message);
+        } else {
+            result = resultFactory.makeSuccessResult('Data retrieved', {users : users})
+        }
+        res.send(result);
+    })
 }
