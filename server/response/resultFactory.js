@@ -38,3 +38,12 @@ exports.makeUserResult = function (user) {
     userResult.user.role = 'user';
     return userResult;
 };
+
+exports.makeSuccessMMResult = function(messages, data) {
+    data = data || {};
+    var conf = {};
+    conf.messages = messages;
+    conf.success = true;
+    conf.data = data;
+    return conf;
+};

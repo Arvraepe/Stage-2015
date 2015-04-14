@@ -88,7 +88,7 @@ exports.findUserByUuid = function(uuid, cb) {
 };
 
 exports.findLike = function (username, cb) {
-    User.find({username : new RegExp(username, 'i')}).limit(20).lean().exec(function(err, users) {
+    User.find({username : new RegExp(username, 'i')}).limit(10).lean().exec(function(err, users) {
         cb(err, users);
     })
 }

@@ -6,7 +6,6 @@ var mongoose = require('mongoose');
 
 var projectSchema = mongoose.Schema({
     name: String,
-    code: String,
     description: String,
     collaborators : [String],
     leader: String,

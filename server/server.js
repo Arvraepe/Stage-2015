@@ -13,6 +13,7 @@ mongoose.model('Project', projectSchema);
 
 var app = restify.createServer();
 var userRoutes = require('./routes/userRoutes');
+var projectRoutes = require('./routes/projectRoutes');
 
 app.use(restify.fullResponse());
 app.use(restify.bodyParser());
@@ -42,6 +43,7 @@ directory: 'upload',
 
 
 userRoutes.registerRoutes(app);
+projectRoutes.registerRoutes(app);
 app.listen(6543, function() {
     console.log('%s listening at %s', app.name, app.url);
 });

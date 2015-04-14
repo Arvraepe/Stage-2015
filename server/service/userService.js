@@ -244,7 +244,9 @@ exports.confirmEmails = function (emails, callback) {
 
 exports.findCollaborators = function (users, callback) {
     var tasks = [];
+    users = ['herpaderp', 'dfsfs'];
     users.forEach(function (entry) {
+        console.log(entry);
         if(entry.indexOf("@") > -1) {
             tasks.push(function(cb) {
                 userRepo.findUserByEmail(entry, cb);
@@ -258,25 +260,30 @@ exports.findCollaborators = function (users, callback) {
     async.parallel(tasks, function(err, results) {
         var counter = 0;
         var result = [];
+        console.log(results);
         results.forEach(function (entry) {
             if (entry == null) {
                 if(users[counter].indexOf("@") > -1) {
                     result.push({exists : false, email: users[counter]});
                 } else {
-                    result.push({exists : false, message: users[counter] + 'does not exist'});
+                    result.push({exists : false, message: users[counter] + ' does not exist'});
                 }
             } else {
                 result.push({exists : true, user: entry});
             }
+            counter++;
         });
         callback(err, result);
     });
 };
 
 exports.findALike = function(username, callback) {
-    userRepo.findLike(username, function(err, users) {
-        callback(err, filterUsers(users));
-    });
+    if(username.length>2) {
+        userRepo.findLike(username, function(err, users) {
+            callback(err, filterUsers(users));
+        });
+    }
+
 };
 
 

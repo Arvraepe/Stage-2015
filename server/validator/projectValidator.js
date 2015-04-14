@@ -3,18 +3,23 @@
  */
 exports.validateNewProject = function(params) {
     var messages = [];
+    console.log(messages);
     if(!checkName(params.name)) {
         messages.push(makeMessage('name', 2, 75));
     }
+    console.log(messages);
     if(!checkDesc(params.description)) {
         messages.push(makeMessage('description', 5, 1000));
     }
+    console.log(messages);
     if(!checkDeadline(params.deadline)) {
         messages.push({code:'ERROR',message:"Deadline can't already be expired."});
     }
-    if(checkStates(params.standardStates)) {
-        messages.push(makeMessage('state', 2, 20));
-    }
+    console.log(messages);
+    //if(checkStates(params.standardStates)) {
+    //    messages.push(makeMessage('state', 2, 20));
+    //}
+    params.standardStates = ['todo', 'in progress', 'done'];
     return messages;
 };
 
@@ -27,12 +32,13 @@ function checkDesc(desc) {
 }
 
 function checkDeadline(date) {
-    return date > new Date();
+    return date === undefined || date > new Date();
 }
 
 function checkStates(states) {
     var res = true;
     states.forEach(function (entry) {
+        console.log(entry);
         if(entry.length < 2 || entry.length > 20) {
             res = false;
         }
