@@ -17,7 +17,9 @@ var app = angular.module('stageprojectApp', [
   'validation.match',
   'angularFileUpload',
   'LocalStorageModule',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'ui.select',
+  'ngSanitize'
 ]);
 
 /*angular
@@ -107,9 +109,17 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
       templateUrl: 'views/registeremail.html',
       controller: 'RegisterCtrl'
     })
+    .when('/project/newproject', {
+      templateUrl: 'views/project/newproject.html',
+      controller: 'NewProjectCtrl'
+    })
     .otherwise({
       redirectTo: '/'
     });
+});
+
+app.config(function(uiSelectConfig) {
+  uiSelectConfig.theme = 'bootstrap';
 });
 
 
