@@ -8,7 +8,7 @@
  * Controller of the cstageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('NewProjectCtrl', [ '$scope','projectFactory' ,'$modalInstance', function ($scope, projectFactory, $modalInstance) {
+  .controller('NewProjectCtrl', [ '$scope','projectRequestFactory' ,'$modalInstance', function ($scope, projectRequestFactory, $modalInstance) {
 
     $scope.project = {};
     $scope.project.collaborators = [];
@@ -49,15 +49,28 @@ angular.module('stageprojectApp')
         username: username
       };
       if(username.length>2){
-        projectFactory.getUsers(usernameJson, function(response){
-          $scope.allUsernames = [];
-          angular.forEach(response.data.users, function(user){
-            $scope.allUsernames.push(user.username);
-          });
-        })
+        projectRequestFactory.getUsers({
+          path:'user/findlike',
+          method:'GET',
+          params:usernameJson
+        },getUsersSuccessTrue, getUsersSuccessFalse, getUsersError);
       }
 
     };
+
+    function getUsersSuccessTrue(response){
+      $scope.allUsernames = [];
+      angular.forEach(response.data.users, function(user){
+        $scope.allUsernames.push(user.username);
+      });
+      //console.log(response);
+    }
+    function getUsersSuccessFalse(response){
+      console.log(response);
+    }
+    function getUsersError(response){
+      console.log(response);
+    }
 
     $scope.createProject = function(project){
       if($scope.custom){
@@ -66,10 +79,22 @@ angular.module('stageprojectApp')
       else{
         project.standardStates = $scope.customStates;
       }
-      projectFactory.createProject(project, function(response){
-        console.log(response);
-      });
+      projectRequestFactory.createProject({
+        path:'project/create',
+        method:'POST',
+        data: project
+      }, createProjectSuccessTrue, createProjectSuccessFalse, createProjectError);
       $modalInstance.dismiss('Cancel');
+    };
+
+    function createProjectSuccessTrue(response){
+      console.log(response);
+    }
+    function createProjectSuccessFalse(response){
+      console.log(response);
+    }
+    function createProjectError(response){
+      console.log(response);
     }
 
 

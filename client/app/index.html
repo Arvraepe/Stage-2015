@@ -42,9 +42,8 @@
       </div>
       <div class="navbar-right">
         <div class="welcomeUser normalFontColor" ng-if="isAuthorized(userRoles.user)">Welcome, {{currentUser.username}}
-          <!--<img ng-if="currentUser && currentUser.imageUrl" src="{{currentUser.imageUrl}}" alt="ProfilePic" class="smallAvatar">
-          <img ng-if="!currentUser.imageUrl && !currentUser" src="http://localhost:6543/public/profilepicture.jpg" alt="ProfilePic" class="smallAvatar">
--->
+          <img ng-if="currentUser && currentUser.imageUrl" src="{{currentUser.imageUrl}}" alt="ProfilePic" class="smallAvatar">
+
           <div class="btn-group" dropdown>
             <button class="btn btn-default dropdown-toggle normalFontColor" dropdown-toggle>
               <i class="fa fa-cog"></i>
@@ -187,8 +186,9 @@
 <script src="scripts/controllers/user/recover.js"></script>
 <script src="scripts/directives/uniqueemail.js"></script>
 <script src="scripts/controllers/project/newproject.js"></script>
-<script src="scripts/services/project/projectfactory.js"></script>
+<script src="scripts/services/project/projectrequestfactory.js"></script>
 <script src="scripts/controllers/project/project.js"></script>
+<script src="scripts/services/userrequesthandler.js"></script>
 <!-- endbuild -->
 </body>
 </html>

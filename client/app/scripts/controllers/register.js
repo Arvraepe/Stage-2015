@@ -9,8 +9,8 @@
  */
 angular.module('stageprojectApp')
   .controller('RegisterCtrl', ['$scope','$rootScope' ,'userFactory', '$window', 'notificationService', 'AuthService', 'AUTHEVENTS'
-    ,'$routeParams'
-    ,function ($scope,$rootScope ,userFactory, $window, notificationService, AuthService, AUTHEVENTS, $routeParams) {
+    ,'$routeParams', 'userRequestHandler'
+    ,function ($scope,$rootScope ,userFactory, $window, notificationService, AuthService, AUTHEVENTS, $routeParams, userRequestHandler) {
       if($routeParams.email==undefined){
         $scope.user = {};
       }
@@ -25,31 +25,38 @@ angular.module('stageprojectApp')
 
 
 
-
-    function getAllUsernames() {
-      userFactory.getUsernames(function (userList) {
-        angular.forEach(userList, function (uname) {
-          $scope.allUsernames.push(uname.username);
-          $scope.allEmails.push(uname.email);
-        });
-      })
-    }
-
-
     $scope.register = function () {
       $scope.$broadcast('show-errors-check-validity');
 
       if (angular.equals($scope.confirmpassword, $scope.user.password)) {
-        userFactory.registerUser($scope.user, function(credentials){
-          AuthService.login(credentials, function (user){
-            $scope.setCurrentUser(user.data.user, user.data.token);
-            $rootScope.$broadcast(AUTHEVENTS.loginSuccess);
-          })
-        });
-        $window.location.href = '#/';
+        userRequestHandler.registerUser({
+          path:'register',
+          method: 'POST',
+          data: $scope.user
+        },successTrueCallback,successFalseCallback);
+
       }
 
     };
+
+      function successTrueCallback(){
+        var credentials = {
+          username: $scope.user.username,
+          password: $scope.user.password
+        };
+        AuthService.login(credentials, function (user){
+          $scope.setCurrentUser(user.data.user, user.data.token);
+          $rootScope.$broadcast(AUTHEVENTS.loginSuccess);
+          $window.location.href = '#/dashboard';
+        });
+
+      }
+      function successFalseCallback(response){
+        console.log(response);
+      }
+      function errorCallback(response){
+        console.log(response);
+      }
 
 
     $scope.reset = function () {
@@ -62,6 +69,11 @@ angular.module('stageprojectApp')
         username: ''
       }
     };
-    //getAllUsernames();
+      /*userFactory.registerUser($scope.user, function(credentials){
+       AuthService.login(credentials, function (user){
+       $scope.setCurrentUser(user.data.user, user.data.token);
+       $rootScope.$broadcast(AUTHEVENTS.loginSuccess);
+       })
+       });*/
 
   }]);
