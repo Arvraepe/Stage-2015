@@ -10,7 +10,7 @@ exports.handleProjectErrors = function (err, results) {
     if(err) {
         result = resultFact.makeFailureResult('ERROR', err.message);
     } else {
-
+        console.log(results);
         results.forEach(function (entry) {
             if (entry._id !== undefined) { //this is a project with 1 user added, the last iteration we come here will have the project with all users added.
                 usersAddedCounter++;

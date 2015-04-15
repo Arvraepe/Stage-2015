@@ -4,6 +4,7 @@
 var projectValidator = require('./../validator/projectValidator');
 var projectRepo = require('./../repository/projectRepository');
 var mailService = require('./../service/mailService');
+var config = require('./../config.json');
 var async = require('async');
 
 exports.createProject = function(params, userId, callback) {
@@ -22,14 +23,18 @@ exports.createProject = function(params, userId, callback) {
 exports.addCollabs = function(messages, project, usersExist, callback) {
     var tasks = [];
     usersExist.forEach(function (entry) {
+        console.log(entry);
         if(!entry.exists) {
             if(entry.email !== undefined) {
                 tasks.push(function(cb) {
-                    var link = config.domain + config.registerPath + '/' + entry.email + '/' +project._id
-                    mailService.inviteCoworkers(entry.email, link, cb);
+                    console.log('hier');
+                    var link = config.domain + config.registerPath + '/' + entry.email + '/' +project._id;
+                    console.log(link);
+                    mailService.inviteCoworkers([entry.email], link, cb);
                 })
             } else {
                 tasks.push(function(cb) {
+                    console.log('ier ni');
                     messages = messages || [];
                     messages.push({code:'WARN', message: entry.message});
                     cb(null, messages);
@@ -41,9 +46,11 @@ exports.addCollabs = function(messages, project, usersExist, callback) {
             });
         }
     });
+    console.log('before');
     async.parallel(tasks, callback);
 };
 
 function addCollab(projectId, userId, callback) {
+    console.log('iets');
     projectRepo.addCollab(projectId, userId, callback);
 }
