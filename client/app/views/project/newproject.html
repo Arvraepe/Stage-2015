@@ -1,8 +1,9 @@
 <div class="modal-header">
   <h3 class="modal-title">Create a new project!</h3>
 </div>
+<form class="form-horizontal" name="newprojectForm" ng-submit="newprojectForm.$valid && createProject(project)">
 <div class="modal-body">
-  <form class="form-horizontal" name="newprojectForm" ng-submit="newprojectForm.$valid && createProject(project)">
+
     <div class="form-group" show-errors="{showSuccess: true}">
       <label class="col-md-3 control-label">Name</label>
 
@@ -45,7 +46,7 @@
       <label class="col-md-3 control-label">Collaborators</label>
 
       <div class="col-md-9">
-        <ui-select multiple tagging tagging-tokens="@" ng-model="project.collaborators" ng-disabled="disabled"
+        <ui-select multiple tagging tagging-label="false" tagging-tokens=",|@|SPACE" ng-model="project.collaborators" ng-disabled="disabled"
                    search-enabled="true" theme="bootstrap">
           <ui-select-match placeholder="Invite collaborators">{{$item}}</ui-select-match>
           <ui-select-choices repeat="username in allUsernames"
@@ -63,7 +64,7 @@
           <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="project.deadline"
                  is-open="opened" min-date="minDate"
                  max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabledTime(date,mode)"
-                 ng-required="true" close-text="Close"/>
+                 close-text="Close"/>
           <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="open($event)"><i
                   class="glyphicon glyphicon-calendar"></i></button>
@@ -86,12 +87,12 @@
           Custom States
         </label>
 
-        <div ng-repeat="state in customStates" ng-show="custom==false">
+        <div ng-repeat="stat in customStates" ng-show="custom==false">
           <ng-form>
             <div style="margin-top: 10px">
-              <input type="text" class="form-control-custom col-md-9 " ng-model="project.state" style="margin-bottom:13px">
+              <input type="text" class="form-control-custom col-md-9 " ng-model="stat.status" style="margin-bottom:13px">
               <div class="col-md-3">
-                <button type="button" class="btn btn-primary" ng-click="addState()" ng-show="($index+1) == customStates.length"><i class="fa fa-plus-square"></i>
+                <button type="button" class="btn btn-primary" ng-click="addState()" ng-show="($index+1) == customStates.length" ng-hide="customStates.length>=5"><i class="fa fa-plus-square"></i>
                   Add
                 </button>
               </div>
@@ -105,9 +106,10 @@
     <div class="form-group">
       <button type="submit" class="col-md-offset-4 btn btn-primary">Create!</button>
     </div>
-  </form>
+
 </div>
 <div class="modal-footer">
-  <button class="btn btn-primary" ng-click="ok()">OK</button>
+  <button type="submit" class="btn btn-primary" >Create</button>
   <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
 </div>
+</form>

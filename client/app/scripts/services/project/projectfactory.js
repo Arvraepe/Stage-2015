@@ -36,6 +36,18 @@ angular.module('stageprojectApp')
             callback(response);
           }
         })
+      },
+      getProjectsForUser: function(callback){
+        requestFactory.sendRequest({
+          path:'project',
+          method:'GET',
+          success:function(response){
+            callback(response);
+          },
+          error:function(response){
+            callback(response);
+          }
+        })
       }
     }
 

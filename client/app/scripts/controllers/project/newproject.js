@@ -8,7 +8,7 @@
  * Controller of the cstageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('NewProjectCtrl', [ '$scope','projectFactory' , function ($scope, projectFactory) {
+  .controller('NewProjectCtrl', [ '$scope','projectFactory' ,'$modalInstance', function ($scope, projectFactory, $modalInstance) {
 
     $scope.project = {};
     $scope.project.collaborators = [];
@@ -19,7 +19,7 @@ angular.module('stageprojectApp')
     }];
     $scope.addState = function(){
       $scope.customStates.push({
-        state: ''
+        status: ''
       });
     };
     $scope.standardStates = [
@@ -69,6 +69,7 @@ angular.module('stageprojectApp')
       projectFactory.createProject(project, function(response){
         console.log(response);
       });
+      $modalInstance.dismiss('Cancel');
     }
 
 

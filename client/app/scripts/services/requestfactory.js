@@ -14,9 +14,15 @@ angular.module('stageprojectApp')
 
     return {
       sendRequest: function (config, getResult) {
-        if (Session.getId() != undefined && config.data != undefined) {
-          config.data.token = Session.getId();
+        if(Session.getId() !=undefined){
+          if(config.data != undefined){
+            config.data.token = Session.getId();
+          }
+          else if(config.params != undefined){
+            config.params.token = Session.getId();
+          }
         }
+
         $http({
           url: baseUrl + '/' + config.path,
           method: config.method,
