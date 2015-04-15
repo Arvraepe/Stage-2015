@@ -23,6 +23,19 @@ angular.module('stageprojectApp')
           }
 
         })
+      },
+      createProject: function(project,callback){
+        requestFactory.sendRequest({
+          path:'project/create',
+          method:'POST',
+          data:project,
+          success:function(response){
+            callback(response);
+          },
+          error:function(response){
+            callback(response);
+          }
+        })
       }
     }
 
