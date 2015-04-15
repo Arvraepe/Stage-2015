@@ -4,6 +4,7 @@
 var projectValidator = require('./../validator/projectValidator');
 var projectRepo = require('./../repository/projectRepository');
 var mailService = require('./../service/mailService');
+var async = require('async');
 
 exports.createProject = function(params, userId, callback) {
     var messages = projectValidator.validateNewProject(params);

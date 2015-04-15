@@ -245,7 +245,6 @@ exports.confirmEmails = function (emails, callback) {
 exports.findCollaborators = function (users, callback) {
     var tasks = [];
     users.forEach(function (entry) {
-        console.log(entry);
         if(entry.indexOf("@") > -1) {
             tasks.push(function(cb) {
                 userRepo.findUserByEmail(entry, cb);

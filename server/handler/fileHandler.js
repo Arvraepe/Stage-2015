@@ -13,7 +13,7 @@ exports.createFile = function(file, name, callback) {
         } else {
             var ext = file.name.split('.')[1];
             if(_.contains(config.supportedImages, ext)) {
-                var newPath = "./upload/public/" + name + '.' + ext;
+                var newPath = config.imagePath + name + '.' + ext;
 
                 /// write file to uploads folder
                 fs.writeFile(newPath, data, function (err) {
