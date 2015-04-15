@@ -16,10 +16,9 @@ exports.validateNewProject = function(params) {
         messages.push({code:'ERROR',message:"Deadline can't already be expired."});
     }
     console.log(messages);
-    //if(checkStates(params.standardStates)) {
-    //    messages.push(makeMessage('state', 2, 20));
-    //}
-    params.standardStates = ['todo', 'in progress', 'done'];
+    if(!checkStates(params.standardStates)) {
+        messages.push(makeMessage('state', 2, 20));
+    }
     return messages;
 };
 
