@@ -7,7 +7,6 @@ exports.handleProjectErrors = function (err, results) {
     var result;
     var usersAddedCounter = 0, emailsSentCounter = 0;
     var messages = [];
-    var project= null;
     if(err) {
         result = resultFact.makeFailureResult('ERROR', err.message);
     } else {
@@ -15,7 +14,6 @@ exports.handleProjectErrors = function (err, results) {
             console.log(entry._id);
             if (entry._id !== undefined) { //this is a project with 1 user added, the last iteration we come here will have the project with all users added.
                 usersAddedCounter++;
-                project = entry;
             } else if (entry.code !== undefined || entry.code !== null) {//this is a user not found
                 messages.push(entry);
             } else {//this is an email
@@ -31,7 +29,7 @@ exports.handleProjectErrors = function (err, results) {
             message = usersAddedCounter==1 ? ' user has been added to your project!' : ' users have been added to your project!';
             messages.push({code: 'INFO', message: usersAddedCounter + message})
         }
-        result = resultFact.makeSuccessMMResult(messages, {project : project});
+        result = resultFact.makeSuccessMMResult(messages);
     }
     return result;
 };
