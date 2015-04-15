@@ -27,14 +27,11 @@ exports.addCollabs = function(messages, project, usersExist, callback) {
         if(!entry.exists) {
             if(entry.email !== undefined) {
                 tasks.push(function(cb) {
-                    console.log('hier');
                     var link = config.domain + config.registerPath + '/' + entry.email + '/' +project._id;
-                    console.log(link);
                     mailService.inviteCoworkers([entry.email], link, cb);
                 })
             } else {
                 tasks.push(function(cb) {
-                    console.log('ier ni');
                     messages = messages || [];
                     messages.push({code:'WARN', message: entry.message});
                     cb(null, messages);
@@ -42,15 +39,26 @@ exports.addCollabs = function(messages, project, usersExist, callback) {
             }
         } else {
             tasks.push(function(cb) {
-                addCollab(project._id, entry.user._id, cb)
+                cb(null, {add: entry.user._id, projectId: project._id});
             });
         }
     });
-    console.log('before');
-    async.parallel(tasks, callback);
+    async.parallel(tasks, function(err, results) {
+        var users  = [];
+        var projectId = '';
+        results.forEach(function (entry) {
+            if(entry.add != undefined) {
+                users.push(entry.add);
+                projectId = entry.projectId;
+            }
+        });
+        addCollab(projectId, users, function(err, result) {
+            results.push(result);
+            callback(err, results);
+        })
+    });
 };
 
 function addCollab(projectId, userId, callback) {
-    console.log('iets');
     projectRepo.addCollab(projectId, userId, callback);
 }

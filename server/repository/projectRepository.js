@@ -14,9 +14,11 @@ exports.create = function (project, cb) {
     newProject.save(cb);
 };
 
-exports.addCollab = function(projectId, userId, cb) {
+exports.addCollab = function(projectId, users, cb) {
     Project.findOne({_id : projectId}).lean().exec(function(err, project) {
-        project.collaborators.push(userId);
+        console.log(project);
+        console.log(users);
+        project.collaborators = users;
         Project.findOneAndUpdate({_id : project._id}, project, {new : true}).lean().exec(cb);
     });
 };

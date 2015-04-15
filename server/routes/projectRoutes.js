@@ -29,7 +29,6 @@ function createProject(req, res, next) {
             projectService.addCollabs(messages, project, usersExist, callback)
         }
     ], function(err, result) {
-        console.log('after');
         var response = errorHandler.handleProjectErrors(err, result);
         res.send(response);
     });
