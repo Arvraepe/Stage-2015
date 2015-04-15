@@ -18,28 +18,11 @@ var projectRoutes = require('./routes/projectRoutes');
 app.use(restify.fullResponse());
 app.use(restify.bodyParser());
 app.use(restify.queryParser());
-/*
- app.get(/\/docs\/upload\/?.*//*
- , restify.serveStatic({
-    directory: __dirname
-}));
- */
-app.get(/.public/, restify.serveStatic({
-directory: 'upload',
+
+app.get(/.avatars/, restify.serveStatic({
+directory: 'public',
  default: 'profilepicture.jpg'
 }));
-/*
- app.get(/\/uploads\/?.*//*
- , restify.serveStatic({
- directory: './uploads'
-
- }));
- */
-
-/*app.get(/.*//*, restify.serveStatic({
- directory: __dirname+'\\uploads',
- default: 'zoompie.jpg'
- }));*/
 
 
 userRoutes.registerRoutes(app);

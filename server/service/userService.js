@@ -244,7 +244,6 @@ exports.confirmEmails = function (emails, callback) {
 
 exports.findCollaborators = function (users, callback) {
     var tasks = [];
-    users = ['herpaderp', 'dfsfs'];
     users.forEach(function (entry) {
         console.log(entry);
         if(entry.indexOf("@") > -1) {
@@ -260,7 +259,6 @@ exports.findCollaborators = function (users, callback) {
     async.parallel(tasks, function(err, results) {
         var counter = 0;
         var result = [];
-        console.log(results);
         results.forEach(function (entry) {
             if (entry == null) {
                 if(users[counter].indexOf("@") > -1) {

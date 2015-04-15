@@ -6,5 +6,5 @@
   "registerPath" : "/register",
   "secret" : "kjgJHhjikKhjKgKHJkHgkHkhjbYkhGk",
   "supportedImages" : ["jpg", "png", "gif", "bmp"],
-  "imageUrl" : "http://localhost:6543/public/"
+  "imageUrl" : "http://localhost:6543/avatars/"
 }

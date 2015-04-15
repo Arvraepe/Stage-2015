@@ -6,7 +6,6 @@ var config = require('./../config.json');
 var projectService = require('./../service/projectService');
 var errorHandler = require('./../response/errorHandler');
 var userService = require('./../service/userService');
-var mailService = require('./../service/mailService');
 var auth = require('./../service/authenticationService');
 
 exports.registerRoutes = function(app) {
@@ -27,28 +26,7 @@ function createProject(req, res, next) {
             });
         },
         function (messages, project, usersExist, callback) {
-            var tasks = [];
-            usersExist.forEach(function (entry) {
-                if(!entry.exists) {
-                    if(entry.email !== undefined) {
-                        tasks.push(function(cb) {
-                            var link = config.domain + config.registerPath + '/' + entry.email + '/' +project._id
-                            mailService.inviteCoworkers(entry.email, link, cb);
-                        })
-                    } else {
-                        tasks.push(function(cb) {
-                            messages = messages || [];
-                            messages.push({code:'WARN', message: entry.message});
-                            cb(null, messages);
-                        });
-                    }
-                } else {
-                    tasks.push(function(cb) {
-                        projectService.addCollab(project._id, entry.user._id, cb)
-                    });
-                }
-            });
-            async.parallel(tasks, callback);
+            projectService.addCollabs(messages, project, usersExist, callback)
         }
     ], function(err, result) {
         var response = errorHandler.handleProjectErrors(err, result);

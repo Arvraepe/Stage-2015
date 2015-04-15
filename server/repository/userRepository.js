@@ -2,6 +2,7 @@
  * Created by Glenn on 31-3-2015.
  */
 var mongoose = require('mongoose');
+var config = require('./../config.json');
 
 User = mongoose.model('User');
 
@@ -13,6 +14,7 @@ exports.registerUser = function (user, callback) {
         email: user.email,
         firstname: user.firstname,
         lastname: user.lastname,
+        imageUrl: config.imageUrl + '/profilepicture.jpg',
         recovery: {}
     });
     registeredUser.save(function (err, registeredUser) {
