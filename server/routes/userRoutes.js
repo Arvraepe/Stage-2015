@@ -145,6 +145,7 @@ function userExists(req, res, next) {
 }
 
 function findLike(req, res, next) {
+
     userService.findALike(req.params.username, function(err, users) {
         var result;
         if(err) {

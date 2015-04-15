@@ -82,15 +82,14 @@ angular.module('stageprojectApp')
       projectRequestFactory.createProject({
         path:'project/create',
         method:'POST',
-        data: project
+        data: project,
+        success: createProjectSuccess(response),
+        error: createProjectError(response)
       }, createProjectSuccessTrue, createProjectSuccessFalse, createProjectError);
       $modalInstance.dismiss('Cancel');
     };
 
-    function createProjectSuccessTrue(response){
-      console.log(response);
-    }
-    function createProjectSuccessFalse(response){
+    function createProjectSuccess(response){
       console.log(response);
     }
     function createProjectError(response){

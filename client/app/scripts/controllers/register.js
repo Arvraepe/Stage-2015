@@ -23,40 +23,33 @@ angular.module('stageprojectApp')
     $scope.allUsernames = [];
     $scope.allEmails = [];
 
-
-
     $scope.register = function () {
       $scope.$broadcast('show-errors-check-validity');
 
       if (angular.equals($scope.confirmpassword, $scope.user.password)) {
+
         userRequestHandler.registerUser({
-          path:'register',
-          method: 'POST',
-          data: $scope.user
-        },successTrueCallback,successFalseCallback);
-
-      }
-
-    };
-
-      function successTrueCallback(){
-        var credentials = {
-          username: $scope.user.username,
-          password: $scope.user.password
-        };
-        AuthService.login(credentials, function (user){
-          $scope.setCurrentUser(user.data.user, user.data.token);
-          $rootScope.$broadcast(AUTHEVENTS.loginSuccess);
-          $window.location.href = '#/dashboard';
+          data: $scope.user,
+          success: function(response){
+            var credentials = {
+              username: $scope.user.username,
+              password: $scope.user.password
+            };
+            AuthService.login(credentials, function (user){
+              $scope.setCurrentUser(user.data.user, user.data.token);
+              $rootScope.$broadcast(AUTHEVENTS.loginSuccess);
+              $window.location.href = '#/dashboard';
+            });
+          },
+          error: function(error){
+            console.log(error);
+          }
         });
 
       }
-      function successFalseCallback(response){
-        console.log(response);
-      }
-      function errorCallback(response){
-        console.log(response);
-      }
+    };
+
+
 
 
     $scope.reset = function () {
@@ -69,11 +62,5 @@ angular.module('stageprojectApp')
         username: ''
       }
     };
-      /*userFactory.registerUser($scope.user, function(credentials){
-       AuthService.login(credentials, function (user){
-       $scope.setCurrentUser(user.data.user, user.data.token);
-       $rootScope.$broadcast(AUTHEVENTS.loginSuccess);
-       })
-       });*/
 
   }]);

@@ -8,17 +8,36 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('DashboardCtrl', ['$scope','$window', '$modal', function ($scope,$window, $modal) {
+  .controller('DashboardCtrl', ['$scope', '$window', '$modal', 'projectRequestFactory', function ($scope, $window, $modal, projectRequestFactory) {
 
-  $scope.openModal = function(size){
+    $scope.openModal = function (size) {
+      var modalInstance = $modal.open({
+        templateUrl: 'views/project/newproject.html',
+        controller: 'NewProjectCtrl',
+        size: size
+      })
+    };
+    getProjectsForUser();
 
-    var modalInstance = $modal.open({
-      templateUrl: 'views/project/newproject.html',
-      controller: 'NewProjectCtrl',
-      size:size
-    })
-  }
+    function getProjectsForUser(){
+      projectRequestFactory.getProjectsForUser({
+        path:'project/getprojects',
+        method:'GET',
+        params: {}
+      }, getProjectsSuccessTrue, getProjectsSuccessFalse, getProjectsError)
+    }
 
+    function getProjectsSuccessTrue(response){
+      console.log(response);
+      $scope.myProjects = response.data.myprojects;
+      $scope.otherProjects = response.data.otherprojects;
+    }
+    function getProjectsSuccessFalse(response){
+      console.log(response);
+    }
+    function getProjectsError(response){
+      console.log(response);
+    }
 
 
   }]);

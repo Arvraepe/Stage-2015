@@ -10,23 +10,13 @@
 angular.module('stageprojectApp')
   .factory('userRequestHandler', ['requestFactory', 'notificationFactory', function (requestFactory, notificationFactory) {
     return {
-      registerUser: function (config, successTrueCallback, successFalseCallback) {
+      registerUser: function (config) {
         requestFactory.sendRequest({
-          path: config.path,
-          method: config.method,
+          path: 'register',
+          method: 'POST',
           data: config.data,
-          success: function(response){
-            if(response.success){
-              successTrueCallback();
-              notificationFactory.createNotification(response);
-            }
-            else{
-              successFalseCallback(response)
-            }
-          },
-          error:function(response){
-            notificationFactory.createNotification(response);
-          }
+          success: config.success,
+          error: config.error
         })
       }
     };

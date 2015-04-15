@@ -48,15 +48,22 @@ angular.module('stageprojectApp')
           }
         })
       },
-      getProjectsForUser: function(callback){
+      getProjectsForUser: function(config,successTrueCallback, successFalseCallback, errorCallback){
         requestFactory.sendRequest({
-          path:'project',
+          path:'project/getprojects',
           method:'GET',
+          params: {},
           success:function(response){
-            callback(response);
+            if(response.success){
+              successTrueCallback(response);
+            }
+            else{
+              notificationFactory.createNotification(response);
+              successFalseCallback(response);
+            }
           },
           error:function(response){
-            callback(response);
+            errorCallback(response);
           }
         })
       }
