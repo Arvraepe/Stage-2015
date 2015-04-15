@@ -14,14 +14,12 @@ exports.registerRoutes = function(app) {
 };
 
 function createProject(req, res, next) {
-    console.log('ier');
     async.waterfall([
-        //function (callback) {
-        //    auth.verifyToken(req.params.token, callback);
-        //},
         function (callback) {
-            console.log('binne');
-            projectService.createProject(req.params, 'userId', callback);
+            auth.verifyToken(req.params.token, callback);
+        },
+        function (userId, callback) {
+            projectService.createProject(req.params, userId, callback);
         },
         function(messages, project, callback) {
             userService.findCollaborators(req.params.collaborators, function(err, usersExists) {
@@ -30,7 +28,6 @@ function createProject(req, res, next) {
         },
         function (messages, project, usersExist, callback) {
             var tasks = [];
-            console.log(usersExist);
             usersExist.forEach(function (entry) {
                 if(!entry.exists) {
                     if(entry.email !== undefined) {

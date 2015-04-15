@@ -278,10 +278,12 @@ exports.findCollaborators = function (users, callback) {
 };
 
 exports.findALike = function(username, callback) {
-    if(username.length>2) {
+    if(username.length>=2) {
         userRepo.findLike(username, function(err, users) {
             callback(err, filterUsers(users));
         });
+    } else {
+        callback(new Error('please query using more than 2 characters'));
     }
 
 };
