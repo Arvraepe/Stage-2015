@@ -14,7 +14,7 @@ exports.registerUser = function (user, callback) {
         email: user.email,
         firstname: user.firstname,
         lastname: user.lastname,
-        imageUrl: config.imageUrl + '/profilepicture.jpg',
+        imageUrl: config.imageUrl + 'profilepicture.jpg',
         recovery: {}
     });
     registeredUser.save(function (err, registeredUser) {
