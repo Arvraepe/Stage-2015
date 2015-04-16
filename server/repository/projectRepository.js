@@ -21,10 +21,6 @@ exports.addCollab = function(projectId, users, cb) {
     });
 };
 
-exports.getMyProjects = function(userId, callback) {
-    Project.find({leader : userId}).lean().exec(callback);
-};
-
-exports.getOtherProjects = function(userId, callback) {
-    Project.find({collaborators : userId}).lean().exec(callback);
+exports.findProjects = function(condition, callback) {
+    Project.find(condition).lean().exec(callback);
 };

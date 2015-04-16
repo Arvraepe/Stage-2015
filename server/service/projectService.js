@@ -62,11 +62,11 @@ exports.addCollabs = function (messages, project, usersExist, callback) {
 };
 
 exports.getMyProjects = function(userId, callback) {
-    projectRepo.getMyProjects(userId, callback);
+    projectRepo.findProjects({leader : userId}, callback);
 };
 
 exports.getOtherProjects = function(userId, callback) {
-    projectRepo.getOtherProjects(userId, callback);
+    projectRepo.findProjects({collaborators : userId}, callback);
 };
 
 function addCollab(projectId, userId, callback) {
