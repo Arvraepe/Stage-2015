@@ -20,8 +20,8 @@ exports.createProject = function (params, userId, callback) {
     }
 };
 
-exports.addCollabs = function (messages, project, usersExist, callback) {
-    var tasks = [];
+exports.checkAndAddCollabs = function (messages, project, usersExist, callback) {
+    var tasks = [];;
     usersExist.forEach(function (entry) {
         if (!entry.exists) {
             if (entry.email !== undefined) {
@@ -67,6 +67,17 @@ exports.getMyProjects = function(userId, callback) {
 
 exports.getOtherProjects = function(userId, callback) {
     projectRepo.findProjects({collaborators : userId}, callback);
+};
+
+exports.getProject = function(projectId, userId, callback) {
+    projectRepo.findProjects({_id : projectId}, function(err, projects) {
+        var project = projects[0]; //we searched using id but the search returns an array, so we need the first element.
+        if(project.leader == userId || project.collaborators.indexOf(userId) > -1) {
+            callback(err, project);
+        } else {
+            callback(new Error('You have no rights to see this project.'));
+        }
+    });
 };
 
 function addCollab(projectId, userId, callback) {

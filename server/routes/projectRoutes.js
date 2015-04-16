@@ -11,6 +11,8 @@ var auth = require('./../service/authenticationService');
 exports.registerRoutes = function(app) {
     app.post('/project/create', createProject);
     app.get('/project/getprojects', getProjects);
+    app.put('/project/addcollab', addCollab);
+    app.get('/project/getproject', getProject);
 };
 
 function createProject(req, res, next) {
@@ -27,7 +29,7 @@ function createProject(req, res, next) {
             });
         },
         function (messages, project, usersExist, callback) {
-            projectService.addCollabs(messages, project, usersExist, callback)
+            projectService.checkAndAddCollabs(messages, project, usersExist, callback)
         }
     ], function(err, result) {
         var response = errorHandler.handleProjectErrors(err, result);
@@ -54,6 +56,50 @@ function getProjects(req, res, next) {
         }
     ], function(err, result) {
         var response = errorHandler.handleResult(err, result);
+        res.send(response);
+    });
+    next();
+}
+
+function addCollab(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            auth.verifyToken(req.params.token, callback)
+        },
+        function (userId, callback) {
+            projectService.getProject(req.params.projectId, userId, function(err, project) {
+                if(project.leader != userId) {
+                    callback(new Error('You cannot add collaborators to projects you do not own.'));
+                } else {
+                    callback(err, project);
+                }
+            });
+        },
+        function (project, callback) {
+            userService.findCollaborators(req.params.collaborators, function(err, userExists) {
+                callback(err, project, userExists)
+            });
+        },
+        function(project, userExists, callback) {
+            projectService.checkAndAddCollabs(null, project, userExists, callback);
+        }
+    ], function(err, result) {
+        var response = errorHandler.handleProjectErrors(err, result, 'Projects fetched successfully.');
+        res.send(response);
+    });
+    next();
+}
+
+function getProject(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            auth.verifyToken(req.params.token, callback);
+        },
+        function(userId, callback) {
+            projectService.getProject(req.params.projectId, userId, callback);
+        }
+    ], function(err, result) {
+        var response = errorHandler.handleResult(err, result, 'Project fetched successfully.');
         res.send(response);
     });
     next();
