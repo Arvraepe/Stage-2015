@@ -4,6 +4,7 @@
 var projectValidator = require('./../validator/projectValidator');
 var projectRepo = require('./../repository/projectRepository');
 var mailService = require('./../service/mailService');
+var config = require('./../config.json');
 var async = require('async');
 
 exports.createProject = function(params, userId, callback) {
@@ -22,11 +23,12 @@ exports.createProject = function(params, userId, callback) {
 exports.addCollabs = function(messages, project, usersExist, callback) {
     var tasks = [];
     usersExist.forEach(function (entry) {
+        console.log(entry);
         if(!entry.exists) {
             if(entry.email !== undefined) {
                 tasks.push(function(cb) {
-                    var link = config.domain + config.registerPath + '/' + entry.email + '/' +project._id
-                    mailService.inviteCoworkers(entry.email, link, cb);
+                    var link = config.domain + config.registerPath + '/' + entry.email + '/' +project._id;
+                    mailService.inviteCoworkers([entry.email], link, cb);
                 })
             } else {
                 tasks.push(function(cb) {
@@ -37,11 +39,24 @@ exports.addCollabs = function(messages, project, usersExist, callback) {
             }
         } else {
             tasks.push(function(cb) {
-                addCollab(project._id, entry.user._id, cb)
+                cb(null, {add: entry.user._id, projectId: project._id});
             });
         }
     });
-    async.parallel(tasks, callback);
+    async.parallel(tasks, function(err, results) {
+        var users  = [];
+        var projectId = '';
+        results.forEach(function (entry) {
+            if(entry.add != undefined) {
+                users.push(entry.add);
+                projectId = entry.projectId;
+            }
+        });
+        addCollab(projectId, users, function(err, result) {
+            results.push(result);
+            callback(err, results);
+        })
+    });
 };
 
 function addCollab(projectId, userId, callback) {

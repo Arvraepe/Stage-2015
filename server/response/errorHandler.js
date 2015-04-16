@@ -10,11 +10,10 @@ exports.handleProjectErrors = function (err, results) {
     if(err) {
         result = resultFact.makeFailureResult('ERROR', err.message);
     } else {
-
         results.forEach(function (entry) {
-            if (entry._id !== undefined) { //this is a project with 1 user added, the last iteration we come here will have the project with all users added.
+            if (entry.add !== undefined) { //this means 1 user was added to the project.
                 usersAddedCounter++;
-            } else if (entry.code !== undefined || entry.code !== null) {//this is a user not found
+            } else if (entry.code !== undefined ) {//this is a user not found
                 messages.push(entry);
             } else {//this is an email
                 emailsSentCounter++;
@@ -31,5 +30,6 @@ exports.handleProjectErrors = function (err, results) {
         }
         result = resultFact.makeSuccessMMResult(messages);
     }
+    console.log(result);
     return result;
 };

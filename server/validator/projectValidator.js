@@ -16,6 +16,8 @@ exports.validateNewProject = function(params) {
     }
     if(!checkStates(params.standardStates)) {
         messages.push(makeMessage('state', 2, 20));
+    } else {
+        params.standardStates = convertStates(params.standardStates);
     }
     return messages;
 };
@@ -35,7 +37,7 @@ function checkDeadline(date) {
 function checkStates(states) {
     var res = true;
     states.forEach(function (entry) {
-        if(entry.length < 2 || entry.length > 20) {
+        if(entry.status.length < 2 || entry.status.length > 20) {
             res = false;
         }
     });
@@ -44,4 +46,12 @@ function checkStates(states) {
 
 function makeMessage(wrong, minlength, maxlength) {
     return { code : 'ERROR', message : wrong + 'needs to be between ' + minlength + ' and ' + maxlength + 'characters long.'};
+}
+
+function convertStates(states) {
+    var result = [];
+    states.forEach(function (entry) {
+        result.push(entry.status);
+    });
+    return result
 }
