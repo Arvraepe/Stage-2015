@@ -46,9 +46,9 @@
       <label class="col-md-3 control-label">Collaborators</label>
 
       <div class="col-md-9">
-        <ui-select multiple tagging tagging-label="false" tagging-tokens=",|@|SPACE" ng-model="project.collaborators" ng-disabled="disabled"
-                   search-enabled="true" theme="bootstrap">
-          <ui-select-match placeholder="Invite collaborators">{{$item}}</ui-select-match>
+        <ui-select multiple tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|@|SPACE" ng-model="project.collaborators" ng-disabled="disabled"
+                   search-enabled="true" theme="bootstrap" style="height:34px">
+          <ui-select-match placeholder="Invite collaborators" style="padding-left:9px;">{{$item}}</ui-select-match>
           <ui-select-choices repeat="username in allUsernames"
                              refresh="getUsers($select.search)" refresh-delay="0">
             {{username}}
@@ -103,13 +103,13 @@
 
       </div>
     </div>
-    <div class="form-group">
+    <!--<div class="form-group">
       <button type="submit" class="col-md-offset-4 btn btn-primary">Create!</button>
-    </div>
+    </div>-->
 
 </div>
 <div class="modal-footer">
-  <button type="submit" class="btn btn-primary" >Create</button>
+  <button type="submit" class="btn btn-primary" >Create!</button>
   <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
 </div>
 </form>

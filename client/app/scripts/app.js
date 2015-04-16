@@ -113,12 +113,8 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
       templateUrl: 'views/project/newproject.html',
       controller: 'NewProjectCtrl'
     })
-    .when('/project/project/:pid', {
-      templateUrl: 'views/project/project.html',
-      controller: 'ProjectCtrl'
-    })
     .when('/project/:pid', {
-      templateUrl: 'views/project.html',
+      templateUrl: 'views/project/project.html',
       controller: 'ProjectCtrl'
     })
     .otherwise({

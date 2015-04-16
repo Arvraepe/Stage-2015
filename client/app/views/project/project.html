@@ -1,1 +1,10 @@
-<p>This is the project/project view.</p>
+<div ng-init="getProjectInfo()">
+  <h2>{{project.name}}</h2>
+  <ul>
+    <li ng-repeat="collaborators in project">
+      {{collaborators.name}}
+    </li>
+  </ul>
+
+
+</div>

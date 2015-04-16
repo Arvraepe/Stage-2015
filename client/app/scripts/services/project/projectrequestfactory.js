@@ -8,37 +8,45 @@
  * Factory in the stageprojectApp.
  */
 angular.module('stageprojectApp')
-  .factory('projectRequestFactory', ['requestFactory','notificationFactory', function (requestFactory, notificationFactory) {
+  .factory('projectRequestFactory', ['requestFactory', 'notificationFactory', function (requestFactory, notificationFactory) {
     return {
       getUsers: function (config, successTrueCallback, successFalseCallback, errorCallback) {
         requestFactory.sendRequest({
-          path:'user/findlike',
-          method:'GET',
+          path: 'user/findlike',
+          method: 'GET',
           params: config.params,
           success: config.success,
           error: config.error
         })
       },
-      createProject: function(config){
+      createProject: function (config) {
         requestFactory.sendRequest({
-          path:'project/create',
-          method:'POST',
-          data:config.data,
+          path: 'project/create',
+          method: 'POST',
+          data: config.data,
           success: config.success,
           error: config.error
         })
       },
-      getProjectsForUser: function(config){
+      getProjectsForUser: function (config) {
         requestFactory.sendRequest({
-          path:'project/getprojects',
-          method:'GET',
+          path: 'project/getprojects',
+          method: 'GET',
           params: config.params,
-          success:config.success,
-          error:config.error
+          success: config.success,
+          error: config.error
         })
+      },
+      getProjectById: function (config) {
+      requestFactory.sendRequest({
+        path:'project/getproject',
+        method:'GET',
+        params: config.params,
+        success: config.success,
+        error: config.error
+      })
       }
     }
 
 
-
-    }]);
+  }]);
