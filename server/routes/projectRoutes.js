@@ -14,6 +14,7 @@ exports.registerRoutes = function(app) {
     app.put('/project/addcollab', addCollab);
     app.get('/project/getproject', getProject);
     app.del('/project/delete', deleteProject);
+    app.put('/project/update', updateProject);
 };
 
 function createProject(req, res, next) {
@@ -119,4 +120,15 @@ function deleteProject(req, res, next) {
         res.send(response);
     });
     next();
+}
+
+function updateProject(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            auth.verifyToken(req.params.token, callback);
+        },
+        function(userId, callback) {
+            projectService.updateProject(userId, req.params, callback);
+        }
+    ])
 }

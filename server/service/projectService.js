@@ -74,17 +74,24 @@ exports.getProject = function(projectId, userId, callback) {
 };
 
 exports.deleteProject = function(projectId, userId, callback) {
-   checkProject(projectId, userId, function(err, project) {
-       if(err || project == undefined) {
-           callback(err || new Error('project was not found'));
-       } else {
-           if(project.leader != userId) {
-               callback(new Error('You are not the leader of this project, you cannot delete it.'))
-           } else {
-               projectRepo.deleteProject(projectId, callback);
-           }
-       }
-   })
+    isLeader(projectId, userId, function(err, project) {
+        if(project) {
+            projectRepo.deleteProject(projectId, callback);
+        } else {
+            callback(new Error('You are not the leader of this project, you cannot delete it.'));
+        }
+    });
+};
+
+exports.updateProject = function(params, userId, callback) {
+    isLeader(params._id, userId, function(err, isLeader) {
+        if(isLeader) {
+            projectRepo.findOneAndUpdate(params._id, params, callback);
+        } else {
+            err = err || new Error('You cannot update a project you do not own.');
+            callback(err);
+        }
+    });
 };
 
 function addCollab(projectId, userId, callback) {
@@ -98,6 +105,18 @@ function checkProject(projectId, userId, callback) {
             callback(err, project);
         } else {
             callback(new Error('You have no rights to see this project.'));
+        }
+    });
+}
+
+function isLeader(projectId, userId, callback) {
+    projectRepo.findProjects({_id: projectId}, function(err, project) {
+        if(project == null) {
+            callback(new Error('project does not exist'))
+        } else if(project.leader == userId) {
+            callback(err, true);
+        } else {
+            callback(err, false);
         }
     });
 }
