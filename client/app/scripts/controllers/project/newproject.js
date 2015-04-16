@@ -8,7 +8,7 @@
  * Controller of the cstageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('NewProjectCtrl', [ '$scope','projectRequestFactory' ,'$modalInstance', function ($scope, projectRequestFactory, $modalInstance) {
+  .controller('NewProjectCtrl', [ '$scope','projectRequestFactory' ,'$modalInstance','notificationFactory', function ($scope, projectRequestFactory, $modalInstance, notificationFactory) {
 
     $scope.project = {};
     $scope.project.collaborators = [];
@@ -50,27 +50,21 @@ angular.module('stageprojectApp')
       };
       if(username.length>2){
         projectRequestFactory.getUsers({
-          path:'user/findlike',
-          method:'GET',
-          params:usernameJson
-        },getUsersSuccessTrue, getUsersSuccessFalse, getUsersError);
+          params:usernameJson,
+          success: function(response){
+            $scope.allUsernames = [];
+            angular.forEach(response.data.users, function(user){
+              $scope.allUsernames.push(user.username);
+            });
+          },
+          error: function(error){
+            console.log(error);
+          }
+        });
       }
 
     };
 
-    function getUsersSuccessTrue(response){
-      $scope.allUsernames = [];
-      angular.forEach(response.data.users, function(user){
-        $scope.allUsernames.push(user.username);
-      });
-      //console.log(response);
-    }
-    function getUsersSuccessFalse(response){
-      console.log(response);
-    }
-    function getUsersError(response){
-      console.log(response);
-    }
 
     $scope.createProject = function(project){
       if($scope.custom){
@@ -80,21 +74,17 @@ angular.module('stageprojectApp')
         project.standardStates = $scope.customStates;
       }
       projectRequestFactory.createProject({
-        path:'project/create',
-        method:'POST',
         data: project,
-        success: createProjectSuccess(response),
-        error: createProjectError(response)
-      }, createProjectSuccessTrue, createProjectSuccessFalse, createProjectError);
+        success: function(response){
+          notificationFactory.createNotification(response);
+        },
+        error: function(error){
+          console.log(error);
+        }
+      });
       $modalInstance.dismiss('Cancel');
     };
 
-    function createProjectSuccess(response){
-      console.log(response);
-    }
-    function createProjectError(response){
-      console.log(response);
-    }
 
 
 

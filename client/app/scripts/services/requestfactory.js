@@ -8,12 +8,13 @@
  * Factory in the stageprojectApp.
  */
 angular.module('stageprojectApp')
-  .factory('requestFactory', ['$http', 'Session', 'notificationFactory', function ($http, Session, notificationFactory) {
+  .factory('requestFactory', ['$http', 'Session', 'notificationFactory','notificationService','$rootScope', function ($http, Session, notificationFactory, notificationService, $rootScope) {
     var baseUrl = 'http://localhost:6543';
 
 
     return {
       sendRequest: function (config, getResult) {
+        $rootScope.$broadcast('requestEventStarted');
         if (Session.getId() != undefined) {
           if (config.data != undefined) {
             config.data.token = Session.getId();
@@ -36,6 +37,7 @@ angular.module('stageprojectApp')
           data: config.data,
           params: config.params
         }).success(function (response) {
+          $rootScope.$broadcast('requestEventStopped');
           if (response.success && config.success) config.success(response);
           else if (!response.success) {
             notificationFactory.createNotification(response);
@@ -46,32 +48,6 @@ angular.module('stageprojectApp')
           if (config.error) config.error(error);
         });
 
-
-        /*    .
-         success(function (response) {
-         if (response.success && config.success) {
-         config.success(response);
-         }
-         }, getResult).error(function (error) {
-         notificationService.error('Network error');
-         })
-         else
-         if (!response.success) {
-         notificationFactory.createNotification(response);
-         if (config.error) config.error(response);
-         }
-         } config.success, getResult
-         ).
-         error(config.error);*/
-
-
-        /*$http({
-          url: baseUrl + '/' + config.path,
-          method: config.method,
-          dataType: 'json',
-          data: config.data,
-          params: config.params
-        }).success(config.success, getResult).error(config.error);*/
       }
     };
 

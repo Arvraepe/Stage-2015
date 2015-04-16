@@ -41,9 +41,10 @@
         <a class="navbar-brand" href="#/">Collaboration app</a>
       </div>
       <div class="navbar-right">
-        <div class="welcomeUser normalFontColor" ng-if="isAuthorized(userRoles.user)">Welcome, {{currentUser.username}}
+        <div class="welcomeUser normalFontColor" ng-if="isAuthorized(userRoles.user)">
+          <span ng-show="request==true"><i class="fa fa-spinner fa-pulse"></i></span>
+          Hi, {{currentUser.username}}
           <img ng-if="currentUser && currentUser.imageUrl" src="{{currentUser.imageUrl}}" alt="ProfilePic" class="smallAvatar">
-
           <div class="btn-group" dropdown>
             <button class="btn btn-default dropdown-toggle normalFontColor" dropdown-toggle>
               <i class="fa fa-cog"></i>
@@ -52,12 +53,12 @@
             <ul class="dropdown-menu" role="menu">
               <li><a ng-href="#/updateuser">Update profile</a></li>
             </ul>
-
           </div>
           <button type="button" ng-click="logout()" class="btn btn-default normalFontColor"><i
             class="glyphicon glyphicon-log-out"></i>
             Sign out
           </button>
+
         </div>
         <div ng-if="!isAuthorized(userRoles.user)" class="loginFrontPage">
           <form ng-controller="LoginCtrl" class="navbar-form" role="search" name="logForm"
@@ -149,6 +150,8 @@
 <script src="bower_components/angular-bootstrap-show-errors/src/showErrors.min.js"></script>
 <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
 <script src="bower_components/angular-ui-select/dist/select.js"></script>
+<script src="bower_components/angular-spinner/angular-spinner.js"></script>
+<script src="bower_components/spin.js/spin.js"></script>
 
 
 

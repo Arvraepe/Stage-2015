@@ -9,7 +9,7 @@
  */
 angular.module('stageprojectApp')
   .controller('ApplicationCtrl', ['$scope', 'USERROLES', 'AuthService', 'loginFactory', '$rootScope', 'AUTHEVENTS', 'Session',
-    '$window', 'userFactory', 'localStorageService', function ($scope, USERROLES, AuthService, loginFactory, $rootScope,
+    '$window', 'userFactory', 'localStorageService',function ($scope, USERROLES, AuthService, loginFactory, $rootScope,
                                                                AUTHEVENTS, Session, $window, userFactory, localStorageService) {
 
       //console.log($scope.currentUser);
@@ -17,7 +17,6 @@ angular.module('stageprojectApp')
       $scope.isAuthorized = AuthService.isAuthorized;
       $scope.isLoginPage = true;
       //$scope.visible = false;
-
 
       $scope.setCurrentUser = function (user, token) {
         if(token ==undefined){
@@ -47,6 +46,13 @@ angular.module('stageprojectApp')
 
 
       $scope.currentUser = loginFactory.getUser();
+
+      $scope.$on('requestEventStarted', function(){
+        $scope.request=true;
+      });
+      $scope.$on('requestEventStopped', function(){
+        $scope.request=false;
+      })
 
 
 

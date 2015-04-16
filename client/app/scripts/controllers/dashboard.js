@@ -17,14 +17,22 @@ angular.module('stageprojectApp')
         size: size
       })
     };
-    getProjectsForUser();
+    //getProjectsForUser();
 
     function getProjectsForUser(){
       projectRequestFactory.getProjectsForUser({
         path:'project/getprojects',
         method:'GET',
-        params: {}
-      }, getProjectsSuccessTrue, getProjectsSuccessFalse, getProjectsError)
+        params: {},
+        success: function(response){
+          console.log(response);
+         /* $scope.userLeaderProjects = response.data.myprojects;
+          $scope.userCollaboratorProjects = response.data.otherprojects;*/
+        },
+        error: function(error){
+          console.log(error);
+        }
+      })
     }
 
     function getProjectsSuccessTrue(response){

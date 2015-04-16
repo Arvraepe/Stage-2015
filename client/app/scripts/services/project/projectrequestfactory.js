@@ -12,47 +12,27 @@ angular.module('stageprojectApp')
     return {
       getUsers: function (config, successTrueCallback, successFalseCallback, errorCallback) {
         requestFactory.sendRequest({
-          path: config.path,
-          method: config.method,
+          path:'user/findlike',
+          method:'GET',
           params: config.params,
-          success: function (response) {
-            if(response.success){
-              successTrueCallback(response);
-            }
-            else{
-              successFalseCallback(response);
-            }
-          },
-          error: function (response) {
-            errorCallback(response);
-          }
-
+          success: config.success,
+          error: config.error
         })
       },
-      createProject: function(config,successTrueCallback, successFalseCallback, errorCallback){
+      createProject: function(config){
         requestFactory.sendRequest({
-          path:config.path,
-          method:config.method,
+          path:'project/create',
+          method:'POST',
           data:config.data,
-          success:function(response){
-            if(response.success){
-              successTrueCallback(response);
-            }
-            else{
-              successFalseCallback(response);
-            }
-            notificationFactory.createNotification(response);
-          },
-          error:function(response){
-            errorCallback(response);
-          }
+          success: config.success,
+          error: config.error
         })
       },
       getProjectsForUser: function(config,successTrueCallback, successFalseCallback, errorCallback){
         requestFactory.sendRequest({
           path:'project/getprojects',
           method:'GET',
-          params: {},
+          params: config.params,
           success:function(response){
             if(response.success){
               successTrueCallback(response);
