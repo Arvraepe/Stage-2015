@@ -33,11 +33,11 @@ exports.handleProjectErrors = function (err, results) {
     return result;
 };
 
-exports.handleResult = function(err, result) {
+exports.handleResult = function(err, result, message) {
     if(err) {
         result = resultFact.makeFailureResult('ERROR', err.message);
     } else {
-        result = resultFact.makeSuccessResult('Projects fetched successfully.', result);
+        result = resultFact.makeSuccessResult(message, result);
     }
     return result;
 };
