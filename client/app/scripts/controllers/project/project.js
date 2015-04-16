@@ -20,35 +20,12 @@ angular.module('stageprojectApp')
       projectRequestFactory.getProjectById({
         params: projectId,
         success: function(response){
-          $scope.project=response.data;
-          angular.forEach($scope.project.collaborators, function(collaborator){
-            var collab = {
-              userId : collaborator
-            };
-            userRequestHandler.getUserById({
-              params: collab,
-              success: function(response){
-                console.log(response);
-                $scope.collaborators.push(response.data.user);
-              },
-              error:function(error){
-                console.log(error);
-              }
-            })
+          angular.forEach(response.data.collaborators, function(collab){
+            $scope.collaborators.push(collab);
           });
-          var projectLeader = {
-            userId : $scope.project.leader
-          };
-          userRequestHandler.getUserById({
-            params:projectLeader,
-            success : function(response){
-              console.log(response);
-              $scope.leader = response.data.user;
-            },
-            error: function(error){
-              console.log(error);
-            }
-          })
+          $scope.leader = response.data.leader;
+          $scope.project = response.data;
+
         },
         error:function(error){
           console.log(error);

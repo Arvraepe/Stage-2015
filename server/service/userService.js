@@ -298,7 +298,7 @@ exports.getUsersFromProject = function(collaborators, leader, callback) {
     async.parallel(tasks, function(err, results) {
         results = filterUsers(results);
         var result ={
-            leader : results.shift(),
+            leader : results.pop(),
             collaborators : []
         };
         results.forEach(function (entry) {
