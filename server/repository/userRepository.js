@@ -33,8 +33,8 @@ exports.userExists = function (condition, cb) {
     });
 };
 
-exports.findUser = function(username, cb) {
-    User.findOne({username: username}).lean().exec(function(err, user) {
+exports.findUser = function(condition, cb) {
+    User.findOne(condition).lean().exec(function(err, user) {
         if(err) cb(err);
         cb(null, user);
     });
@@ -90,7 +90,6 @@ exports.findUserByUuid = function(uuid, cb) {
 };
 
 exports.findLike = function (username, cb) {
-
     User.find({username : new RegExp(username, 'i')}).limit(10).lean().exec(function(err, users) {
         cb(err, users);
     })

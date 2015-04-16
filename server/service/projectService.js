@@ -70,6 +70,28 @@ exports.getOtherProjects = function(userId, callback) {
 };
 
 exports.getProject = function(projectId, userId, callback) {
+    checkProject(projectId, userId, callback);
+};
+
+exports.deleteProject = function(projectId, userId, callback) {
+   checkProject(projectId, userId, function(err, project) {
+       if(err || project == undefined) {
+           callback(err || new Error('project was not found'));
+       } else {
+           if(project.leader != userId) {
+               callback(new Error('You are not the leader of this project, you cannot delete it.'))
+           } else {
+               projectRepo.deleteProject(projectId, callback);
+           }
+       }
+   })
+};
+
+function addCollab(projectId, userId, callback) {
+    projectRepo.addCollab(projectId, userId, callback);
+}
+
+function checkProject(projectId, userId, callback) {
     projectRepo.findProjects({_id : projectId}, function(err, projects) {
         var project = projects[0]; //we searched using id but the search returns an array, so we need the first element.
         if(project.leader == userId || project.collaborators.indexOf(userId) > -1) {
@@ -78,8 +100,4 @@ exports.getProject = function(projectId, userId, callback) {
             callback(new Error('You have no rights to see this project.'));
         }
     });
-};
-
-function addCollab(projectId, userId, callback) {
-    projectRepo.addCollab(projectId, userId, callback);
 }

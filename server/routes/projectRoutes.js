@@ -13,6 +13,7 @@ exports.registerRoutes = function(app) {
     app.get('/project/getprojects', getProjects);
     app.put('/project/addcollab', addCollab);
     app.get('/project/getproject', getProject);
+    app.del('/project/delete', deleteProject);
 };
 
 function createProject(req, res, next) {
@@ -100,6 +101,21 @@ function getProject(req, res, next) {
         }
     ], function(err, result) {
         var response = errorHandler.handleResult(err, result, 'Project fetched successfully.');
+        res.send(response);
+    });
+    next();
+}
+
+function deleteProject(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            auth.verifyToken(req.params.token, callback);
+        },
+        function (userId, callback) {
+            projectService.deleteProject(req.params.projectId, userId, callback);
+        }
+    ], function(err, result) {
+        var response = errorHandler.handleResult(err, result, 'project has been deleted.');
         res.send(response);
     });
     next();

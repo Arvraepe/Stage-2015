@@ -15,6 +15,7 @@ exports.registerRoutes = function (app) {
     app.put('/user/resetpassword/confirm', confirmReset);
     app.post('/user/invitecoworkers', inviteCoWorkers);
     app.get('/user/findlike', findLike);
+    app.get('/user/getuser', getUser);
 };
 
 function register(req, res, next) {
@@ -143,26 +144,6 @@ function inviteCoWorkers(req, res, next) {
             res.send(result);
         }
     });
-    /**
-    userService.confirmEmails(req.params, function(err, vEmails, number) {
-        mailService.inviteCoworkers(vEmails, config.domain + config.registerPath, function (err, results) {
-            var result;
-             else {
-                var message;
-                if(number === 1) {
-                    message = '1 email has been sent.';
-                }
-                if (err) {
-                result = resultFactory.makeFailureResult('ERROR', err.message);
-                } else {
-                    message = number + ' emails have been sent.';
-                }
-                result = resultFactory.makeSuccessResult(message);
-            }
-            res.send(result);
-        });
-    });
-     **/
     next();
 }
 
@@ -180,7 +161,6 @@ function userExists(req, res, next) {
 }
 
 function findLike(req, res, next) {
-
     userService.findALike(req.params.username, function(err, users) {
         var result;
         if(err) {
@@ -189,5 +169,19 @@ function findLike(req, res, next) {
             result = resultFactory.makeSuccessResult('Data retrieved', {users : users})
         }
         res.send(result);
-    })
+    });
+    next();
+}
+
+function getUser(req, res, next) {
+    userService.findUser({_id : req.params.userId}, function(err, user) {
+        var result;
+        if(err) {
+            result = resultFactory.makeFailureResult('ERROR', err.message);
+        } else {
+            result = resultFactory.makeSuccessResult('Data retrieved', {user : user})
+        }
+        res.send(result);
+    });
+    next();
 }
