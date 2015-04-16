@@ -24,3 +24,7 @@ exports.addCollab = function(projectId, users, cb) {
 exports.findProjects = function(condition, callback) {
     Project.find(condition).lean().exec(callback);
 };
+
+exports.deleteProject = function(projectId, callback) {
+    Project.findOneAndRemove({_id : projectId}, callback);
+};

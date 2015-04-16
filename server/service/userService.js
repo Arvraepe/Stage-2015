@@ -26,7 +26,7 @@ exports.registerUser = function (user, callback) {
             if (exists) {
                 callback(new Error('Username already exists'));
             } else {
-                userRepo.userExists({email : user.email}, function (err, emailExists) {
+                userRepo.userExists({email : new RegExp(user.email, 'i')}, function (err, emailExists) {
                     if (err) callback(err);
                     if (emailExists) callback(new Error('A user has already registered using this email.'));
                     else {
