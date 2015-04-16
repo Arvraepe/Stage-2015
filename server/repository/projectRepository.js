@@ -20,3 +20,11 @@ exports.addCollab = function(projectId, users, cb) {
         Project.findOneAndUpdate({_id : project._id}, project, {new : true}).lean().exec(cb);
     });
 };
+
+exports.getMyProjects = function(userId, callback) {
+    Project.find({leader : userId}).lean().exec(callback);
+};
+
+exports.getOtherProjects = function(userId, callback) {
+    Project.find({collaborators : userId}).lean().exec(callback);
+};

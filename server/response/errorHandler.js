@@ -32,3 +32,12 @@ exports.handleProjectErrors = function (err, results) {
     }
     return result;
 };
+
+exports.handleResult = function(err, result) {
+    if(err) {
+        result = resultFact.makeFailureResult('ERROR', err.message);
+    } else {
+        result = resultFact.makeSuccessResult('Projects fetched successfully.', result);
+    }
+    return result;
+};

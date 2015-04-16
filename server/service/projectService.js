@@ -61,6 +61,14 @@ exports.addCollabs = function (messages, project, usersExist, callback) {
     });
 };
 
+exports.getMyProjects = function(userId, callback) {
+    projectRepo.getMyProjects(userId, callback);
+};
+
+exports.getOtherProjects = function(userId, callback) {
+    projectRepo.getOtherProjects(userId, callback);
+};
+
 function addCollab(projectId, userId, callback) {
     projectRepo.addCollab(projectId, userId, callback);
 }
