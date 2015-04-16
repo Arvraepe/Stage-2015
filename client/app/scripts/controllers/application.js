@@ -16,6 +16,7 @@ angular.module('stageprojectApp')
       $scope.userRoles = USERROLES;
       $scope.isAuthorized = AuthService.isAuthorized;
       $scope.isLoginPage = true;
+      $scope.requestsBusy=0;
       //$scope.visible = false;
 
       $scope.setCurrentUser = function (user, token) {
@@ -48,10 +49,10 @@ angular.module('stageprojectApp')
       $scope.currentUser = loginFactory.getUser();
 
       $scope.$on('requestEventStarted', function(){
-        $scope.request=true;
+        $scope.requestsBusy++;
       });
       $scope.$on('requestEventStopped', function(){
-        $scope.request=false;
+        $scope.requestsBusy--;
       })
 
 

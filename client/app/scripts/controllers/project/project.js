@@ -8,7 +8,8 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('ProjectCtrl' ,['$scope', '$routeParams', 'projectRequestFactory', function ($scope, $routeParams, projectRequestFactory) {
+  .controller('ProjectCtrl' ,['$scope', '$routeParams', 'projectRequestFactory',
+    'userRequestHandler', function ($scope, $routeParams, projectRequestFactory, userRequestHandler) {
     $scope.project = {};
     $scope.collaborators = [];
     $scope.leader = {};
@@ -21,22 +22,31 @@ angular.module('stageprojectApp')
         success: function(response){
           $scope.project=response.data;
           angular.forEach($scope.project.collaborators, function(collaborator){
-            projectRequestFactory.getUserById({
-              params: collaborator,
+            var collab = {
+              userId : collaborator
+            };
+            userRequestHandler.getUserById({
+              params: collab,
               success: function(response){
                 console.log(response);
-                $scope.collaborators.push(response.data);
+                $scope.collaborators.push(response.data.user);
               },
               error:function(error){
                 console.log(error);
               }
             })
           });
-          projectRequestFactory.getUserById({
-            params:$scope.project.leader,
+          var projectLeader = {
+            userId : $scope.project.leader
+          };
+          userRequestHandler.getUserById({
+            params:projectLeader,
             success : function(response){
               console.log(response);
-              $scope.leader = response.data;
+              $scope.leader = response.data.user;
+            },
+            error: function(error){
+              console.log(error);
             }
           })
         },

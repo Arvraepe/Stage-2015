@@ -1,10 +1,133 @@
 <div ng-init="getProjectInfo()">
   <h2>{{project.name}}</h2>
-  <ul>
-    <li ng-repeat="collaborators in project">
-      {{collaborators.name}}
-    </li>
-  </ul>
+
+  <div class="col-md-3 pull-right">
+    <div class="panel panel-default col-md-12 pull-right panelNoPadding">
+      <div class="panel-heading">
+        <div class="panel-title">
+          Details
+        </div>
+      </div>
+      <div class="panel-body">
+        <div ng-if="project.deadline">
+          <label>Deadline: </label>
+          <span> {{project.deadline | date}}</span>
+        </div>
+        <div>
+          <label>Name: </label>
+          <span> {{project.name}}</span>
+        </div>
+        <div>
+          <label>Description: </label>
+          <span> {{project.description}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default col-md-12 pull-right panelNoPadding">
+      <div class="panel-heading">
+        <div class="panel-title">
+          Members
+        </div>
+      </div>
+      <div class="panel-body">
+        <div>
+          <ul class="list-unstyled">
+            <li>
+              <i class="icon-f-crown"></i>
+              <img src="{{leader.imageUrl}}" alt="Profile Picture" class="smallerAvatar"/>
+              <span>{{leader.username}} <i class="icon-crown" style="vertical-align: middle"></i>
+              </span>
+            </li>
+            <li ng-repeat="collab in collaborators" style="margin-top: 3px;margin-bottom:3px;">
+              <img src="{{collab.imageUrl}}" alt="Profile Picture" class="smallerAvatar"/>
+              <span>{{collab.username}}</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!--<div class="panel panel-primary">
+    <div class="panel-heading">
+      <div class="panel-title">
+        <div class="row">
+          <div class="col-md-4 text-center">
+            Details
+          </div>
+          <div class="col-md-4 text-center">
+            Members
+          </div>
+          <div class="col-md-4 text-center">
+            Date
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-4">
+          <div>
+            <label>Name:
+            </label>
+          <span>
+            {{project.name}}
+          </span>
+          </div>
+          <div>
+            <label>Description</label>
+            <span>{{project.description}}</span>
+          </div>
+
+        </div>
+        <div class="col-md-4">
+          <ul class="list-unstyled">
+            <li ng-repeat="collab in collaborators">
+              <img src="{{collab.imageUrl}}" alt="ProfilePic" class="smallAvatar">
+
+              {{collab.username}}
+            </li>
+          </ul>
+
+        </div>
+        <div class="col-md-4">
+
+        </div>
+      </div>
+    </div>
+  </div>-->
+
+
+  <!--<table class="table">
+    <tr>
+      <th>
+        DESCRIPTION
+      </th>
+      <th>
+        MEMBERS
+      </th>
+      <th>
+        DATE
+      </th>
+    </tr>
+    <tr>
+      <td>
+        {{project.description}}
+      </td>
+      <td>
+        <ul class="list-unstyled">
+          <li ng-repeat="collab in collaborators">
+            {{collab.username}}
+          </li>
+        </ul>
+      </td>
+      <td>
+        Startdate : {{project.startDate | date}}
+      </td>
+    </tr>
+  </table>-->
 
 
 </div>

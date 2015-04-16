@@ -18,6 +18,15 @@ angular.module('stageprojectApp')
           success: config.success,
           error: config.error
         })
+      },
+      getUserById: function(config){
+        requestFactory.sendRequest({
+          path:'user/getuser',
+          method:'GET',
+          params: config.params,
+          success:config.success,
+          error: config.error
+        })
       }
     };
   }]);

@@ -44,6 +44,7 @@ angular.module('stageprojectApp')
             if (config.error) config.error(response);
           }
         }, getResult).error(function (error) {
+          $rootScope.$broadcast('requestEventStopped');
           notificationService.error('NETWORK ERROR');
           if (config.error) config.error(error);
         });

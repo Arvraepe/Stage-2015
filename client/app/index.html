@@ -15,9 +15,11 @@
   <!-- build:css(.tmp) styles/main.css -->
   <link rel="stylesheet" href="styles/main.css">
   <!-- endbuild -->
+  <link rel="stylesheet" href="styles/whhg.css">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="bower_components/pnotify/pnotify.core.css">
   <link rel="stylesheet" href="bower_components/pnotify/pnotify.buttons.css">
+
 </head>
 <body ng-app="stageprojectApp" ng-controller="ApplicationCtrl">
 <!--[if lt IE 7]>
@@ -42,7 +44,7 @@
       </div>
       <div class="navbar-right">
         <div class="welcomeUser normalFontColor" ng-if="isAuthorized(userRoles.user)">
-          <span ng-show="request==true"><i class="fa fa-spinner fa-pulse"></i></span>
+          <span ng-show="requestsBusy>0"><i class="fa fa-spinner fa-pulse"></i></span>
           Hi, {{currentUser.username}}
           <img ng-if="currentUser && currentUser.imageUrl" src="{{currentUser.imageUrl}}" alt="ProfilePic" class="smallAvatar">
           <div class="btn-group" dropdown>
