@@ -33,8 +33,8 @@ exports.userExists = function (condition, cb) {
     });
 };
 
-exports.findUser = function(username, cb) {
-    User.findOne({username: username}).lean().exec(function(err, user) {
+exports.findUser = function(condition, cb) {
+    User.findOne(condition).lean().exec(function(err, user) {
         if(err) cb(err);
         cb(null, user);
     });

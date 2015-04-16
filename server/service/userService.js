@@ -55,7 +55,7 @@ exports.registerUser = function (user, callback) {
  * @param callback = function(err, token, user) token is a json web token for session management, user is a user object who is now logged in.
  */
 exports.loginUser = function (credentials, callback) {
-    userRepo.findUser(credentials.username, function (err, user) {
+    userRepo.findUser({username : credentials.username}, function (err, user) {
         if (user != null && validateUser(credentials.password, user.salt, user.password)) {
             var token = authService.issueToken(user._id);
             callback(null, token, filterUser(user));
@@ -251,7 +251,7 @@ exports.findCollaborators = function (users, callback) {
             });
         } else {
             tasks.push(function(cb) {
-                userRepo.findUser(entry, cb);
+                userRepo.findUser({username : entry}, cb);
             });
         }
     });
@@ -283,6 +283,12 @@ exports.findALike = function(username, callback) {
         callback(new Error('please query using more than 2 characters'));
     }
 
+};
+
+exports.findUser = function(condition, callback) {
+    userRepo.findUser(condition, function(err, user) {
+        callback(err, filterUser(user));
+    });
 };
 
 
