@@ -10,9 +10,11 @@ exports.validateNewProject = function(params) {
     if(!checkDesc(params.description)) {
         messages.push(makeMessage('description', 5, 1000));
     }
-    var dateDeadline = new Date(params.deadline);
-    if(!checkDeadline(dateDeadline)) {
-        messages.push({code:'ERROR',message:"Deadline can't already be expired."});
+    if(params.deadline != undefined) {
+        var dateDeadline = new Date(params.deadline);
+        if (!checkDeadline(dateDeadline)) {
+            messages.push({code: 'ERROR', message: "Deadline can't already be expired."});
+        }
     }
     if(!checkStates(params.standardStates)) {
         messages.push(makeMessage('state', 2, 20));
