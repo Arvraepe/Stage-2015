@@ -282,7 +282,30 @@ exports.findALike = function(username, callback) {
     } else {
         callback(new Error('please query using more than 2 characters'));
     }
+};
 
+exports.getUsersFromProject = function(collaborators, leader, callback) {
+    var tasks = [
+        function(cb) {
+            userRepo.findUser({_id : leader}, cb)
+        }
+    ];
+    collaborators.forEach(function (entry) {
+        tasks.push(function (cb) {
+            userRepo.findUser({_id : entry}, cb);
+        });
+    });
+    async.parallel(tasks, function(err, results) {
+        results = filterUsers(results);
+        var result ={
+            leader : results.shift(),
+            collaborators : []
+        };
+        results.forEach(function (entry) {
+            result.collaborators.push(entry);
+        });
+        callback(err, result);
+    })
 };
 
 exports.findUser = function(condition, callback) {

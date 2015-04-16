@@ -99,6 +99,13 @@ function getProject(req, res, next) {
         },
         function(userId, callback) {
             projectService.getProject(req.params.projectId, userId, callback);
+        },
+        function(project, callback) {
+            userService.getUsersFromProject(project.collaborators, project.leader, function(err, result) {
+                project.leader = result.leader;
+                project.collaborators = result.collaborators;
+                callback(err, project);
+            });
         }
     ], function(err, result) {
         var response = errorHandler.handleResult(err, result, 'Project fetched successfully.');
@@ -130,5 +137,9 @@ function updateProject(req, res, next) {
         function(userId, callback) {
             projectService.updateProject(userId, req.params, callback);
         }
-    ])
+    ], function(err, result) {
+        var response = errorHandler.handleResult(err, result, 'Project updated succesfully');
+        res.send(response);
+    });
+    next();
 }

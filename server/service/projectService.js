@@ -21,7 +21,7 @@ exports.createProject = function (params, userId, callback) {
 };
 
 exports.checkAndAddCollabs = function (messages, project, usersExist, callback) {
-    var tasks = [];;
+    var tasks = [];
     usersExist.forEach(function (entry) {
         if (!entry.exists) {
             if (entry.email !== undefined) {
@@ -38,7 +38,7 @@ exports.checkAndAddCollabs = function (messages, project, usersExist, callback) 
             }
         } else {
             tasks.push(function (cb) {
-                cb(null, {add: entry.user._id, projectId: project._id});
+                cb(null, {add: entry.user._id, projectId: project._id, leader : project.leader});
             });
         }
     });
@@ -47,8 +47,12 @@ exports.checkAndAddCollabs = function (messages, project, usersExist, callback) 
         var projectId = '';
         results.forEach(function (entry) {
             if (entry.add != undefined) {
-                users.push(entry.add);
-                projectId = entry.projectId;
+                if(entry.add != entry.leader) {
+                    users.push(entry.add);
+                    projectId = entry.projectId;
+                } else {
+                    results.push({message : {code : 'WARN', message : 'You cannot add yourself to a project you own.'}});
+                }
             }
         });
         if (users.length > 0) {
