@@ -9,6 +9,17 @@
  */
 angular.module('stageprojectApp')
   .controller('DashboardCtrl', ['$scope', '$window', '$modal', 'projectRequestFactory', function ($scope, $window, $modal, projectRequestFactory) {
+    $scope.userLeaderProjects = [];
+    $scope.userCollaboratorProjects=[];
+    $scope.showMyLeaderProjects = function(){
+      $scope.projectsToShow = [];
+      $scope.projectsToShow = angular.copy($scope.userLeaderProjects);
+    };
+
+    $scope.showMyCollaborationProjects = function(){
+      $scope.projectsToShow = [];
+      $scope.projectsToShow = angular.copy($scope.userCollaboratorProjects);
+    };
 
     $scope.openModal = function (size) {
       var modalInstance = $modal.open({
@@ -17,7 +28,9 @@ angular.module('stageprojectApp')
         size: size
       })
     };
-    //getProjectsForUser();
+    $scope.projectsToShow = [];
+
+
 
     function getProjectsForUser(){
       projectRequestFactory.getProjectsForUser({
@@ -26,8 +39,13 @@ angular.module('stageprojectApp')
         params: {},
         success: function(response){
           console.log(response);
-         /* $scope.userLeaderProjects = response.data.myprojects;
-          $scope.userCollaboratorProjects = response.data.otherprojects;*/
+          /*angular.forEach(response.data.myprojects, function(project){
+            $scope.userLeaderProjects.push(project);
+          });
+          angular.forEach(response.data.otherprojects)*/
+          $scope.userLeaderProjects = response.data.myProjects;
+          $scope.userCollaboratorProjects = response.data.otherProjects;
+          $scope.showAllProjects();
         },
         error: function(error){
           console.log(error);
@@ -35,17 +53,21 @@ angular.module('stageprojectApp')
       })
     }
 
-    function getProjectsSuccessTrue(response){
-      console.log(response);
-      $scope.myProjects = response.data.myprojects;
-      $scope.otherProjects = response.data.otherprojects;
-    }
-    function getProjectsSuccessFalse(response){
-      console.log(response);
-    }
-    function getProjectsError(response){
-      console.log(response);
-    }
+    $scope.showAllProjects = function(){
+      $scope.projectsToShow = [];
+
+      angular.forEach($scope.userLeaderProjects, function(project){
+        $scope.projectsToShow.push(project);
+      });
+      angular.forEach($scope.userCollaboratorProjects, function(project){
+        $scope.projectsToShow.push(project);
+      });
+    };
+
+
+
+    getProjectsForUser();
+
 
 
   }]);

@@ -85,6 +85,8 @@ h2 {
   margin-right: 43px;
 }
 
+.panel-title a { cursor: pointer; }
+
 .normalFontColor {
   color: #777;
 }

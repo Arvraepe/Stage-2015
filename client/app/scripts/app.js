@@ -117,6 +117,10 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
       templateUrl: 'views/project/project.html',
       controller: 'ProjectCtrl'
     })
+    .when('/project/:pid', {
+      templateUrl: 'views/project.html',
+      controller: 'ProjectCtrl'
+    })
     .otherwise({
       redirectTo: '/'
     });

@@ -28,23 +28,13 @@ angular.module('stageprojectApp')
           error: config.error
         })
       },
-      getProjectsForUser: function(config,successTrueCallback, successFalseCallback, errorCallback){
+      getProjectsForUser: function(config){
         requestFactory.sendRequest({
           path:'project/getprojects',
           method:'GET',
           params: config.params,
-          success:function(response){
-            if(response.success){
-              successTrueCallback(response);
-            }
-            else{
-              notificationFactory.createNotification(response);
-              successFalseCallback(response);
-            }
-          },
-          error:function(response){
-            errorCallback(response);
-          }
+          success:config.success,
+          error:config.error
         })
       }
     }
