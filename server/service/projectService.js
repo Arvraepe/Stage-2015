@@ -7,56 +7,66 @@ var mailService = require('./../service/mailService');
 var config = require('./../config.json');
 var async = require('async');
 
-exports.createProject = function(params, userId, callback) {
+exports.createProject = function (params, userId, callback) {
     var messages = projectValidator.validateNewProject(params);
-    if(messages.length !== undefined && messages.length !== 0) {
+    if (messages.length !== undefined && messages.length !== 0) {
         callback(null, messages);
     } else {
         params.leader = userId;
         params.startDate = new Date();
-        projectRepo.create(params, function(err, project) {
+        projectRepo.create(params, function (err, project) {
             callback(err, null, project);
         });
     }
 };
 
-exports.addCollabs = function(messages, project, usersExist, callback) {
+exports.addCollabs = function (messages, project, usersExist, callback) {
     var tasks = [];
     usersExist.forEach(function (entry) {
-        console.log(entry);
-        if(!entry.exists) {
-            if(entry.email !== undefined) {
-                tasks.push(function(cb) {
-                    var link = config.domain + config.registerPath + '/' + entry.email + '/' +project._id;
-                    mailService.inviteCoworkers([entry.email], link, cb);
+        if (!entry.exists) {
+            if (entry.email !== undefined) {
+                tasks.push(function (cb) {
+                    var link = config.domain + config.registerPath + entry.email + '/' + project._id;
+                    mailService.inviteCoworkers(entry.email, link, cb);
                 })
             } else {
-                tasks.push(function(cb) {
-                    messages = messages || [];
-                    messages.push({code:'WARN', message: entry.message});
+                tasks.push(function (cb) {
+                    messages = messages || {};
+                    messages.message = {code: 'WARN', message: entry.message};
                     cb(null, messages);
                 });
             }
         } else {
-            tasks.push(function(cb) {
+            tasks.push(function (cb) {
                 cb(null, {add: entry.user._id, projectId: project._id});
             });
         }
     });
-    async.parallel(tasks, function(err, results) {
-        var users  = [];
+    async.parallel(tasks, function (err, results) {
+        var users = [];
         var projectId = '';
         results.forEach(function (entry) {
-            if(entry.add != undefined) {
+            if (entry.add != undefined) {
                 users.push(entry.add);
                 projectId = entry.projectId;
             }
         });
-        addCollab(projectId, users, function(err, result) {
-            results.push(result);
-            callback(err, results);
-        })
+        if (users.length > 0) {
+            addCollab(projectId, users, function (err, result) {
+                callback(err, results);
+            })
+        } else {
+            callback(null, results);
+        }
     });
+};
+
+exports.getMyProjects = function(userId, callback) {
+    projectRepo.findProjects({leader : userId}, callback);
+};
+
+exports.getOtherProjects = function(userId, callback) {
+    projectRepo.findProjects({collaborators : userId}, callback);
 };
 
 function addCollab(projectId, userId, callback) {

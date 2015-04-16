@@ -2,7 +2,7 @@ var userService = require('./../service/userService');
 var resultFactory = require('./../response/resultFactory');
 var mailService = require('./../service/mailService');
 var config = require('./../config.json');
-var fs = require('fs');
+var async = require('async');
 
 exports.registerRoutes = function (app) {
 
@@ -111,15 +111,49 @@ function confirmReset(req, res, next) {
 }
 
 function inviteCoWorkers(req, res, next) {
+    var tasks = [
+        function(callback) {
+            userService.confirmEmails(req.params, callback);
+        },
+        function(vEmails, number, callback) {
+            var pTasks = [];
+            vEmails.forEach(function (entry) {
+                var link = config.domain + config.registerPath + entry;
+                pTasks.push(function(cb) {
+                    mailService.inviteCoworkers(entry, link, cb);
+                })
+            });
+            async.parallel(pTasks, function(err, result) {
+                callback(err, number, result);
+            });
+        },
+        function(number, results, callback) {
+            var result;{
+                var message = number == 1 ? '1 email has been sent.' : number + ' emails have been sent.';
+                result = resultFactory.makeSuccessResult(message);
+            }
+           callback(null, result);
+        }
+    ];
+    async.waterfall(tasks, function(err, result) {
+        console.log(result);
+        if (err) {
+            res.send(resultFactory.makeFailureResult('ERROR', err.message));
+        } else {
+            res.send(result);
+        }
+    });
+    /**
     userService.confirmEmails(req.params, function(err, vEmails, number) {
         mailService.inviteCoworkers(vEmails, config.domain + config.registerPath, function (err, results) {
             var result;
-            if (err) {
-                result = resultFactory.makeFailureResult('ERROR', err.message);
-            } else {
+             else {
                 var message;
                 if(number === 1) {
                     message = '1 email has been sent.';
+                }
+                if (err) {
+                result = resultFactory.makeFailureResult('ERROR', err.message);
                 } else {
                     message = number + ' emails have been sent.';
                 }
@@ -128,6 +162,7 @@ function inviteCoWorkers(req, res, next) {
             res.send(result);
         });
     });
+     **/
     next();
 }
 

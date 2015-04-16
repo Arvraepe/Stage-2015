@@ -13,8 +13,8 @@ exports.handleProjectErrors = function (err, results) {
         results.forEach(function (entry) {
             if (entry.add !== undefined) { //this means 1 user was added to the project.
                 usersAddedCounter++;
-            } else if (entry.code !== undefined ) {//this is a user not found
-                messages.push(entry);
+            } else if (entry.message !== undefined ) {//this is a user not found
+                messages.push(entry.message);
             } else {//this is an email
                 emailsSentCounter++;
             }
@@ -30,6 +30,14 @@ exports.handleProjectErrors = function (err, results) {
         }
         result = resultFact.makeSuccessMMResult(messages);
     }
-    console.log(result);
+    return result;
+};
+
+exports.handleResult = function(err, result) {
+    if(err) {
+        result = resultFact.makeFailureResult('ERROR', err.message);
+    } else {
+        result = resultFact.makeSuccessResult('Projects fetched successfully.', result);
+    }
     return result;
 };

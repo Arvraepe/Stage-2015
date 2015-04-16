@@ -16,9 +16,11 @@ exports.create = function (project, cb) {
 
 exports.addCollab = function(projectId, users, cb) {
     Project.findOne({_id : projectId}).lean().exec(function(err, project) {
-        console.log(project);
-        console.log(users);
         project.collaborators = users;
         Project.findOneAndUpdate({_id : project._id}, project, {new : true}).lean().exec(cb);
     });
+};
+
+exports.findProjects = function(condition, callback) {
+    Project.find(condition).lean().exec(callback);
 };

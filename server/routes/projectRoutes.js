@@ -10,6 +10,7 @@ var auth = require('./../service/authenticationService');
 
 exports.registerRoutes = function(app) {
     app.post('/project/create', createProject);
+    app.get('/project/getprojects', getProjects);
 };
 
 function createProject(req, res, next) {
@@ -30,6 +31,29 @@ function createProject(req, res, next) {
         }
     ], function(err, result) {
         var response = errorHandler.handleProjectErrors(err, result);
+        res.send(response);
+    });
+    next();
+}
+
+function getProjects(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            auth.verifyToken(req.params.token, callback);
+        },
+        function(userId, callback) {
+            projectService.getMyProjects(userId, function(err, myProjects) {
+                callback(err, userId, myProjects);
+            });
+        },
+        function(userId, myProjects, callback) {
+            projectService.getOtherProjects(userId, function(err, otherProjects) {
+                var result = {otherProjects : otherProjects, myProjects: myProjects};
+                callback(err, result);
+            });
+        }
+    ], function(err, result) {
+        var response = errorHandler.handleResult(err, result);
         res.send(response);
     });
     next();

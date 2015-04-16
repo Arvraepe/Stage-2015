@@ -3,7 +3,7 @@
   "password" : "hueHue258",
   "domain" : "http://localhost:9000/#",
   "recoverPath" : "/user/recover/",
-  "registerPath" : "/register",
+  "registerPath" : "/register/",
   "secret" : "kjgJHhjikKhjKgKHJkHgkHkhjbYkhGk",
   "supportedImages" : ["jpg", "png", "gif", "bmp"],
   "imageUrl" : "http://localhost:6543/avatars/",
