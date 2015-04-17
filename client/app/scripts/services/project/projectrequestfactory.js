@@ -38,13 +38,22 @@ angular.module('stageprojectApp')
         })
       },
       getProjectById: function (config) {
-      requestFactory.sendRequest({
-        path:'project/getproject',
-        method:'GET',
-        params: config.params,
-        success: config.success,
-        error: config.error
-      })
+        requestFactory.sendRequest({
+          path: 'project/getproject',
+          method: 'GET',
+          params: config.params,
+          success: config.success,
+          error: config.error
+        })
+      },
+      updateProject: function (config) {
+        requestFactory.sendRequest({
+          path: 'project/update',
+          method: 'PUT',
+          data: config.data,
+          success: config.success,
+          error: config.error
+        })
       }
     }
 

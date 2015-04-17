@@ -8,7 +8,7 @@
  * Controller of the clientApp
  */
 angular.module('stageprojectApp')
-  .controller('UpdateDetailsCtrl', function ($scope, $modalInstance, project, projectRequestFactory, notificationFactory) {
+  .controller('UpdateDetailsCtrl', function ($scope, $modalInstance, project, projectRequestFactory, notificationFactory, loginFactory) {
     $scope.project = angular.copy(project);
     $scope.collaborators = [];
 
@@ -66,12 +66,16 @@ angular.module('stageprojectApp')
       else {
         project.standardStates = $scope.customStates;
       }
+      project.leader = loginFactory.getUser()._id;
 
       projectRequestFactory.updateProject({
         data: project,
         success: function (response) {
           notificationFactory.createNotification(response);
           console.log(response);
+        },
+        error: function(error){
+          console.log(error)
         }
       });
     };
