@@ -54,6 +54,15 @@ angular.module('stageprojectApp')
           success: config.success,
           error: config.error
         })
+      },
+      deleteProject: function(config){
+        requestFactory.sendRequest({
+          path:'project/delete',
+          method:'delete',
+          params:config.params,
+          success: config.success,
+          error: config.error
+        })
       }
     }
 

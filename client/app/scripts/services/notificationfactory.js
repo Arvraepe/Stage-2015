@@ -36,5 +36,24 @@ angular.module('stageprojectApp')
 
     };
 
+    notificationFactory.createConfirm = function(config){
+      notificationService.notify({
+        title: config.title,
+        text: config.body,
+        hide: false,
+        confirm: {
+          confirm: true
+        },
+        buttons: {
+          closer: false,
+          sticker: false
+        },
+        history: {
+          history: false
+        }
+      }).get().on('pnotify.confirm', config.confirm
+      ).on('pnotify.cancel', config.cancel);
+    };
+
     return notificationFactory;
   }]);
