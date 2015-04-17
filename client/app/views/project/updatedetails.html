@@ -1,0 +1,115 @@
+<div class="modal-header">
+  <h3 class="modal-title">Update project</h3>
+</div>
+<form class="form-horizontal" name="updateProjectForm" ng-submit="updateProjectForm.$valid && updateProject(project)">
+  <div class="modal-body">
+
+    <div class="form-group" show-errors="{showSuccess: true}">
+      <label class="col-md-3 control-label">Name</label>
+
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="projectNameField" placeholder="Project name"
+               ng-model="project.name" required ng-minlength="2"
+               ng-maxlength="75">
+
+        <p class="help-block" ng-if="updateProjectForm.projectNameField.$error.required">A project needs to have a
+          name.</p>
+
+        <p class="help-block" ng-if="updateProjectForm.projectNameField.$error.minlength">A project name needs to have at
+          least 2
+          characters.</p>
+
+        <p class="help-block" ng-if="updateProjectForm.projectNameField.$error.maxlength">A project name can have up to 75
+          characters.</p>
+      </div>
+    </div>
+    <div class="form-group" show-errors="{showSuccess: true}">
+      <label class="col-md-3 control-label">Description</label>
+
+      <div class="col-md-9">
+        <textarea type="text" class="form-control" name="projectDescriptionField" placeholder="Project description"
+                  ng-model="project.description" required ng-minlength="5"
+                  ng-maxlength="1000" style="resize: none"></textarea>
+
+        <p class="help-block" ng-if="updateProjectForm.projectDescriptionField.$error.required">This field can't be
+          empty.</p>
+
+        <p class="help-block" ng-if="updateProjectForm.projectDescriptionField.$error.minlength">A project name needs to
+          have at least 5
+          characters.</p>
+
+        <p class="help-block" ng-if="updateProjectForm.projectDescriptionField.$error.maxlength">A project name can have up
+          to 1000 characters.</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-md-3 control-label">Collaborators</label>
+
+      <div class="col-md-9">
+        <ui-select multiple tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|@|SPACE" ng-model="project.collaborators" ng-disabled="disabled"
+                   search-enabled="true" theme="bootstrap" style="height:34px">
+          <ui-select-match placeholder="Invite collaborators" style="padding-left:9px;">{{$item}}</ui-select-match>
+          <ui-select-choices repeat="collab in collaborators"
+                             refresh="getUsers($select.search)" refresh-delay="0">
+            {{collab}}
+          </ui-select-choices>
+        </ui-select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-md-3 control-label">Deadline</label>
+
+      <div class="col-md-9">
+        <p class="input-group">
+          <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="project.deadline"
+                 is-open="opened" min-date="minDate"
+                 max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabledTime(date,mode)"
+                 close-text="Close"/>
+          <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open($event)"><i
+                  class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+        </p>
+      </div>
+    </div>
+    <div class="form-group" show-errors="{showSuccess: true}">
+      <label class="col-md-3 control-label">States</label>
+
+      <div class="col-md-9 radio">
+        <label>
+          <input type="radio" name="stateRadio" id="optionsRadio1" ng-value=true ng-model="custom">
+          Not Started - In Progress - Finished
+        </label>
+      </div>
+      <div class="col-md-offset-3 col-md-9 radio">
+        <label>
+          <input type="radio" name="stateRadio" id="optionsRadio2" ng-value=false ng-model="custom">
+          Custom States
+        </label>
+
+        <div ng-repeat="stat in customStates" ng-show="custom==false">
+          <ng-form>
+            <div style="margin-top: 10px">
+              <input type="text" class="form-control-custom col-md-9 " ng-model="stat.status" style="margin-bottom:13px">
+              <div class="col-md-3">
+                <button type="button" class="btn btn-primary" ng-click="addState()" ng-show="($index+1) == customStates.length" ng-hide="customStates.length>=5"><i class="fa fa-plus-square"></i>
+                  Add
+                </button>
+              </div>
+            </div>
+
+          </ng-form>
+        </div>
+
+      </div>
+    </div>
+    <!--<div class="form-group">
+      <button type="submit" class="col-md-offset-4 btn btn-primary">Create!</button>
+    </div>-->
+
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary" >Create!</button>
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+  </div>
+</form>

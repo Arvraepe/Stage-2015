@@ -5,7 +5,19 @@
     <div class="panel panel-default col-md-12 pull-right panelNoPadding">
       <div class="panel-heading">
         <div class="panel-title">
-          Details
+          <div class="row">
+            <div class="col-md-6">
+              <div style="padding-top:6px">
+                Details
+              </div>
+
+            </div>
+            <div ng-if="isLeader()" class="col-md-6">
+              <div class="pull-right">
+                <button type="button" ng-click="openDetailsModal()" class="btn btn-primary">Update</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="panel-body">
@@ -27,7 +39,20 @@
     <div class="panel panel-default col-md-12 pull-right panelNoPadding">
       <div class="panel-heading">
         <div class="panel-title">
-          Members
+          <div class="row">
+            <div class="col-md-6">
+              <div style="padding-top:6px">
+                Collaborators
+              </div>
+
+            </div>
+            <div class="col-md-6">
+              <div class="pull-right">
+                <button type="button" ng-click="openModal()" class="btn btn-primary">Update</button>
+              </div>
+
+            </div>
+          </div>
         </div>
       </div>
       <div class="panel-body">
@@ -49,85 +74,6 @@
       </div>
     </div>
   </div>
-
-  <!--<div class="panel panel-primary">
-    <div class="panel-heading">
-      <div class="panel-title">
-        <div class="row">
-          <div class="col-md-4 text-center">
-            Details
-          </div>
-          <div class="col-md-4 text-center">
-            Members
-          </div>
-          <div class="col-md-4 text-center">
-            Date
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="panel-body">
-      <div class="row">
-        <div class="col-md-4">
-          <div>
-            <label>Name:
-            </label>
-          <span>
-            {{project.name}}
-          </span>
-          </div>
-          <div>
-            <label>Description</label>
-            <span>{{project.description}}</span>
-          </div>
-
-        </div>
-        <div class="col-md-4">
-          <ul class="list-unstyled">
-            <li ng-repeat="collab in collaborators">
-              <img src="{{collab.imageUrl}}" alt="ProfilePic" class="smallAvatar">
-
-              {{collab.username}}
-            </li>
-          </ul>
-
-        </div>
-        <div class="col-md-4">
-
-        </div>
-      </div>
-    </div>
-  </div>-->
-
-
-  <!--<table class="table">
-    <tr>
-      <th>
-        DESCRIPTION
-      </th>
-      <th>
-        MEMBERS
-      </th>
-      <th>
-        DATE
-      </th>
-    </tr>
-    <tr>
-      <td>
-        {{project.description}}
-      </td>
-      <td>
-        <ul class="list-unstyled">
-          <li ng-repeat="collab in collaborators">
-            {{collab.username}}
-          </li>
-        </ul>
-      </td>
-      <td>
-        Startdate : {{project.startDate | date}}
-      </td>
-    </tr>
-  </table>-->
 
 
 </div>

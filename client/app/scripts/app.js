@@ -117,6 +117,14 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
       templateUrl: 'views/project/project.html',
       controller: 'ProjectCtrl'
     })
+    .when('/project/updatecollaborators', {
+      templateUrl: 'views/project/updatecollaborators.html',
+      controller: 'UpdateCollaboratorsCtrl'
+    })
+    .when('/project/updatedetails', {
+      templateUrl: 'views/project/updatedetails.html',
+      controller: 'UpdateDetailsCtrl'
+    })
     .otherwise({
       redirectTo: '/'
     });
