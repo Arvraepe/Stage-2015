@@ -11,10 +11,10 @@ var auth = require('./../service/authenticationService');
 exports.registerRoutes = function(app) {
     app.post('/project/create', createProject);
     app.get('/project/getprojects', getProjects);
-    app.put('/project/addcollab', addCollab);
     app.get('/project/getproject', getProject);
     app.del('/project/delete', deleteProject);
     app.put('/project/update', updateProject);
+    app.put('/project/changeleader', changeLeader);
 };
 
 function createProject(req, res, next) {
@@ -63,19 +63,13 @@ function getProjects(req, res, next) {
     next();
 }
 
-function addCollab(req, res, next) {
+function updateProject(req, res, next) {
     async.waterfall([
         function(callback) {
             auth.verifyToken(req.params.token, callback)
         },
         function (userId, callback) {
-            projectService.getProject(req.params.projectId, userId, function(err, project) {
-                if(project.leader != userId) {
-                    callback(new Error('You cannot add collaborators to projects you do not own.'));
-                } else {
-                    callback(err, project);
-                }
-            });
+            projectService.updateProject(userId, req.params, callback)
         },
         function (project, callback) {
             userService.findCollaborators(req.params.collaborators, function(err, userExists) {
@@ -86,7 +80,7 @@ function addCollab(req, res, next) {
             projectService.checkAndAddCollabs(null, project, userExists, callback);
         }
     ], function(err, result) {
-        var response = errorHandler.handleProjectErrors(err, result, 'Projects fetched successfully.');
+        var response = errorHandler.handleProjectErrors(err, result, 'Projects updated successfully.');
         res.send(response);
     });
     next();
@@ -129,17 +123,13 @@ function deleteProject(req, res, next) {
     next();
 }
 
-function updateProject(req, res, next) {
+function changeLeader(req, res, next) {
     async.waterfall([
         function(callback) {
             auth.verifyToken(req.params.token, callback);
         },
         function(userId, callback) {
-            projectService.updateProject(userId, req.params, callback);
+            projectService.changeLeader(req.params, userId, callback);
         }
-    ], function(err, result) {
-        var response = errorHandler.handleResult(err, result, 'Project updated succesfully');
-        res.send(response);
-    });
-    next();
+    ])
 }

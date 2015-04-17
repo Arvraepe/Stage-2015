@@ -31,4 +31,4 @@ exports.deleteProject = function(projectId, callback) {
 
 exports.findOneAndUpdate = function(id, project, callback) {
     Project.findOneAndUpdate({_id : id}, project, { new:true}).lean().exec(callback);
-}
+};

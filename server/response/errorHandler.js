@@ -7,6 +7,7 @@ exports.handleProjectErrors = function (err, results) {
     var result;
     var usersAddedCounter = 0, emailsSentCounter = 0;
     var messages = [];
+    var project = {};
     if(err) {
         result = resultFact.makeFailureResult('ERROR', err.message);
     } else {
@@ -15,6 +16,8 @@ exports.handleProjectErrors = function (err, results) {
                 usersAddedCounter++;
             } else if (entry.message !== undefined ) {//this is a user not found
                 messages.push(entry.message);
+            } else if (entry.description !== undefined) {
+                project = entry;
             } else {//this is an email
                 emailsSentCounter++;
             }
@@ -28,7 +31,7 @@ exports.handleProjectErrors = function (err, results) {
             message = usersAddedCounter==1 ? ' user has been added to your project!' : ' users have been added to your project!';
             messages.push({code: 'INFO', message: usersAddedCounter + message})
         }
-        result = resultFact.makeSuccessMMResult(messages);
+        result = resultFact.makeSuccessMMResult(messages, {project : project});
     }
     return result;
 };
