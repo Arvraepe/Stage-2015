@@ -244,6 +244,7 @@ exports.confirmEmails = function (emails, callback) {
 
 exports.findCollaborators = function (users, callback) {
     var tasks = [];
+    console.log(users);
     users.forEach(function (entry) {
         if(entry.indexOf("@") > -1) {
             tasks.push(function(cb) {
@@ -316,7 +317,7 @@ exports.findUser = function(condition, callback) {
 
 
 function filterUser(user) {
-    return _.omit(user, ['password', 'salt', '__v', '_id', 'recovery']);
+    return _.omit(user, ['password', 'salt', '__v', 'recovery']);
 }
 
 function filterUsers(users) {

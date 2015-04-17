@@ -45,18 +45,27 @@ exports.checkAndAddCollabs = function (messages, project, usersExist, callback) 
     async.parallel(tasks, function (err, results) {
         var users = [];
         var projectId = '';
+        var leaderEntry = {};
         results.forEach(function (entry) {
             if (entry.add != undefined) {
                 if(entry.add != entry.leader) {
                     users.push(entry.add);
                     projectId = entry.projectId;
                 } else {
+                    leaderEntry = entry;
                     results.push({message : {code : 'WARN', message : 'You cannot add yourself to a project you own.'}});
                 }
             }
         });
+        async.filter(results, function (item, callback) {
+            callback(item !== leaderEntry)
+        }, function(filteredResults) {
+            results = filteredResults;
+        });
+        results = results.filter(onlyUnique);
         if (users.length > 0) {
             addCollab(projectId, users, function (err, result) {
+                results.push(result);
                 callback(err, results);
             })
         } else {
@@ -87,7 +96,7 @@ exports.deleteProject = function(projectId, userId, callback) {
     });
 };
 
-exports.updateProject = function(params, userId, callback) {
+exports.updateProject = function(userId, params, callback) {
     isLeader(params._id, userId, function(err, isLeader) {
         if(isLeader) {
             projectRepo.findOneAndUpdate(params._id, params, callback);
@@ -98,8 +107,20 @@ exports.updateProject = function(params, userId, callback) {
     });
 };
 
-function addCollab(projectId, userId, callback) {
-    projectRepo.addCollab(projectId, userId, callback);
+exports.changeLeader = function (params, leaderId, callback) {
+    isLeader(params.projectId, leaderId, function(err, isleader) {
+        if(isleader) {
+            projectRepo.findProjects({_id : params.projectId}, function(err, project) {
+                project.leader = project.collaborators.splice(project.collaborators.indexOf(params.userId), 1)[0];
+                project.collaborators.push(leaderId);
+                projectRepo.findOneAndUpdate({_id : params.projectId}, project, callback);
+            })
+        }
+    })
+};
+
+function addCollab(projectId, users, callback) {
+    projectRepo.addCollab(projectId, users, callback);
 }
 
 function checkProject(projectId, userId, callback) {
@@ -123,4 +144,8 @@ function isLeader(projectId, userId, callback) {
             callback(err, false);
         }
     });
+}
+
+function onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
 }
