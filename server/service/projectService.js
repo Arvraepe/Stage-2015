@@ -138,7 +138,7 @@ function isLeader(projectId, userId, callback) {
     projectRepo.findProjects({_id: projectId}, function(err, project) {
         if(project == null) {
             callback(new Error('project does not exist'))
-        } else if(project.leader == userId) {
+        } else if(project[0].leader == userId) {
             callback(err, true);
         } else {
             callback(err, false);
