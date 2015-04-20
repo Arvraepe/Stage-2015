@@ -63,6 +63,16 @@ angular.module('stageprojectApp')
           success: config.success,
           error: config.error
         })
+      },
+
+      promoteToLeader:function(config){
+        requestFactory.sendRequest({
+          path:'project/changeleader',
+          method:'put',
+          data:config.data,
+          success: config.success,
+          error: config.error
+        })
       }
     }
 

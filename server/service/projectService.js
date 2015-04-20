@@ -111,9 +111,10 @@ exports.changeLeader = function (params, leaderId, callback) {
     isLeader(params.projectId, leaderId, function(err, isleader) {
         if(isleader) {
             projectRepo.findProjects({_id : params.projectId}, function(err, project) {
-                project.leader = project.collaborators.splice(project.collaborators.indexOf(params.userId), 1)[0];
-                project.collaborators.push(leaderId);
-                projectRepo.findOneAndUpdate({_id : params.projectId}, project, callback);
+                console.log(project);
+                project[0].leader = project[0].collaborators.splice(project[0].collaborators.indexOf(params.userId), 1)[0];
+                project[0].collaborators.push(leaderId);
+                projectRepo.findOneAndUpdate({_id : params.projectId}, project[0], callback);
             })
         }
     })

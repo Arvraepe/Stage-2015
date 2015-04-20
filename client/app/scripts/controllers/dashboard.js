@@ -10,11 +10,10 @@
 angular.module('stageprojectApp')
   .controller('DashboardCtrl', ['$scope', '$window', '$modal', 'projectRequestFactory', function ($scope, $window, $modal, projectRequestFactory) {
     $scope.userLeaderProjects = [];
-    $scope.userCollaboratorProjects=[];
+    $scope.userCollaboratorProjects = [];
 
 
-    $scope.title= 'All My Projects';
-
+    $scope.title = 'All My Projects';
 
 
     $scope.openModal = function (size) {
@@ -22,51 +21,54 @@ angular.module('stageprojectApp')
         templateUrl: 'views/project/newproject.html',
         controller: 'NewProjectCtrl',
         size: size
-      })
+      });
+      modalInstance.result.then(function (project) {
+          $scope.userLeaderProjects.push(project);
+          $scope.showAllProjects();
+        }, function () {
+
+        }
+      );
     };
     $scope.projectsToShow = [];
 
 
-
-    $scope.getProjectsForUser= function(){
+    $scope.getProjectsForUser = function () {
       projectRequestFactory.getProjectsForUser({
 
         params: {},
-        success: function(response){
+        success: function (response) {
           console.log(response);
-          /*angular.forEach(response.data.myprojects, function(project){
-            $scope.userLeaderProjects.push(project);
-          });
-          angular.forEach(response.data.otherprojects)*/
+
           $scope.userLeaderProjects = response.data.myProjects;
           $scope.userCollaboratorProjects = response.data.otherProjects;
           $scope.showAllProjects();
         },
-        error: function(error){
+        error: function (error) {
           console.log(error);
         }
       })
-    }
+    };
 
-    $scope.showAllProjects = function(){
+    $scope.showAllProjects = function () {
       $scope.projectsToShow = [];
 
-      angular.forEach($scope.userLeaderProjects, function(project){
+      angular.forEach($scope.userLeaderProjects, function (project) {
         $scope.projectsToShow.push(project);
       });
-      angular.forEach($scope.userCollaboratorProjects, function(project){
+      angular.forEach($scope.userCollaboratorProjects, function (project) {
         $scope.projectsToShow.push(project);
       });
       $scope.title = 'All My Projects';
     };
 
-    $scope.showMyCollaborationProjects = function(){
+    $scope.showMyCollaborationProjects = function () {
       $scope.projectsToShow = [];
       $scope.projectsToShow = angular.copy($scope.userCollaboratorProjects);
       $scope.title = 'Projects as Collaborator';
     };
 
-    $scope.showMyLeaderProjects = function(){
+    $scope.showMyLeaderProjects = function () {
       $scope.projectsToShow = [];
       $scope.projectsToShow = angular.copy($scope.userLeaderProjects);
       $scope.title = 'Projects I own';
@@ -74,33 +76,9 @@ angular.module('stageprojectApp')
 
     $scope.currentPage = 0;
     $scope.pageSize = 5;
-    $scope.numberOfPages = function(){
-      return Math.ceil($scope.projectsToShow.length/$scope.pageSize);
+    $scope.numberOfPages = function () {
+      return Math.ceil($scope.projectsToShow.length / $scope.pageSize);
     };
-
-
-    /*$scope.paginate = {};
-    $scope.paginate.size = 7;
-    $scope.paginate.start = 0;
-
-    $scope.prevPage = function(){
-      if($scope.paginate.start){
-        $scope.paginate.start -= $scope.paginate.size;
-      }
-    };
-
-    $scope.nextPage = function(){
-      $scope.paginate.start += $scope.paginate.size;
-    };
-
-    $scope.getProjectList = function(project,index){
-      return (index>=$scope.paginate.start && index<$scope.paginate.start + $scope.paginate.size);
-    };*/
-
-
-
-
-
 
 
   }]);

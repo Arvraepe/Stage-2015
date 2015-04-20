@@ -8,7 +8,7 @@
  * Controller of the cstageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('NewProjectCtrl', [ '$scope','projectRequestFactory' ,'$modalInstance','notificationFactory', function ($scope, projectRequestFactory, $modalInstance, notificationFactory) {
+  .controller('NewProjectCtrl', [ '$scope','projectRequestFactory' ,'$modalInstance','notificationFactory', '$window', function ($scope, projectRequestFactory, $modalInstance, notificationFactory, $window) {
 
     $scope.project = {};
     $scope.project.collaborators = [];
@@ -77,12 +77,12 @@ angular.module('stageprojectApp')
         data: project,
         success: function(response){
           notificationFactory.createNotification(response);
+          $modalInstance.close(response.data.project);
         },
         error: function(error){
           console.log(error);
         }
       });
-      $modalInstance.dismiss('Cancel');
     };
 
     $scope.cancel = function () {

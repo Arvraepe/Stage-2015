@@ -67,6 +67,7 @@
             <li ng-repeat="collab in collaborators" style="margin-top: 3px;margin-bottom:3px;">
               <img src="{{collab.imageUrl}}" alt="Profile Picture" class="smallerAvatar"/>
               <span>{{collab.username}}</span>
+              <span ng-if="isLeader()" class="pull-right" ng-click="promoteUser(collab)"><i class="fa fa-arrow-up"></i></span>
             </li>
           </ul>
         </div>

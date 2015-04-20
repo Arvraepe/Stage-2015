@@ -31,7 +31,6 @@ angular.module('stageprojectApp')
         modalInstance.result.then(function (project) {
           $scope.project = project;
         }, function () {
-          console.log('Modal dismissed at: ' + new Date());
         })
       };
 
@@ -63,52 +62,57 @@ angular.module('stageprojectApp')
         })
       };
 
+      $scope.promoteUser = function(collab){
+        notificationFactory.createConfirm({
+          title:'Promote '+collab.username+' to leader',
+          body: 'Are you sure?',
+          confirm: function(){
+            var postSettings = {
+              projectId : $routeParams.pid,
+              userId : collab._id
+            };
+            projectRequestFactory.promoteToLeader({
+              data: postSettings,
+              success:function(response){
+                notificationFactory.createNotification(response);
+                console.log(response);
+              },
+              error : function(error){
+                console.log(error);
+              }
+            })
+          },
+          cancel:function(){
+            console.log('cancelled');
+          }
+        });
+      };
+
       $scope.deleteProject = function () {
         notificationFactory.createConfirm({
           title: 'Delete project ' + $scope.project.name,
           body: 'Are you sure?',
-          confirm : function(){
+          confirm: function () {
             var projectId = {
               projectId: $routeParams.pid
             };
             projectRequestFactory.deleteProject({
               params: projectId,
               success: function (response) {
-                console.log(response);
                 notificationFactory.createNotification(response);
-                $window.location.href='#/dashboard';
+                $window.location.href = '#/dashboard';
               },
               error: function (error) {
                 console.log(error);
               }
             });
           },
-          cancel: function(){
+          cancel: function () {
 
           }
         });
 
-      /*
-        notificationService.notify({
-          title: 'Delete project ' + $scope.project.name,
-          text: 'Are you sure?',
-          hide: false,
-          confirm: {
-            confirm: true
-          },
-          buttons: {
-            closer: false,
-            sticker: false
-          },
-          history: {
-            history: false
-          }
-        }).get().on('pnotify.confirm', function () {
 
-        }).on('pnotify.cancel', function () {
-          alert('Oh ok. Chicken, I see.');
-        });
-*/
       }
 
 
