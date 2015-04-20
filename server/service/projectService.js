@@ -99,12 +99,11 @@ exports.deleteProject = function(projectId, userId, callback) {
 
 exports.updateProject = function(userId, params, callback) {
     var messages = projectValidator.validateNewProject(params);
-    if (messages.length !== undefined && messages.length !== 0) {
-        callback(messages);
-    }
     isLeader(params._id, userId, function(err, isLeader) {
         if(isLeader) {
-            projectRepo.findOneAndUpdate(params._id, params, callback);
+            projectRepo.findOneAndUpdate(params._id, params, function(err, result) {
+                callback(err, messages, result);
+            });
         } else {
             err = err || new Error('You cannot update a project you do not own.');
             callback(err);
@@ -121,6 +120,18 @@ exports.changeLeader = function (params, leaderId, callback) {
                 project[0].collaborators.push(leaderId);
                 projectRepo.findOneAndUpdate({_id : params.projectId}, project[0], callback);
             })
+        }
+    });
+};
+
+exports.addRegisteredCollab = function(userId, projectId, callback) {
+    projectRepo.findProjects({_id : projectId}, function(err, projects) {
+        var project = projects[0];
+        if(project == undefined) {
+            callback(new Error('project does not exist'));
+        } else {
+            project.collaborators.push(userId);
+            projectRepo.findOneAndUpdate(project._id, project, callback);
         }
     });
 };

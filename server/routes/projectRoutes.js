@@ -71,13 +71,22 @@ function updateProject(req, res, next) {
         function (userId, callback) {
             projectService.updateProject(userId, req.params, callback)
         },
-        function (project, callback) {
+        function (messages, project, callback) {
             userService.findCollaborators(req.params.collaborators, function(err, userExists) {
-                callback(err, project, userExists)
+                callback(err, messages, project, userExists)
             });
         },
-        function(project, userExists, callback) {
-            projectService.checkAndAddCollabs(null, project, userExists, callback);
+        function(messages, project, userExists, callback) {
+            projectService.checkAndAddCollabs(messages, project, userExists, callback);
+        }, function(result, callback) {
+            result.forEach(function (entry) {
+                if(entry.description != undefined) {
+                    populateProject(entry, function (err, result) {
+                        entry = result;
+                    });
+                }
+            });
+            callback(result);
         }
     ], function(err, result) {
         var response = errorHandler.handleProjectErrors(err, result, 'Projects updated successfully.');
