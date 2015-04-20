@@ -24,12 +24,12 @@ exports.handleProjectErrors = function (err, results) {
         });
         var message;
         if(emailsSentCounter !== 0) {
-            message = emailsSentCounter==1 ? 'Your project has ' + emailsSentCounter + ' collaborator': 'Your project has ' + emailsSentCounter + ' collaborators';
-            messages.push({code: 'INFO', message: message})
+            message = emailsSentCounter==1 ? ' email has been sent.': ' emails have been sent.';
+            messages.push({code: 'INFO', message: emailsSentCounter + message})
         }
         if(usersAddedCounter !== 0) {
-            message = usersAddedCounter==1 ? ' user has been added to your project' : ' users have been added to your project!';
-            messages.push({code: 'INFO', message: usersAddedCounter + message})
+            message = usersAddedCounter==1 ? 'Your project has ' + emailsSentCounter + ' collaborator' : ' users have been added to your project!';
+            messages.push({code: 'INFO', message: message})
         }
         result = resultFact.makeSuccessMMResult(messages, {project : project});
     }
