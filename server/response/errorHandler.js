@@ -44,3 +44,14 @@ exports.handleResult = function(err, result, message) {
     }
     return result;
 };
+
+exports.handleMMResult = function(err, result, messages, successMessage) {
+    if(err) {
+        result = resultFact.makeFailureResult('ERROR', err.message);
+    } else if(messages) {
+        result = resultFact.makeFailureMultipleMessages(messages);
+    } else {
+        result = resultFact.makeSuccessResult(successMessage, result);
+    }
+    return result;
+};

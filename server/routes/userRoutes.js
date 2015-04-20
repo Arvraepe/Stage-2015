@@ -3,6 +3,8 @@ var resultFactory = require('./../response/resultFactory');
 var mailService = require('./../service/mailService');
 var config = require('./../config.json');
 var async = require('async');
+var projectService = require('./../service/projectService');
+var errorHandler = require('./../response/errorHandler');
 
 exports.registerRoutes = function (app) {
 
@@ -19,15 +21,25 @@ exports.registerRoutes = function (app) {
 };
 
 function register(req, res, next) {
-    userService.registerUser(req.params, function(err, messages, success) {
-        var result;
-        if(err) {
-            result = resultFactory.makeFailureResult('ERROR', err.message);
-        } else if(messages) {
-            result = resultFactory.makeFailureMultipleMessages(messages);
-        } else if(success){
-            result = resultFactory.makeSuccessResult('User registered successfully');
+    async.waterfall([
+        function(callback) {
+            userService.registerUser(req.params, callback);
+        },
+        function(messages, user, callback) {
+            var result = {
+                user : user,
+                messages : messages
+            };
+            if(req.params.projectId != undefined) {
+                projectService.addRegisteredCollab(user._id, req.params.projectId, function(err, updatedProject) {
+                    callback(err, result);
+                });
+            } else {
+                callback(null, result)
+            }
         }
+    ], function(err, result) {
+        result = errorHandler.handleMMResult(err, null, result.messages, 'User registered successfully')
         res.send(result);
     });
     next();
