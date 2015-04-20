@@ -196,7 +196,9 @@ function findLike(req, res, next) {
             userService.sortResults(userId, myProjects, otherProjects, users, callback);
         }
     ], function(err, result) {
-        var result = errorHandler.handleResult(err, result, 'Users fetched successfully.');
+        console.log(result);
+        console.log(err);
+        var result = errorHandler.handleResult(err, {users : result}, 'Users fetched successfully.');
         res.send(result);
     });
     next();
