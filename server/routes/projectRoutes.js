@@ -132,7 +132,7 @@ function changeLeader(req, res, next) {
             projectService.changeLeader(req.params, userId, callback);
         }
     ], function(err, result) {
-        var response = errorHandler.handleResult(err, result, 'You are no longer leader of this project.')
+        var response = errorHandler.handleResult(err, result, 'You are no longer leader of this project.');
         res.send(response);
     });
     next();

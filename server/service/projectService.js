@@ -87,8 +87,8 @@ exports.getProject = function(projectId, userId, callback) {
 };
 
 exports.deleteProject = function(projectId, userId, callback) {
-    isLeader(projectId, userId, function(err, project) {
-        if(project) {
+    isLeader(projectId, userId, function(err, leader) {
+        if(leader) {
             projectRepo.deleteProject(projectId, callback);
         } else {
             callback(new Error('You are not the leader of this project, you cannot delete it.'));
@@ -97,6 +97,10 @@ exports.deleteProject = function(projectId, userId, callback) {
 };
 
 exports.updateProject = function(userId, params, callback) {
+    var messages = projectValidator.validateNewProject(params);
+    if (messages.length !== undefined && messages.length !== 0) {
+        callback(messages);
+    }
     isLeader(params._id, userId, function(err, isLeader) {
         if(isLeader) {
             projectRepo.findOneAndUpdate(params._id, params, callback);
@@ -117,7 +121,7 @@ exports.changeLeader = function (params, leaderId, callback) {
                 projectRepo.findOneAndUpdate({_id : params.projectId}, project[0], callback);
             })
         }
-    })
+    });
 };
 
 function addCollab(projectId, users, callback) {
@@ -137,7 +141,7 @@ function checkProject(projectId, userId, callback) {
 
 function isLeader(projectId, userId, callback) {
     projectRepo.findProjects({_id: projectId}, function(err, project) {
-        if(project == null) {
+        if(project[0] == undefined) {
             callback(new Error('project does not exist'))
         } else if(project[0].leader == userId) {
             callback(err, true);
