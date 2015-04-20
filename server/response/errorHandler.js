@@ -11,7 +11,6 @@ exports.handleProjectErrors = function (err, results) {
     if(err) {
         result = resultFact.makeFailureResult('ERROR', err.message);
     } else {
-        console.log(results);
         results.forEach(function (entry) {
             if (entry.add !== undefined) { //this means 1 user was added to the project.
                 usersAddedCounter++;

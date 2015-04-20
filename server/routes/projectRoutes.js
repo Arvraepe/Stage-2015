@@ -78,17 +78,21 @@ function updateProject(req, res, next) {
         },
         function(messages, project, userExists, callback) {
             projectService.checkAndAddCollabs(messages, project, userExists, callback);
-        }, function(result, callback) {
+        },
+        function(result, callback) {
+            var project = {};
             result.forEach(function (entry) {
                 if(entry.description != undefined) {
-                    populateProject(entry, function (err, result) {
-                        entry = result;
-                    });
+                    project = entry;
                 }
             });
-            callback(result);
+            populateProject(project, function (err, pProject) {
+                result[result.length -1] = pProject;
+                callback(err, result);
+            });
         }
     ], function(err, result) {
+        console.log(result);
         var response = errorHandler.handleProjectErrors(err, result, 'Projects updated successfully.');
         res.send(response);
     });
