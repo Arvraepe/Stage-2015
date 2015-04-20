@@ -29,6 +29,7 @@ exports.registerUser = function (user, callback) {
 exports.userExists = function (condition, cb) {
     User.find(condition, function (err, users) {
         if (err) cb(err);
+        console.log(users);
         cb(null, users.length >= 1);
     });
 };

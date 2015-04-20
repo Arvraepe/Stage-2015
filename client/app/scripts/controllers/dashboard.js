@@ -35,17 +35,13 @@ angular.module('stageprojectApp')
 
     $scope.getProjectsForUser = function () {
       projectRequestFactory.getProjectsForUser({
-
         params: {},
         success: function (response) {
-          console.log(response);
-
           $scope.userLeaderProjects = response.data.myProjects;
           $scope.userCollaboratorProjects = response.data.otherProjects;
           $scope.showAllProjects();
         },
         error: function (error) {
-          console.log(error);
         }
       })
     };

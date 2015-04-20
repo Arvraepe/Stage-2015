@@ -30,6 +30,11 @@ angular.module('stageprojectApp')
         });
         modalInstance.result.then(function (project) {
           $scope.project = project;
+          $scope.leader = project.leader;
+          $scope.collaborators = [];
+          angular.forEach(project.collaborators, function(collab){
+            $scope.collaborators.push(collab);
+          })
         }, function () {
         })
       };
@@ -54,13 +59,7 @@ angular.module('stageprojectApp')
         })
       };
 
-      $scope.openModal = function (size) {
-        var modalInstance = $modal.open({
-          templateUrl: 'views/project/updatecollaborators.html',
-          controller: 'UpdateCollaboratorsCtrl',
-          size: size
-        })
-      };
+
 
       $scope.promoteUser = function(collab){
         notificationFactory.createConfirm({
@@ -74,6 +73,13 @@ angular.module('stageprojectApp')
             projectRequestFactory.promoteToLeader({
               data: postSettings,
               success:function(response){
+                $scope.leader = response.data.leader;
+                $scope.collaborators = [];
+                angular.forEach(response.data.collaborators, function (collab) {
+                  $scope.collaborators.push(collab);
+                });
+                $scope.project = response.data;
+
                 notificationFactory.createNotification(response);
                 console.log(response);
               },

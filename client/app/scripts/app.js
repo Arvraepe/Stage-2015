@@ -125,6 +125,10 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
       templateUrl: 'views/project/updatedetails.html',
       controller: 'UpdateDetailsCtrl'
     })
+    .when('/register/:email/:pid', {
+      templateUrl: 'views/registeremailproject.html',
+      controller: 'RegisterCtrl'
+    })
     .otherwise({
       redirectTo: '/'
     });

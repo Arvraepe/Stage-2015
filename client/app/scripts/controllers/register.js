@@ -11,13 +11,16 @@ angular.module('stageprojectApp')
   .controller('RegisterCtrl', ['$scope','$rootScope' ,'userFactory', '$window', 'notificationService', 'AuthService', 'AUTHEVENTS'
     ,'$routeParams', 'userRequestHandler'
     ,function ($scope,$rootScope ,userFactory, $window, notificationService, AuthService, AUTHEVENTS, $routeParams, userRequestHandler) {
-      if($routeParams.email==undefined){
-        $scope.user = {};
-      }
-      else{
+      if($routeParams.email != undefined){
         $scope.user = {
           email : $routeParams.email
+        };
+        if($routeParams.pid != undefined){
+          $scope.user.projectId = $routeParams.pid;
         }
+      }
+      else{
+        $scope.user = {}
       }
     $scope.confirmpassword = "";
     $scope.allUsernames = [];

@@ -19,9 +19,9 @@
         <i class="fa fa-cog fa-"></i>
       </a>
       <ul class="dropdown-menu">
-        <li><a href ng-click="showAllProjects()">All projects</a></li>
+        <li><a href ng-click="showAllProjects()">All my projects</a></li>
         <li><a href ng-click="showMyLeaderProjects()">Projects I own</a></li>
-        <li><a href ng-click="showMyCollaborationProjects()">Projects in which I'm a collaborator</a></li>
+        <li><a href ng-click="showMyCollaborationProjects()">Projects as a collaborator</a></li>
       </ul>
     </span>
       </div>
@@ -33,7 +33,7 @@
           <a ng-href="#/project/{{project._id}}">{{project.name}}</a>
         </li>
       </ul>
-      <ul class="pagination">
+      <ul class="pagination pull-right" style="margin-top: 20px;margin-bottom:10px;">
         <li><a href="" ng-disabled="currentPage==0" ng-click="currentPage=currentPage-1">&lt;&lt;</a></li>
         <li><a href="" ng-disabled="currentPage>= projectsToShow.length/pageSize -1"
                ng-click="currentPage=currentPage+1">&gt;&gt;</a></li>

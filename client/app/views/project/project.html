@@ -46,12 +46,6 @@
               </div>
 
             </div>
-            <div class="col-md-6">
-              <div class="pull-right">
-                <button type="button" ng-click="openModal()" class="btn btn-primary">Update</button>
-              </div>
-
-            </div>
           </div>
         </div>
       </div>
@@ -67,7 +61,10 @@
             <li ng-repeat="collab in collaborators" style="margin-top: 3px;margin-bottom:3px;">
               <img src="{{collab.imageUrl}}" alt="Profile Picture" class="smallerAvatar"/>
               <span>{{collab.username}}</span>
+              <button ng-if="isLeader()" class="pull-right btn btn-default btn-xs" ng-click="promoteUser(collab)"><i class="fa fa-arrow-up"></i></button>
+<!--
               <span ng-if="isLeader()" class="pull-right" ng-click="promoteUser(collab)"><i class="fa fa-arrow-up"></i></span>
+-->
             </li>
           </ul>
         </div>

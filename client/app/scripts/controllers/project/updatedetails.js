@@ -59,7 +59,6 @@ angular.module('stageprojectApp')
     };
 
     $scope.updateProject = function (project) {
-
       if ($scope.custom) {
         project.standardStates = $scope.standardStates;
       }
@@ -71,6 +70,8 @@ angular.module('stageprojectApp')
       projectRequestFactory.updateProject({
         data: project,
         success: function (response) {
+          var responseProject = response.data.project;
+          $modalInstance.close(responseProject);
           notificationFactory.createNotification(response);
           console.log(response);
         },

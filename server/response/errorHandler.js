@@ -11,6 +11,7 @@ exports.handleProjectErrors = function (err, results) {
     if(err) {
         result = resultFact.makeFailureResult('ERROR', err.message);
     } else {
+        console.log(results);
         results.forEach(function (entry) {
             if (entry.add !== undefined) { //this means 1 user was added to the project.
                 usersAddedCounter++;
@@ -28,7 +29,7 @@ exports.handleProjectErrors = function (err, results) {
             messages.push({code: 'INFO', message: emailsSentCounter + message})
         }
         if(usersAddedCounter !== 0) {
-            message = usersAddedCounter==1 ? 'Your project has ' + emailsSentCounter + ' collaborator' : ' users have been added to your project!';
+            message = usersAddedCounter==1 ? 'Your project has ' + usersAddedCounter + ' collaborator' : ' Your project now has ' + usersAddedCounter + ' collaborators.';
             messages.push({code: 'INFO', message: message})
         }
         result = resultFact.makeSuccessMMResult(messages, {project : project});

@@ -77,7 +77,7 @@ exports.updateUser = function (params, calback) {
         authService.verifyToken(params.token, function (err, decoded) {
             if (err) calback(err);
             userRepo.findUserById(decoded, function (err, user) {
-                userRepo.userExists({email : user.email}, function(err, exists) {
+                userRepo.userExists({email : params.email}, function(err, exists) {
                     if(user.email == params.email) {
                         exists = false;
                     }

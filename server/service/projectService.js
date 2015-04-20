@@ -69,6 +69,7 @@ exports.checkAndAddCollabs = function (messages, project, usersExist, callback) 
                 callback(err, results);
             })
         } else {
+            results.push(project);
             callback(null, results);
         }
     });
