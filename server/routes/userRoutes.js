@@ -5,6 +5,7 @@ var config = require('./../config.json');
 var async = require('async');
 var projectService = require('./../service/projectService');
 var errorHandler = require('./../response/errorHandler');
+var auth = require('./../service/authenticationService');
 
 exports.registerRoutes = function (app) {
 
@@ -17,7 +18,6 @@ exports.registerRoutes = function (app) {
     app.put('/user/resetpassword/confirm', confirmReset);
     app.post('/user/invitecoworkers', inviteCoWorkers);
     app.get('/user/findlike', findLike);
-    app.get('/user/getuser', getUser);
 };
 
 function register(req, res, next) {
@@ -31,7 +31,7 @@ function register(req, res, next) {
                 messages : messages
             };
             if(req.params.projectId != undefined) {
-                projectService.addRegisteredCollab(user._id, req.params.projectId, function(err, updatedProject) {
+                projectService.addRegisteredCollab(user._id, req.params.projectId, function(err) {
                     callback(err, result);
                 });
             } else {
@@ -39,7 +39,7 @@ function register(req, res, next) {
             }
         }
     ], function(err, result) {
-        result = errorHandler.handleMMResult(err, null, result.messages, 'User registered successfully')
+        result = errorHandler.handleMMResult(err, null, result.messages, 'User registered successfully');
         res.send(result);
     });
     next();
@@ -173,27 +173,43 @@ function userExists(req, res, next) {
 }
 
 function findLike(req, res, next) {
-    userService.findALike(req.params.username, function(err, users) {
-        var result;
-        if(err) {
-            result = resultFactory.makeFailureResult('ERROR', err.message);
-        } else {
-            result = resultFactory.makeSuccessResult('Data retrieved', {users : users})
+    async.waterfall([
+        function(callback) {
+            auth.verifyToken(req.params.token, callback);
+        },
+        function(userId, callback) {
+            projectService.getMyProjects(userId, function (err, projects) {
+                callback(err, userId, projects);
+            });
+        },
+        function (userId, myProjects, callback) {
+            projectService.getOtherProjects(userId, function (err, projects) {
+                callback(err, userId, myProjects, projects);
+            });
+        },
+        function (userId, myProjects, otherProjects, callback) {
+            userService.findALike(req.params.username, function(err, users) {
+                callback(err, userId, myProjects, otherProjects, users);
+            });
+        },
+        function (userId, myProjects, otherProjects, users, callback) {
+            userService.sortResults(userId, myProjects, otherProjects, users, callback);
         }
+    ], function(err, result) {
+        var result = errorHandler.handleResult(err, result, 'Users fetched successfully.');
         res.send(result);
     });
     next();
 }
-
-function getUser(req, res, next) {
-    userService.findUser({_id : req.params.userId}, function(err, user) {
-        var result;
-        if(err) {
-            result = resultFactory.makeFailureResult('ERROR', err.message);
-        } else {
-            result = resultFactory.makeSuccessResult('Data retrieved', {user : user})
-        }
-        res.send(result);
-    });
-    next();
-}
+//function findLike(req, res, next) {
+//    userService.findALike(req.params.username, function(err, users) {
+//        var result;
+//        if(err) {
+//            result = resultFactory.makeFailureResult('ERROR', err.message);
+//        } else {
+//            result = resultFactory.makeSuccessResult('Data retrieved', {users : users})
+//        }
+//        res.send(result);
+//    });
+//    next();
+//}

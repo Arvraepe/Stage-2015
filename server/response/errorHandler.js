@@ -28,7 +28,7 @@ exports.handleProjectErrors = function (err, results) {
             messages.push({code: 'INFO', message: emailsSentCounter + message})
         }
         if(usersAddedCounter !== 0) {
-            message = usersAddedCounter==1 ? 'Your project has ' + usersAddedCounter + ' collaborator' : ' Your project now has ' + usersAddedCounter + ' collaborators.';
+            message = usersAddedCounter==1 ? 'Your project has 1 collaborator' : ' Your project now has ' + usersAddedCounter + ' collaborators.';
             messages.push({code: 'INFO', message: message})
         }
         result = resultFact.makeSuccessMMResult(messages, {project : project});
