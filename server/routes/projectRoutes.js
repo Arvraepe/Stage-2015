@@ -95,11 +95,7 @@ function getProject(req, res, next) {
             projectService.getProject(req.params.projectId, userId, callback);
         },
         function(project, callback) {
-            userService.getUsersFromProject(project.collaborators, project.leader, function(err, result) {
-                project.leader = result.leader;
-                project.collaborators = result.collaborators;
-                callback(err, project);
-            });
+            populateProject(project, callback);
         }
     ], function(err, result) {
         var response = errorHandler.handleResult(err, result, 'Project fetched successfully.');
@@ -130,10 +126,21 @@ function changeLeader(req, res, next) {
         },
         function(userId, callback) {
             projectService.changeLeader(req.params, userId, callback);
+        },
+        function (project, callback) {
+            populateProject(project, callback);
         }
     ], function(err, result) {
         var response = errorHandler.handleResult(err, result, 'You are no longer leader of this project.');
         res.send(response);
     });
     next();
+}
+
+function populateProject(project, callback) {
+    userService.getUsersFromProject(project.collaborators, project.leader, function(err, result) {
+        project.leader = result.leader;
+        project.collaborators = result.collaborators;
+        callback(err, project);
+    });
 }
