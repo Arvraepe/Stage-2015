@@ -70,11 +70,21 @@ angular.module('stageprojectApp')
       $scope.title = 'Projects I own';
     };
 
+
     $scope.currentPage = 0;
     $scope.pageSize = 5;
     $scope.numberOfPages = function () {
       return Math.ceil($scope.projectsToShow.length / $scope.pageSize);
     };
+
+    $scope.pageChanged = function(){
+      console.log('Page changed to: ' + $scope.currentPage);
+    };
+
+    $scope.setPage = function (pageNo) {
+      $scope.currentPage = pageNo;
+    };
+
 
 
   }]);

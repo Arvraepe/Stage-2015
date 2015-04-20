@@ -77,17 +77,28 @@
 
       <div class="col-md-9 radio">
         <label>
-          <input type="radio" name="stateRadio" id="optionsRadio1" ng-value=true ng-model="custom">
+          <input type="radio" name="stateRadio" id="optionsRadio1" ng-value="custom" ng-model="custom">
           Not Started - In Progress - Finished
         </label>
       </div>
       <div class="col-md-offset-3 col-md-9 radio">
         <label>
-          <input type="radio" name="stateRadio" id="optionsRadio2" ng-value=false ng-model="custom">
+          <input type="radio" name="stateRadio" id="optionsRadio2" ng-value="custom" ng-model="custom">
           Custom States
         </label>
-
-        <div ng-repeat="stat in customStates" ng-show="custom==false">
+        <div ng-repeat="state in project.standardStates" ng-if="!costum">
+          <ng-form>
+            <div style="margin-top: 10px">
+              <input type="text" class="form-control-custom col-md-9" ng-model="state" style="margin-bottom:13px">
+              <div class="col-md-3">
+                <button type="button" class="btn btn-primary" ng-click="addState()" ng-show="($index+1) == customStates.length" ng-hide="customStates.length>=5"><i class="fa fa-plus-square"></i>
+                  Add
+                </button>
+              </div>
+            </div>
+          </ng-form>
+        </div>
+        <!--<div ng-repeat="stat in customStates" ng-show="custom==false">
           <ng-form>
             <div style="margin-top: 10px">
               <input type="text" class="form-control-custom col-md-9 " ng-model="stat.status" style="margin-bottom:13px">
@@ -99,7 +110,7 @@
             </div>
 
           </ng-form>
-        </div>
+        </div>-->
 
       </div>
     </div>
