@@ -26,6 +26,7 @@ function register(req, res, next) {
             userService.registerUser(req.params, callback);
         },
         function(messages, user, callback) {
+            console.log(user);
             var result = { messages : messages };
             if(req.params.projectId != undefined) {
                 projectService.addRegisteredCollab(user._id, req.params.projectId, function(err) {
@@ -34,6 +35,8 @@ function register(req, res, next) {
             } else callback(null, result);
         }
     ], function(err, result) {
+        console.log(err);
+        console.log(result);
         result = errorHandler.handleMMResult(err, null, result.messages, 'User registered successfully'); //response doesn't need a data object, so give null as param.
         res.send(result);
     });

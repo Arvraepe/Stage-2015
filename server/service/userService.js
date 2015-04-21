@@ -47,7 +47,7 @@ exports.registerUser = function (user, callback) {
             callback(err, messages, result);
         });
     } else {
-        callback(null, messages);
+        callback(null, messages, null);
     }
 };
 
