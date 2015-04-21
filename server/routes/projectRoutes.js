@@ -92,7 +92,6 @@ function updateProject(req, res, next) {
             });
         }
     ], function(err, result) {
-        console.log(result);
         var response = errorHandler.handleProjectErrors(err, result, 'Projects updated successfully.');
         res.send(response);
     });

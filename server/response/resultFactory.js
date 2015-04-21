@@ -32,13 +32,6 @@ exports.makeFailureMultipleMessages = function (messages) {
     return conf;
 };
 
-exports.makeUserResult = function (user) {
-    var userResult = {};
-    userResult.user = user;
-    userResult.user.role = 'user';
-    return userResult;
-};
-
 exports.makeSuccessMMResult = function(messages, data) {
     data = data || {};
     var conf = {};

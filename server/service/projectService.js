@@ -6,6 +6,7 @@ var projectRepo = require('./../repository/projectRepository');
 var mailService = require('./../service/mailService');
 var config = require('./../config.json');
 var async = require('async');
+var uuid = require('node-uuid');
 
 exports.createProject = function (params, userId, callback) {
     var messages = projectValidator.validateNewProject(params);
@@ -26,7 +27,11 @@ exports.checkAndAddCollabs = function (messages, project, usersExist, callback) 
         if (!entry.exists) {
             if (entry.email !== undefined) {
                 tasks.push(function (cb) {
-                    var link = config.domain + config.registerPath + entry.email + '/' + project._id;
+                    var uId = uuid.v1();
+                    var link = config.domain + config.registerPath + entry.email + '/' + uId;
+                    project.uniqueLinks = project.uniqueLinks || [];
+                    project.uniqueLinks.push(uId);
+                    projectRepo.findOneAndUpdate(project._id, project);
                     mailService.inviteCoworkers(entry.email, link, cb);
                 })
             } else {
@@ -115,7 +120,6 @@ exports.changeLeader = function (params, leaderId, callback) {
     isLeader(params.projectId, leaderId, function(err, isleader) {
         if(isleader) {
             projectRepo.findProjects({_id : params.projectId}, function(err, project) {
-                console.log(project);
                 project[0].leader = project[0].collaborators.splice(project[0].collaborators.indexOf(params.userId), 1)[0];
                 project[0].collaborators.push(leaderId);
                 projectRepo.findOneAndUpdate({_id : params.projectId}, project[0], callback);
@@ -125,7 +129,7 @@ exports.changeLeader = function (params, leaderId, callback) {
 };
 
 exports.addRegisteredCollab = function(userId, projectId, callback) {
-    projectRepo.findProjects({_id : projectId}, function(err, projects) {
+    projectRepo.findProjects({uniqueLinks : projectId}, function(err, projects) {
         var project = projects[0];
         if(project == undefined) {
             callback(new Error('project does not exist'));

@@ -7,5 +7,6 @@
   "secret" : "kjgJHhjikKhjKgKHJkHgkHkhjbYkhGk",
   "supportedImages" : ["jpg", "png", "gif", "bmp"],
   "imageUrl" : "http://localhost:6543/avatars/",
-  "imagePath" : "./public/avatars/"
+  "imagePath" : "./public/avatars/",
+  "defaultImage" : "profilepicture.png"
 }

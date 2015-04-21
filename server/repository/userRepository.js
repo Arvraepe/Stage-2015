@@ -14,7 +14,7 @@ exports.registerUser = function (user, callback) {
         email: user.email,
         firstname: user.firstname,
         lastname: user.lastname,
-        imageUrl: config.imageUrl + 'profilepicture.jpg',
+        imageUrl: config.imageUrl + config.defaultImage,
         recovery: {}
     });
     registeredUser.save(callback);
@@ -23,7 +23,6 @@ exports.registerUser = function (user, callback) {
 exports.userExists = function (condition, cb) {
     User.find(condition, function (err, users) {
         if (err) cb(err);
-        console.log(users);
         cb(null, users.length >= 1);
     });
 };
