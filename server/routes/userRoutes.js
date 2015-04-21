@@ -26,20 +26,15 @@ function register(req, res, next) {
             userService.registerUser(req.params, callback);
         },
         function(messages, user, callback) {
-            var result = {
-                user : user,
-                messages : messages
-            };
+            var result = { messages : messages };
             if(req.params.projectId != undefined) {
                 projectService.addRegisteredCollab(user._id, req.params.projectId, function(err) {
                     callback(err, result);
                 });
-            } else {
-                callback(null, result)
-            }
+            } else callback(null, result);
         }
     ], function(err, result) {
-        result = errorHandler.handleMMResult(err, null, result.messages, 'User registered successfully');
+        result = errorHandler.handleMMResult(err, null, result.messages, 'User registered successfully'); //response doesn't need a data object, so give null as param.
         res.send(result);
     });
     next();
@@ -47,14 +42,7 @@ function register(req, res, next) {
 
 function login(req, res, next) {
     userService.loginUser(req.params, function(err, token, user) {
-        var result;
-        if(err) {
-            result = resultFactory.makeFailureResult('ERROR', err.message);
-        } else {
-            var data = resultFactory.makeUserResult(user);
-            data.token = token;
-            result = resultFactory.makeSuccessResult('User logged in successfully.', data);
-        }
+        var result = errorHandler.handleUser(err, user, token);
         res.send(result);
     });
     next();
@@ -62,15 +50,8 @@ function login(req, res, next) {
 
 function updateUser(req, res, next) {
     userService.updateUser(req.params, function(err, messages, user) {
-        var result;
-        if(err) {
-            result = resultFactory.makeFailureResult('ERROR', err.message);
-        } else if (messages) {
-            result = resultFactory.makeFailureMultipleMessages(messages);
-        } else {
-            var userResult = resultFactory.makeUserResult(user);
-            result = resultFactory.makeSuccessResult('User modified successfully.', userResult);
-        }
+        var userResult = errorHandler.makeUserData(user);
+        var result = errorHandler.handleMMResult(err, userResult, messages, 'User modified successfully.');
         res.send(result);
     });
     next();
@@ -78,12 +59,7 @@ function updateUser(req, res, next) {
 
 function uploadAvatar(req, res, next) {
     userService.upload(req, function(err, user) {
-        var result;
-        if (err) {
-            result = resultFactory.makeFailureResult('ERROR', err.message);
-        } else {
-            result = resultFactory.makeSuccessResult('Avatar uploaded successfully.', resultFactory.makeUserResult(user));
-        }
+        var result = errorHandler.handleResult(err, errorHandler.makeUserData(user), 'Avatar uploaded successfully.');
         res.send(result);
     });
     next();
@@ -112,12 +88,7 @@ function resetPassword(req, res, next) {
 
 function confirmReset(req, res, next) {
     userService.confirmReset(req.params, function(err, user) {
-        var result;
-        if(err) {
-            result = resultFactory.makeFailureResult('ERROR', err.message);
-        } else {
-            result = resultFactory.makeSuccessResult('You can now log in using your new password.', resultFactory.makeUserResult(user));
-        }
+        var result = errorHandler.handleResult(err, errorHandler.makeUserData(user), 'You can now log in using your new password.');
         res.send(result);
     });
     next();
@@ -149,7 +120,6 @@ function inviteCoWorkers(req, res, next) {
         }
     ];
     async.waterfall(tasks, function(err, result) {
-        console.log(result);
         if (err) {
             res.send(resultFactory.makeFailureResult('ERROR', err.message));
         } else {
@@ -196,22 +166,8 @@ function findLike(req, res, next) {
             userService.sortResults(userId, myProjects, otherProjects, users, callback);
         }
     ], function(err, result) {
-        console.log(result);
-        console.log(err);
         var result = errorHandler.handleResult(err, {users : result}, 'Users fetched successfully.');
         res.send(result);
     });
     next();
 }
-//function findLike(req, res, next) {
-//    userService.findALike(req.params.username, function(err, users) {
-//        var result;
-//        if(err) {
-//            result = resultFactory.makeFailureResult('ERROR', err.message);
-//        } else {
-//            result = resultFactory.makeSuccessResult('Data retrieved', {users : users})
-//        }
-//        res.send(result);
-//    });
-//    next();
-//}

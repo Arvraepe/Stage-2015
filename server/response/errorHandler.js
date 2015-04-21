@@ -48,10 +48,35 @@ exports.handleResult = function(err, result, message) {
 exports.handleMMResult = function(err, result, messages, successMessage) {
     if(err) {
         result = resultFact.makeFailureResult('ERROR', err.message);
-    } else if(messages) {
+    } else if(messages != null && messages.length > 0) {
         result = resultFact.makeFailureMultipleMessages(messages);
     } else {
         result = resultFact.makeSuccessResult(successMessage, result);
     }
     return result;
 };
+
+exports.handleUser = function(err, user, token) {
+    var result;
+    if(err) {
+        result = resultFact.makeFailureResult('ERROR', err.message);
+    } else {
+        var data = makeUserData(user);
+        if(token) {
+            data.token = token;
+        }
+        result = resultFact.makeSuccessResult('User logged in successfully.', data);
+    }
+    return result;
+};
+
+exports.makeUserData = function (user) {
+    makeUserData(user);
+};
+
+function makeUserData(user) {
+    var userResult = {};
+    userResult.user = user;
+    userResult.user.role = 'user';
+    return userResult;
+}

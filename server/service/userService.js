@@ -21,28 +21,30 @@ var config  = require('./../config.json');
 exports.registerUser = function (user, callback) {
     var messages = validator.validateRegistration(user);
     if (messages.length === 0) {
-        userRepo.userExists({username: user.username}, function (err, exists) {
-            if (err) callback(err);
-            if (exists) {
-                callback(new Error('Username already exists'));
-            } else {
-                userRepo.userExists({email : new RegExp(user.email, 'i')}, function (err, emailExists) {
-                    if (err) callback(err);
-                    if (emailExists) callback(new Error('A user has already registered using this email.'));
-                    else {
-                        var saltStr = salt.getSalt(user.password, ''); //empty string because the function will build the salt from scratch
-                        user.password = encryptPassword(user.password, saltStr);
-                        user.salt = saltStr;
-                        userRepo.registerUser(user, function (err, success) {
-                            if (err) {
-                                callback(err);
-                            } else {
-                                callback(null, null, success);
-                            }
-                        });
+        async.waterfall([
+            function(callback) {
+                async.parallel([
+                    function(callback) {
+                        userRepo.userExists({username: new RegExp(user.username, 'i')}, callback);
+                    },
+                    function(callback) {
+                        userRepo.userExists({email : new RegExp(user.email, 'i')}, callback);
                     }
+                ], function(err, results) { // results will always be an array of 2 booleans.
+                    if(results[0] || results[1]) {
+                        var message = results[0] ? 'Username already exists.' : 'A user has already registered using this email.';
+                        callback(new Error(message));
+                    } else callback();
                 });
+            },
+            function (callback) {
+                var saltStr = salt.getSalt(user.password, ''); //empty string because the function will build the salt from scratch
+                user.password = encryptPassword(user.password, saltStr);
+                user.salt = saltStr;
+                userRepo.registerUser(user, callback);
             }
+        ], function (err, result) {
+            callback(err, messages, result);
         });
     } else {
         callback(null, messages);
@@ -244,7 +246,6 @@ exports.confirmEmails = function (emails, callback) {
 
 exports.findCollaborators = function (users, callback) {
     var tasks = [];
-    console.log(users);
     users.forEach(function (entry) {
         if(entry.indexOf("@") > -1) {
             tasks.push(function(cb) {

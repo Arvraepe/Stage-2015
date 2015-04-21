@@ -11,7 +11,8 @@ var projectSchema = mongoose.Schema({
     leader: String,
     startDate: Date,
     deadline: Date,
-    standardStates: [String]
+    standardStates: [String],
+    uniqueLinks: [String]
 });
 var Project = mongoose.model('Project', projectSchema);
 module.exports.Project = Project;
