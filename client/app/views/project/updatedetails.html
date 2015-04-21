@@ -46,8 +46,8 @@
       <label class="col-md-3 control-label">Collaborators</label>
 
       <div class="col-md-9">
-        <ui-select multiple tagging theme="bootstrap" tagging-label="false" tagging-tokens="@|SPACE" ng-model="project.collaborators" ng-disabled="disabled"
-                   search-enabled="true" theme="bootstrap" style="height:34px">
+        <ui-select multiple tagging theme="bootstrap" tagging-label="false" tagging-tokens="@|SPACE|ENTER" ng-model="project.collaborators" ng-disabled="disabled"
+                   search-enabled="true" theme="bootstrap">
           <ui-select-match placeholder="Invite collaborators" style="padding-left:9px;">{{$item}}</ui-select-match>
           <ui-select-choices repeat="collab in collaborators"
                              refresh="getUsers($select.search)" refresh-delay="0">
@@ -72,10 +72,19 @@
         </p>
       </div>
     </div>
-    <div class="form-group" show-errors="{showSuccess: true}">
+   <div class="form-group" show-errors="{showSuccess: true}">
       <label class="col-md-3 control-label">States</label>
+     <div class="col-md-9">
+       <ui-select multiple tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|ENTER|TAB"
+                  ng-model="project.standardStates" ng-disabled="disabled"
+                  search-enabled="true" theme="bootstrap">
+         <ui-select-match placeholder="Which states will your tasks have?" style="padding-left:9px;">{{$item}}
+         </ui-select-match>
+         <ui-select-choices repeat="stat in project.states"></ui-select-choices>
+       </ui-select>
+     </div>
 
-      <div class="col-md-9 radio">
+     <!--  <div class="col-md-9 radio">
         <label>
           <input type="radio" name="stateRadio" id="optionsRadio1" ng-value=false ng-model="custom">
           Not Started - In Progress - Finished
@@ -98,7 +107,7 @@
             </div>
           </ng-form>
         </div>
-        <!--<div ng-repeat="stat in customStates" ng-show="custom==false">
+        &lt;!&ndash;<div ng-repeat="stat in customStates" ng-show="custom==false">
           <ng-form>
             <div style="margin-top: 10px">
               <input type="text" class="form-control-custom col-md-9 " ng-model="stat.status" style="margin-bottom:13px">
@@ -110,10 +119,10 @@
             </div>
 
           </ng-form>
-        </div>-->
+        </div>&ndash;&gt;
 
       </div>
-    </div>
+    </div>-->
 
 
   </div>

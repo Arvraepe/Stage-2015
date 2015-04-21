@@ -49,10 +49,11 @@
       <label for="username" class="col-md-3 control-label">Username</label>
       <div class="col-md-5">
         <input type="text" class="form-control" name="usernameField" unique-username="" ng-model="user.username"
-               id="username"
+               id="username" ng-pattern="/^[a-zA-Z0-9]*$/"
                placeholder="Username needs to be unique" required>
 
         <p class="help-block" ng-if="registerForm.usernameField.$error.required">Username is required.</p>
+        <p class="help-block" ng-if="registerForm.usernameField.$error.pattern">Only alphanumeric characters are allowed. No whitespaces or special characters.</p>
 
         <p class="help-block" ng-if="registerForm.usernameField.$error.unique">This username is already taken.</p>
       </div>

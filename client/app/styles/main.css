@@ -12,10 +12,24 @@
   width:33px;
 }
 
+.btn-default{
+  color:#555;
+}
+
 .smallerAvatar{
   border-radius: 5px;
   height:25px;
   width:25px;
+}
+
+.crownIcon{
+  margin-right:5px;
+  vertical-align: middle;
+}
+
+
+.projectsPadding{
+  margin:10px 13px;
 }
 
 .blockNoPadding{
@@ -26,6 +40,18 @@
 
 .marginTop50{
   margin-top:30px;
+}
+
+.noPaddingRight{
+  padding-right:0
+}
+
+.noPaddingLeft{
+  padding-left:0
+}
+
+.panelPadding{
+  padding:10px 15px;
 }
 
 .formBackground{
@@ -75,8 +101,12 @@
 }
 
 h2 {
-  text-align: center;
+
   margin-bottom: 5%;
+}
+
+.marginBotDeleteButton{
+  margin-bottom: 20px;
 }
 
 .wellPaddingVertical{
@@ -119,6 +149,7 @@ h2 {
   font-size: 16px;
 }
 
+
 .panel-dashboard {
   padding-top: 2%;
   padding-bottom: 2%;
@@ -155,6 +186,7 @@ h2 {
 
 body {
   padding: 0;
+  color: #555;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */

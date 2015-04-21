@@ -10,21 +10,6 @@
 angular.module('stageprojectApp')
   .controller('UpdateDetailsCtrl', function ($scope, $modalInstance, project, projectRequestFactory, notificationFactory, loginFactory) {
     $scope.project = angular.copy(project);
-    if ($scope.project.standardStates.indexOf("Not Started") > -1 && $scope.project.standardStates.indexOf("In Progress") > -1 && $scope.project.standardStates.indexOf("Finished") > -1 &&
-      $scope.project.standardStates.length === 3) {
-      $scope.custom = false;
-
-    }
-    else {
-      $scope.customStates = [];
-
-      $scope.custom = true;
-      angular.forEach(project.standardStates, function (state) {
-        $scope.customStates.push({
-          status: state
-        });
-      });
-    }
     $scope.collaborators = [];
 
     function fillCollaborators() {
@@ -37,17 +22,6 @@ angular.module('stageprojectApp')
     }
 
 
-    $scope.addState = function () {
-      //$scope.project.standardStates.push('');
-      $scope.customStates.push({
-        status: ''
-      });
-    };
-    $scope.standardStates = [
-      {status: 'Not Started'},
-      {status: 'In Progress'},
-      {status: 'Finished'}
-    ];
 
     fillCollaborators();
 
@@ -74,12 +48,6 @@ angular.module('stageprojectApp')
     $scope.updateProject = function (project) {
       if ($scope.updateProjectForm.$valid) {
 
-        if ($scope.custom) {
-          project.standardStates = $scope.customStates;
-        }
-        else {
-          project.standardStates = $scope.standardStates;
-        }
         project.leader = loginFactory.getUser()._id;
 
         projectRequestFactory.updateProject({

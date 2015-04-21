@@ -1,7 +1,9 @@
 <div ng-init="getProjectInfo()">
-  <h2>{{project.name}}</h2>
+  <div class="col-md-9 noPaddingLeft">
+    <h2>{{project.name}}</h2>
+  </div>
 
-  <div class="col-md-3 pull-right">
+  <div class="col-md-3 pull-right noPaddingRight">
     <div class="panel panel-default col-md-12 pull-right panelNoPadding">
       <div class="panel-heading">
         <div class="panel-title">
@@ -55,7 +57,7 @@
             <li>
               <i class="icon-f-crown"></i>
               <img src="{{leader.imageUrl}}" alt="Profile Picture" class="smallerAvatar"/>
-              <span>{{leader.username}} <i class="icon-crown pull-right" style="vertical-align: middle"></i>
+              <span>{{leader.username}} <i class="icon-crown pull-right crownIcon"></i>
               </span>
             </li>
             <li ng-repeat="collab in collaborators" style="margin-top: 3px;margin-bottom:3px;">
@@ -68,7 +70,7 @@
 
       </div>
     </div>
-    <button type="button" ng-if="isLeader()" ng-click="deleteProject()" class="btn btn-danger btn-block">Delete project</button>
+    <button type="button" ng-if="isLeader()" ng-click="deleteProject()" class="btn btn-danger btn-block marginBotDeleteButton">Delete project</button>
   </div>
 
 

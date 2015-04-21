@@ -8,56 +8,48 @@
  * Controller of the cstageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('NewProjectCtrl', [ '$scope','projectRequestFactory' ,'$modalInstance','notificationFactory', '$window', function ($scope, projectRequestFactory, $modalInstance, notificationFactory, $window) {
+  .controller('NewProjectCtrl', ['$scope', 'projectRequestFactory', '$modalInstance', 'notificationFactory', '$window', function ($scope, projectRequestFactory, $modalInstance, notificationFactory, $window) {
 
     $scope.project = {};
     $scope.project.collaborators = [];
-    $scope.allUsernames = [];
-    $scope.custom=true;
-    $scope.customStates = [{
-      status:''
-    }];
-    $scope.addState = function(){
-      $scope.customStates.push({
-        status: ''
-      });
-    };
-    $scope.standardStates = [
-      {status: 'Not Started'},
-      {status: 'In Progress'},
-      {status: 'Finished'}
+    $scope.project.standardStates = [
+      'Not Started',
+      'In Progress',
+      'Finished'
     ];
+    $scope.allUsernames = [];
 
-    $scope.dateFormat= 'dd-MMMM-yyyy';
-    $scope.minDate = $scope.minDate? null: new Date();
+
+    $scope.dateFormat = 'dd-MMMM-yyyy';
+    $scope.minDate = $scope.minDate ? null : new Date();
     $scope.dateOptions = {
       formatYear: 'yy',
       startingDay: 1
     };
-    $scope.disabledTime = function(date, mode) {
+    $scope.disabledTime = function (date, mode) {
       return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
     };
-    $scope.open = function($event) {
+    $scope.open = function ($event) {
       $event.preventDefault();
       $event.stopPropagation();
 
       $scope.opened = true;
     };
 
-    $scope.getUsers = function(username){
+    $scope.getUsers = function (username) {
       var usernameJson = {
         username: username
       };
-      if(username.length>2){
+      if (username.length > 2) {
         projectRequestFactory.getUsers({
-          params:usernameJson,
-          success: function(response){
+          params: usernameJson,
+          success: function (response) {
             $scope.allUsernames = [];
-            angular.forEach(response.data.users, function(user){
+            angular.forEach(response.data.users, function (user) {
               $scope.allUsernames.push(user.username);
             });
           },
-          error: function(error){
+          error: function (error) {
             console.log(error);
           }
         });
@@ -66,21 +58,15 @@ angular.module('stageprojectApp')
     };
 
 
-    $scope.createProject = function(project){
-      if($scope.newprojectForm.$valid){
-        if($scope.custom){
-          project.standardStates = $scope.standardStates;
-        }
-        else{
-          project.standardStates = $scope.customStates;
-        }
+    $scope.createProject = function (project) {
+      if ($scope.newprojectForm.$valid) {
         projectRequestFactory.createProject({
           data: project,
-          success: function(response){
+          success: function (response) {
             notificationFactory.createNotification(response);
             $modalInstance.close(response.data.project);
           },
-          error: function(error){
+          error: function (error) {
             console.log(error);
           }
         });
@@ -91,7 +77,6 @@ angular.module('stageprojectApp')
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
     };
-
 
 
   }]);

@@ -1,18 +1,19 @@
 <div ng-init="getProjectsForUser()"></div>
-<div class="panel panel-default col-md-9">
+<div class="col-md-9 noPaddingLeft">
   <div class="dashboard-panel-left">
-    <button type="button" ng-click="openModal()" class="btn-lg btn btn-success bigButton"><i
-      class="fa fa-plus-circle fa-2x" style="vertical-align: middle;"></i> <span>New Project</span></button>
+    <button type="button" ng-click="openModal()" class="btn btn-success"><i
+      class="fa fa-plus-circle " style="vertical-align: middle;"></i> <span>New project</span></button>
+    <a ng-href="#/invitecoworkers"><button type="button" class="btn btn-default"><i
+      class="fa fa-user-plus " style="vertical-align: middle;"></i> <span>Invite people</span></button></a>
   </div>
 </div>
 
 
-<div class="col-md-3 pull-right">
+<div class="col-md-3 noPaddingRight pull-right">
 
   <div class="panel panel-default col-md-12 pull-right panelNoPadding">
     <div class="panel-heading">
       <div class="panel-title">
-
         {{title}}
       <span class="dropdown pull-right" dropdown style="font-size: 12px;">
       <a href class="dropdown-toggle" dropdown-toggle style="color:#333">
@@ -27,26 +28,16 @@
       </div>
 
     </div>
-    <div class="panel-body">
-      <ul class="nav nav-pills nav-stacked">
+    <div class="panel-body panelNoPadding">
+      <div class="panelPadding" ng-if="projectsToShow.length == 0">You have no projects yet.</div>
+      <ul class="nav nav-pills nav-stacked projectsList">
         <li ng-repeat="project in projectsToShow | startFrom:currentPage*pageSize | limitTo:pageSize">
-          <a ng-href="#/project/{{project._id}}">{{project.name}}</a>
+          <a ng-href="#/project/{{project._id}}">{{project.name}}<span class="badge pull-right"><i class="fa fa-user"></i> {{project.collaborators.length + 1}}</span></a>
         </li>
       </ul>
-      <ul class="pagination pull-right" style="margin-top: 20px;margin-bottom:10px;">
-        <button type="button" class="btn btn-default" ng-disabled="currentPage==0" ng-click="currentPage=currentPage-1">&lt;&lt;</button>
-        <button type="button" class="btn btn-default" ng-disabled="currentPage >= projectsToShow.length/pageSize -1" ng-click="currentPage = currentPage+1">&gt;&gt;</button>
-      </ul>
-    </div>
-  </div>
-  <div class="panel panel-default col-md-12 pull-right panelNoPadding ">
-    <div class="panel-heading">
-      Pages
-    </div>
-    <div class="panel-body">
-      <ul class="nav nav-pills nav-stacked">
-        <li><a ng-href="#/invitecoworkers">Invite collaborators</a></li>
-      </ul>
+        <button type="button" class="btn btn-default pull-left projectsPadding" ng-hide="currentPage==0" ng-click="currentPage=currentPage-1">&lt;&lt;</button>
+        <button type="button" class="btn btn-default pull-right projectsPadding" ng-hide="currentPage >= projectsToShow.length/pageSize -1" ng-click="currentPage = currentPage+1">&gt;&gt;</button>
+
     </div>
   </div>
 </div>
