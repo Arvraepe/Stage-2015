@@ -13,17 +13,18 @@ angular.module('stageprojectApp')
     if($scope.project.standardStates.indexOf("Not Started")>-1 && $scope.project.standardStates.indexOf("In Progress")>-1 && $scope.project.standardStates.indexOf("Finished")>-1 &&
     $scope.project.standardStates.length ===3){
       $scope.custom =false;
+
     }
     else{
+      $scope.customStates = [];
+
       $scope.custom = true;
+      angular.forEach(project.standardStates, function(state){
+        $scope.customStates.push({
+          status : state
+        });
+      });
     }
-    /*if($scope.project.standardStates != ['Not Started','In Progress','Finished'])
-    {
-      $scope.custom=false;
-    }
-    else{
-      $scope.custom = true;
-    }*/
     $scope.collaborators = [];
 
     function fillCollaborators() {
@@ -35,10 +36,9 @@ angular.module('stageprojectApp')
 
     }
 
-    $scope.customStates = [{
-      status: ''
-    }];
+
     $scope.addState = function () {
+      //$scope.project.standardStates.push('');
       $scope.customStates.push({
         status: ''
       });
@@ -73,10 +73,10 @@ angular.module('stageprojectApp')
 
     $scope.updateProject = function (project) {
       if ($scope.custom) {
-        project.standardStates = $scope.standardStates;
+        project.standardStates = $scope.customStates;
       }
       else {
-        project.standardStates = $scope.customStates;
+        project.standardStates = $scope.standardStates;
       }
       project.leader = loginFactory.getUser()._id;
 
