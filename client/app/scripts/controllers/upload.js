@@ -31,18 +31,6 @@ angular.module('stageprojectApp')
           }).success(function (data, status, headers, config) {
             $scope.setCurrentUser(data.data.user);
             notificationFactory.createNotification(data);
-            console.log('file upload gelukt');
-            console.log(data);
-            console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
-            /*userFactory.getImageForCurrentUser($scope.currentUser.username, function (file) {
-              if (file.code === 'InternalError') {
-
-              }
-              else {
-                $scope.setAvatarForCurrentUser(file);
-              }
-            });*/
-
           });
         }
       }

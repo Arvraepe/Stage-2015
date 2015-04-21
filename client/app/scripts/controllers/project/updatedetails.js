@@ -10,18 +10,18 @@
 angular.module('stageprojectApp')
   .controller('UpdateDetailsCtrl', function ($scope, $modalInstance, project, projectRequestFactory, notificationFactory, loginFactory) {
     $scope.project = angular.copy(project);
-    if($scope.project.standardStates.indexOf("Not Started")>-1 && $scope.project.standardStates.indexOf("In Progress")>-1 && $scope.project.standardStates.indexOf("Finished")>-1 &&
-    $scope.project.standardStates.length ===3){
-      $scope.custom =false;
+    if ($scope.project.standardStates.indexOf("Not Started") > -1 && $scope.project.standardStates.indexOf("In Progress") > -1 && $scope.project.standardStates.indexOf("Finished") > -1 &&
+      $scope.project.standardStates.length === 3) {
+      $scope.custom = false;
 
     }
-    else{
+    else {
       $scope.customStates = [];
 
       $scope.custom = true;
-      angular.forEach(project.standardStates, function(state){
+      angular.forEach(project.standardStates, function (state) {
         $scope.customStates.push({
-          status : state
+          status: state
         });
       });
     }
@@ -72,26 +72,29 @@ angular.module('stageprojectApp')
     };
 
     $scope.updateProject = function (project) {
-      if ($scope.custom) {
-        project.standardStates = $scope.customStates;
-      }
-      else {
-        project.standardStates = $scope.standardStates;
-      }
-      project.leader = loginFactory.getUser()._id;
+      if ($scope.updateProjectForm.$valid) {
 
-      projectRequestFactory.updateProject({
-        data: project,
-        success: function (response) {
-          var responseProject = response.data.project;
-          $modalInstance.close(responseProject);
-          notificationFactory.createNotification(response);
-          console.log(response);
-        },
-        error: function(error){
-          console.log(error)
+        if ($scope.custom) {
+          project.standardStates = $scope.customStates;
         }
-      });
+        else {
+          project.standardStates = $scope.standardStates;
+        }
+        project.leader = loginFactory.getUser()._id;
+
+        projectRequestFactory.updateProject({
+          data: project,
+          success: function (response) {
+            var responseProject = response.data.project;
+            $modalInstance.close(responseProject);
+            notificationFactory.createNotification(response);
+            console.log(response);
+          },
+          error: function (error) {
+            console.log(error)
+          }
+        });
+      }
     };
 
     $scope.dateFormat = 'dd-MMMM-yyyy';
@@ -113,7 +116,16 @@ angular.module('stageprojectApp')
 
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
+      console.log("cancel pressed");
     };
+
+    $scope.fillCustomStates = function(){
+      $scope.customStates = [
+      {
+        status:''
+      }
+        ];
+    }
 
 
   });

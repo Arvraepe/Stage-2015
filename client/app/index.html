@@ -40,13 +40,13 @@
           <span class="icon-bar"></span>
         </button>
 
-        <a class="navbar-brand" href="#/">Collaboration app</a>
+        <a class="navbar-brand" ng-href="#/">Collaboration app</a>
       </div>
       <div class="navbar-right">
         <div class="welcomeUser normalFontColor" ng-if="isAuthorized(userRoles.user)">
           <span ng-show="requestsBusy>0"><i class="fa fa-spinner fa-pulse"></i></span>
           Hi, {{currentUser.username}}
-          <img ng-if="currentUser && currentUser.imageUrl" src="{{currentUser.imageUrl}}" alt="ProfilePic" class="smallAvatar">
+          <img ng-if="currentUser && currentUser.imageUrl" ng-src="{{currentUser.imageUrl}}" alt="ProfilePic" class="smallAvatar">
           <div class="btn-group" dropdown>
             <button class="btn btn-default dropdown-toggle normalFontColor" dropdown-toggle>
               <i class="fa fa-cog"></i>
@@ -95,7 +95,7 @@
       <div class="collapse navbar-collapse" id="js-navbar-collapse">
 
         <ul class="nav navbar-nav">
-          <li ng-if="!isAuthorized(userRoles.user)"><a href="#/"><i class="fa fa-home"></i> Home</a></li>
+          <li ng-if="!isAuthorized(userRoles.user)"><a ng-href="#/"><i class="fa fa-home"></i> Home</a></li>
           <li ng-if="!isAuthorized(userRoles.user)"><a ng-href="#/register"><i class="fa fa-user-plus"></i> Register</a>
           </li>
           <li ng-if="isAuthorized(userRoles.user)"><a ng-href="#/dashboard"><i class="fa fa-tachometer"></i>
@@ -158,42 +158,36 @@
 <!-- build:js({.tmp,app}) scripts/scripts.js -->
 <script src="scripts/app.js"></script>
 <script src="scripts/controllers/main.js"></script>
-<script src="scripts/controllers/about.js"></script>
-<script src="scripts/controllers/login.js"></script>
-<script src="scripts/controllers/register.js"></script>
+<script src="scripts/controllers/user/login.js"></script>
+<script src="scripts/controllers/user/register.js"></script>
 <script src="scripts/controllers/dashboard.js"></script>
-<script src="scripts/services/auth_events.js"></script>
-<script src="scripts/services/user_roles.js"></script>
-<script src="scripts/services/session.js"></script>
-<script src="scripts/services/authservice.js"></script>
+<script src="scripts/services/authentication/auth_events.js"></script>
+<script src="scripts/services/authentication/user_roles.js"></script>
+<script src="scripts/services/authentication/session.js"></script>
+<script src="scripts/services/authentication/authservice.js"></script>
 <script src="scripts/controllers/application.js"></script>
-<script src="scripts/services/requestfactory.js"></script>
+<script src="scripts/services/requests/requestfactory.js"></script>
 <script src="scripts/services/userfactory.js"></script>
 
-<script src="scripts/services/loginfactory.js"></script>
-<script src="scripts/services/authinterceptor.js"></script>
+<script src="scripts/services/authentication/loginfactory.js"></script>
 <script src="scripts/directives/logindialog.js"></script>
-<script src="scripts/services/authresolver.js"></script>
-<script src="scripts/controllers/updateuser.js"></script>
+<script src="scripts/controllers/user/updateuser.js"></script>
 <script src="scripts/controllers/upload.js"></script>
 <script src="scripts/directives/showerrors.js"></script>
-<script src="scripts/services/showerrorsconfig.js"></script>
+<script src="scripts/services/validation/showerrorsconfig.js"></script>
 <script src="scripts/directives/uniqueusername.js"></script>
 <script src="scripts/bootstrap/ui-bootstrap-custom-0.12.1.js"></script>
 <script src="scripts/bootstrap/ui-bootstrap-custom-tpls-0.12.1.js"></script>
-<script src="scripts/controllers/changepassword.js"></script>
-<script src="scripts/controllers/changeemail.js"></script>
-<script src="scripts/services/notificationfactory.js"></script>
-<script src="scripts/controllers/invitecoworkers.js"></script>
-<script src="scripts/controllers/resetpassword.js"></script>
+<script src="scripts/services/notifications/notificationfactory.js"></script>
+<script src="scripts/controllers/user/invitecoworkers.js"></script>
+<script src="scripts/controllers/user/resetpassword.js"></script>
 <script src="scripts/controllers/user/recover.js"></script>
 <script src="scripts/directives/uniqueemail.js"></script>
 <script src="scripts/controllers/project/newproject.js"></script>
-<script src="scripts/services/project/projectrequestfactory.js"></script>
+<script src="scripts/services/requests/projectrequestfactory.js"></script>
 <script src="scripts/controllers/project/project.js"></script>
-<script src="scripts/services/userrequesthandler.js"></script>
+<script src="scripts/services/requests/userrequesthandler.js"></script>
 <script src="scripts/filters/startfrom.js"></script>
-<script src="scripts/controllers/project/updatecollaborators.js"></script>
 <script src="scripts/controllers/project/updatedetails.js"></script>
 <!-- endbuild -->
 </body>

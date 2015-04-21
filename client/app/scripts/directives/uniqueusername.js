@@ -7,7 +7,7 @@
  * # uniqueUsername
  */
 angular.module('stageprojectApp')
-  .directive('uniqueUsername', ['userFactory', function (userFactory) {
+  .directive('uniqueUsername', ['userRequestHandler', function (userRequestHandler) {
     return {
       restrict: 'A',
       require: 'ngModel',
@@ -18,20 +18,28 @@ angular.module('stageprojectApp')
           ngModel.$loading = true;
           inputNgElement = angular.element(element);
           inputValue = inputNgElement.val();
-          if(inputValue.length>2){
+          if (inputValue.length > 2) {
             var usernameJson = {
-              username : inputValue
+              username: inputValue
             };
-            userFactory.userExists(usernameJson, function(response){
-              if(response.data.exists){
-                ngModel.$setValidity('unique', false);
-              }
-              else if(!response.data.exists){
-                ngModel.$setValidity('unique',true);
+            userRequestHandler.userExists({
+              params: usernameJson,
+              success: function (response) {
+                if (response.data.exists) {
+                  ngModel.$setValidity('unique', false);
+                }
+                else if (!response.data.exists) {
+                  ngModel.$setValidity('unique', true);
+                }
+              },
+              error: function (error) {
+
               }
             });
           }
           ngModel.$loading = false;
+
+
 
 
         });

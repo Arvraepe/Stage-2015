@@ -37,23 +37,13 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
       templateUrl: 'views/main.html',
       controller: 'ApplicationCtrl'
     })
-    .when('/about', {
-      templateUrl: 'views/about.html',
-      controller: 'AboutCtrl'
-    })
     .when('/login', {
-      templateUrl: 'views/login.html',
+      templateUrl: 'views/user/login.html',
       controller: 'LoginCtrl'
     })
     .when('/register', {
-      templateUrl: 'views/register.html',
+      templateUrl: 'views/user/register.html',
       controller: 'RegisterCtrl'
-      /* resolve: {
-       auth: function resolveAuthentication(AuthResolver) {
-       return AuthResolver.resolve();
-       }
-       },*/
-
     })
     .when('/dashboard', {
       templateUrl: 'views/dashboard.html',
@@ -62,71 +52,41 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
         authorizedRoles: [USERROLES.user]
       }
     })
-    .when('/editUser', {
-      templateUrl: 'views/edituser.html',
-      controller: 'EdituserCtrl',
-      data: {
-        authorizedRoles: [USERROLES.user]
-      }
-    })
     .when('/updateuser', {
-      templateUrl: 'views/updateuser.html',
+      templateUrl: 'views/user/updateuser.html',
       controller: 'UpdateuserCtrl',
       data: {
         authorizedRoles: [USERROLES.user]
       }
     })
-    .when('/changepassword', {
-      templateUrl: 'views/changepassword.html',
-      controller: 'ChangepasswordCtrl',
-      data: {
-        authorizedRoles: [USERROLES.user]
-      }
-    })
-    .when('/changeemail', {
-      templateUrl: 'views/changeemail.html',
-      controller: 'ChangeemailCtrl',
-      data: {
-        authorizedRoles: [USERROLES.user]
-      }
-    })
     .when('/invitecoworkers', {
-      templateUrl: 'views/invitecoworkers.html',
+      templateUrl: 'views/user/invitecoworkers.html',
       controller: 'InvitecoworkersCtrl',
       data: {
         authorizedRoles: [USERROLES.user]
       }
     })
     .when('/resetpassword', {
-      templateUrl: 'views/resetpassword.html',
+      templateUrl: 'views/user/resetpassword.html',
       controller: 'ResetpasswordCtrl'
     })
     .when('/user/recover/:uuid', {
-      templateUrl: 'views/recover.html',
+      templateUrl: 'views/user/recover.html',
       controller: 'UserRecoverCtrl'
     })
     .when('/register/:email', {
-      templateUrl: 'views/registeremail.html',
+      templateUrl: 'views/user/registeremail.html',
       controller: 'RegisterCtrl'
-    })
-    .when('/project/newproject', {
-      templateUrl: 'views/project/newproject.html',
-      controller: 'NewProjectCtrl'
     })
     .when('/project/:pid', {
       templateUrl: 'views/project/project.html',
-      controller: 'ProjectCtrl'
-    })
-    .when('/project/updatecollaborators', {
-      templateUrl: 'views/project/updatecollaborators.html',
-      controller: 'UpdateCollaboratorsCtrl'
-    })
-    .when('/project/updatedetails', {
-      templateUrl: 'views/project/updatedetails.html',
-      controller: 'UpdateDetailsCtrl'
+      controller: 'ProjectCtrl',
+      data: {
+        authorizedRoles: [USERROLES.user]
+      }
     })
     .when('/register/:email/:pid', {
-      templateUrl: 'views/registeremailproject.html',
+      templateUrl: 'views/user/registeremailproject.html',
       controller: 'RegisterCtrl'
     })
     .otherwise({
@@ -165,13 +125,5 @@ app.run(function ($rootScope, $location, AUTHEVENTS, AuthService, userFactory, S
   });
 });
 
-/*app.config(function ($httpProvider) {
-  $httpProvider.interceptors.push([
-    '$injector',
-    function ($injector) {
-      console.log($injector.get('AuthInterceptor'));
-      return $injector.get('AuthInterceptor');
-    }
-  ]);
-});*/
+
 

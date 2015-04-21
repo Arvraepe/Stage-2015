@@ -8,28 +8,19 @@
  * Factory in the stageprojectApp.
  */
 angular.module('stageprojectApp')
-  .factory('AuthService', ['userFactory', 'Session', function (userFactory, Session) {
+  .factory('AuthService', ['userFactory', 'Session','userRequestHandler', function (userFactory, Session, userRequestHandler) {
     var authService = {};
-    authService.login = function (credentials, callback, onError) {
-      userFactory.loginUser(credentials, createSession, callback, onError);
+    authService.login = function (config) {
+      userRequestHandler.loginUser({
+        data:config.data,
+        success:config.success,
+        error: config.error
+      });
     };
 
-    function createSession(response, callback) {
-      if (response.data != undefined) {
-        Session.create(response.data.token, response.data.user.role);
-      } else {
-        //todo afhandelen on success:false
-      }
-      callback(response);
-    }
-
-    function onError(response, onErrorCallback) {
-      onErrorCallback(response);
-    }
 
     authService.logout = function () {
       Session.destroy();
-      //userFactory.logoutUser(getResult, callback);
     };
 
 

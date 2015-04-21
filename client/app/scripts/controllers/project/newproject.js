@@ -67,22 +67,25 @@ angular.module('stageprojectApp')
 
 
     $scope.createProject = function(project){
-      if($scope.custom){
-        project.standardStates = $scope.standardStates;
-      }
-      else{
-        project.standardStates = $scope.customStates;
-      }
-      projectRequestFactory.createProject({
-        data: project,
-        success: function(response){
-          notificationFactory.createNotification(response);
-          $modalInstance.close(response.data.project);
-        },
-        error: function(error){
-          console.log(error);
+      if($scope.newprojectForm.$valid){
+        if($scope.custom){
+          project.standardStates = $scope.standardStates;
         }
-      });
+        else{
+          project.standardStates = $scope.customStates;
+        }
+        projectRequestFactory.createProject({
+          data: project,
+          success: function(response){
+            notificationFactory.createNotification(response);
+            $modalInstance.close(response.data.project);
+          },
+          error: function(error){
+            console.log(error);
+          }
+        });
+      }
+
     };
 
     $scope.cancel = function () {

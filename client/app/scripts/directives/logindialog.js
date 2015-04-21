@@ -10,7 +10,7 @@ angular.module('stageprojectApp')
   .directive('loginDialog', ['AUTHEVENTS', function (AUTHEVENTS) {
     return {
       restrict: 'A',
-      templateUrl: '/views/login.html',
+      templateUrl: '/views/user/login.html',
       controller: 'LoginCtrl',
       link: function (scope) {
         var showDialog = function () {

@@ -55,7 +55,7 @@ angular.module('stageprojectApp')
       angular.forEach($scope.userCollaboratorProjects, function (project) {
         $scope.projectsToShow.push(project);
       });
-      $scope.title = 'All My Projects';
+      $scope.title = 'Projects';
     };
 
     $scope.showMyCollaborationProjects = function () {

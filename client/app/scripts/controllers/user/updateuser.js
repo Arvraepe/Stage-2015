@@ -8,15 +8,10 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('UpdateuserCtrl', ['$scope', 'userFactory', 'Session', '$window', function ($scope, userFactory, Session, $window) {
+  .controller('UpdateuserCtrl', ['$scope', 'userRequestHandler', 'Session', '$window', 'notificationFactory', function ($scope, userRequestHandler, Session, $window, notificationFactory) {
     $scope.userinfotochange = angular.copy($scope.currentUser);
     $scope.confirmpassword = '';
     var sId = Session.getId();
-
-    /*if($scope.updateUserForm.oldpasswordField.$dirty){
-     $scope.updateUserForm.newpasswordField.$setRequired();
-     $scope.updateUserForm.confirmPasswordField;
-     }*/
     $scope.copyOfUserInfoToChange = {};
 
 
@@ -25,9 +20,16 @@ angular.module('stageprojectApp')
         $scope.copyOfUserInfoToChange.firstname = userinfotochange.firstname;
         $scope.copyOfUserInfoToChange.lastname = userinfotochange.lastname;
         $scope.copyOfUserInfoToChange.email = userinfotochange.email;
-        userFactory.updateUser($scope.copyOfUserInfoToChange, function (data) {
-          $scope.setCurrentUser(data.user, sId);
-          $window.location.href = '#/dashboard';
+        userRequestHandler.updateUser({
+          data: $scope.copyOfUserInfoToChange,
+          success: function (response) {
+            notificationFactory.createNotification(response);
+            $scope.setCurrentUser(response.data.user, sId);
+            $window.location.href = '#/dashboard';
+          },
+          error: function (error) {
+
+          }
         });
       }
       else if ($scope.passwordForm.$valid && $scope.userForm.$valid) {
@@ -36,13 +38,19 @@ angular.module('stageprojectApp')
         $scope.copyOfUserInfoToChange.email = userinfotochange.email;
         $scope.copyOfUserInfoToChange.oldPassword = userinfotochange.oldPassword;
         $scope.copyOfUserInfoToChange.newPassword = userinfotochange.newPassword;
-        userFactory.updateUser($scope.copyOfUserInfoToChange, function (data) {
-          console.log($scope.currentUser);
-          if (data != undefined) {
-            $scope.setCurrentUser(data.user, sId);
-            $window.location.href = '#/dashboard';
-          }
+        userRequestHandler.updateUser({
+          data: $scope.copyOfUserInfoToChange,
+          success: function (response) {
+            if (response.data != undefined) {
+              notificationFactory.createNotification(response);
+              $scope.setCurrentUser(response.data.user, sId);
+            }
 
+            $window.location.href = '#/dashboard';
+          },
+          error: function (error) {
+
+          }
         });
       }
     }

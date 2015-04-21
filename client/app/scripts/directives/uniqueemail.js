@@ -7,7 +7,7 @@
  * # uniqueEmail
  */
 angular.module('stageprojectApp')
-  .directive('uniqueEmail', ['userFactory', function (userFactory) {
+  .directive('uniqueEmail', ['userRequestHandler', function (userRequestHandler) {
     return {
       restrict: 'A',
       require: 'ngModel',
@@ -18,21 +18,24 @@ angular.module('stageprojectApp')
           ngModel.$loading = true;
           inputNgElement = angular.element(element);
           inputValue = inputNgElement.val();
-          if(inputValue.length>7){
+          if(inputValue.length>7) {
             var emailJson = {
-              email : inputValue
+              email: inputValue
             };
-            userFactory.userExists(emailJson, function(response){
-              if(response.data.exists){
-                if(scope.$parent.currentUser.email === inputValue){
-                  ngModel.$setValidity('unique',true);
+            userRequestHandler.userExists({
+              params: emailJson,
+              success: function (response) {
+                if (response.data.exists) {
+                  if (scope.$parent.currentUser.email === inputValue) {
+                    ngModel.$setValidity('unique', true);
+                  }
+                  else {
+                    ngModel.$setValidity('unique', false);
+                  }
                 }
-                else{
-                  ngModel.$setValidity('unique', false);
+                else if (!response.data.exists) {
+                  ngModel.$setValidity('unique', true);
                 }
-              }
-              else if(!response.data.exists){
-                ngModel.$setValidity('unique',true);
               }
             });
           }

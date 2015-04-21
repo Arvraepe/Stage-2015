@@ -1,7 +1,7 @@
 <div class="modal-header">
   <h3 class="modal-title">Create a new project!</h3>
 </div>
-<form class="form-horizontal" name="newprojectForm" ng-submit="newprojectForm.$valid && createProject(project)">
+<form class="form-horizontal" name="newprojectForm">
 <div class="modal-body">
 
     <div class="form-group" show-errors="{showSuccess: true}">
@@ -109,7 +109,7 @@
 
 </div>
 <div class="modal-footer">
-  <button type="submit" class="btn btn-primary" >Create!</button>
-  <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+  <button type="button" class="btn btn-primary" ng-click="createProject(project)">Create!</button>
+  <button type="button" class="btn btn-warning" ng-click="cancel()">Cancel</button>
 </div>
 </form>

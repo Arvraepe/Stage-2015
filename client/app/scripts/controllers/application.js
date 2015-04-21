@@ -12,28 +12,21 @@ angular.module('stageprojectApp')
     '$window', 'userFactory', 'localStorageService',function ($scope, USERROLES, AuthService, loginFactory, $rootScope,
                                                                AUTHEVENTS, Session, $window, userFactory, localStorageService) {
 
-      //console.log($scope.currentUser);
       $scope.userRoles = USERROLES;
       $scope.isAuthorized = AuthService.isAuthorized;
       $scope.isLoginPage = true;
       $scope.requestsBusy=0;
-      //$scope.visible = false;
 
       $scope.setCurrentUser = function (user, token) {
         if(token ==undefined){
           token = Session.getId();
         }
-        //$scope.currentUser = user;
         $scope.currentUser = user;
         localStorageService.set('userInfo', $scope.currentUser);
         localStorageService.set('tokenInfo', token);
-        //loginFactory.setUser(user, token, file);
         Session.setId(token);
       };
 
-      $scope.setAvatarForCurrentUser = function (file) {
-        $scope.currentUser.avatar = file;
-      };
 
       $scope.logout = function () {
         AuthService.logout();
@@ -42,9 +35,7 @@ angular.module('stageprojectApp')
         $rootScope.$broadcast(AUTHEVENTS.logoutSuccess);
         $scope.currentUser = {};
         $window.location.href = "#/main";
-
       };
-
 
       $scope.currentUser = loginFactory.getUser();
 
@@ -54,7 +45,6 @@ angular.module('stageprojectApp')
       $scope.$on('requestEventStopped', function(){
         $scope.requestsBusy--;
       })
-
 
 
     }]);
