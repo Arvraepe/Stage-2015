@@ -16,11 +16,12 @@ exports.validateNewProject = function(params) {
             messages.push({code: 'ERROR', message: "Deadline can't already be expired."});
         }
     }
-    if(!checkStates(params.standardStates)) {
+    /*if(!checkStates(params.standardStates)) {
         messages.push(makeMessage('state', 2, 20));
     } else {
         params.standardStates = convertStates(params.standardStates);
-    }
+    }*/
+    console.log(messages);
     return messages;
 };
 
@@ -53,7 +54,7 @@ function makeMessage(wrong, minlength, maxlength) {
 function convertStates(states) {
     var result = [];
     states.forEach(function (entry) {
-        result.push(entry.status);
+        result.push(entry);
     });
     return result
 }

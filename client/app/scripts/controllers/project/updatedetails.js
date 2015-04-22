@@ -18,10 +18,7 @@ angular.module('stageprojectApp')
         $scope.collaborators.push(collab.username);
         $scope.project.collaborators.push(collab.username);
       });
-
     }
-
-
 
     fillCollaborators();
 
@@ -47,9 +44,7 @@ angular.module('stageprojectApp')
 
     $scope.updateProject = function (project) {
       if ($scope.updateProjectForm.$valid) {
-
         project.leader = loginFactory.getUser()._id;
-
         projectRequestFactory.updateProject({
           data: project,
           success: function (response) {

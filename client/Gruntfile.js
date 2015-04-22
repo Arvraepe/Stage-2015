@@ -18,7 +18,7 @@ module.exports = function (grunt) {
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
-    dist: 'dist'
+    dist: './dist'
   };
 
   // Define the configuration for all the tasks
@@ -30,7 +30,7 @@ module.exports = function (grunt) {
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       bower: {
-        files: ['bower.json'],
+        files: ['<%= yeoman.app %>/bower.json'],
         tasks: ['wiredep']
       },
       js: {
@@ -123,7 +123,7 @@ module.exports = function (grunt) {
       all: {
         src: [
           'Gruntfile.js',
-          '<%= yeoman.app %>/scripts/{,*/}*.js'
+          '<%= yeoman.app %>/scripts/**/*.js'
         ]
       },
       test: {
@@ -179,23 +179,23 @@ module.exports = function (grunt) {
     wiredep: {
       app: {
         src: ['<%= yeoman.app %>/index.html'],
-        ignorePath:  /\.\.\//
+        ignorePath: /\.\.\//
       },
       test: {
         devDependencies: true,
         src: '<%= karma.unit.configFile %>',
-        ignorePath:  /\.\.\//,
-        fileTypes:{
+        ignorePath: /\.\.\//,
+        fileTypes: {
           js: {
             block: /(([\s\t]*)\/{2}\s*?bower:\s*?(\S*))(\n|\r|.)*?(\/{2}\s*endbower)/gi,
-              detect: {
-                js: /'(.*\.js)'/gi
-              },
-              replace: {
-                js: '\'{{filePath}}\','
-              }
+            detect: {
+              js: /'(.*\.js)'/gi
+            },
+            replace: {
+              js: '\'{{filePath}}\','
             }
           }
+        }
       }
     },
 
@@ -247,27 +247,27 @@ module.exports = function (grunt) {
     // By default, your `index.html`'s <!-- Usemin block --> will take care of
     // minification. These next options are pre-configured if you do not wish
     // to use the Usemin blocks.
-    // cssmin: {
-    //   dist: {
-    //     files: {
-    //       '<%= yeoman.dist %>/styles/main.css': [
-    //         '.tmp/styles/{,*/}*.css'
-    //       ]
-    //     }
-    //   }
-    // },
-    // uglify: {
-    //   dist: {
-    //     files: {
-    //       '<%= yeoman.dist %>/scripts/scripts.js': [
-    //         '<%= yeoman.dist %>/scripts/scripts.js'
-    //       ]
-    //     }
-    //   }
-    // },
-    // concat: {
-    //   dist: {}
-    // },
+    //cssmin: {
+    //  dist: {
+    //    files: {
+    //      '<%= yeoman.dist %>/styles/main.css': [
+    //        '.tmp/styles/{,*/}*.css'
+    //      ]
+    //    }
+    //  }
+    //},
+    //uglify: {
+    //  dist: {
+    //    files: {
+    //      '<%= yeoman.dist %>/scripts/scripts.js': [
+    //        '<%= yeoman.dist %>/scripts/**/*.js'
+    //      ]
+    //    }
+    //  }
+    //},
+    //concat: {
+    //  dist: {}
+    //},
 
     imagemin: {
       dist: {
@@ -303,7 +303,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= yeoman.dist %>',
-          src: ['*.html', 'views/{,*/}*.html'],
+          src: ['*.html', 'views/**/*.html'],
           dest: '<%= yeoman.dist %>'
         }]
       }
@@ -434,6 +434,10 @@ module.exports = function (grunt) {
     'filerev',
     'usemin',
     'htmlmin'
+  ]);
+
+  grunt.registerTask('production',[
+
   ]);
 
   grunt.registerTask('default', [

@@ -1,6 +1,10 @@
 <div ng-init="getProjectInfo()">
   <div class="col-md-9 noPaddingLeft">
     <h2>{{project.name}}</h2>
+    <button ng-if="isLeader()" type="button" ng-click="openBoardModal()" class="btn btn-success"><i class="fa fa-plus-circle" style="vertical-align: middle"> Board</i> </button>
+    <div ng-repeat="board in project.boards" class="well projectBoardLayout">
+      <a ng-href="#/project/{{project._id}}/board/{{board.name}}">{{board.name}}</a>
+    </div>
   </div>
 
   <div class="col-md-3 pull-right noPaddingRight">
@@ -63,7 +67,7 @@
             <li ng-repeat="collab in collaborators" style="margin-top: 3px;margin-bottom:3px;">
               <img src="{{collab.imageUrl}}" alt="Profile Picture" class="smallerAvatar"/>
               <span>{{collab.username}}</span>
-              <button ng-if="isLeader()" class="pull-right btn btn-default btn-xs" ng-click="promoteUser(collab)"><i class="fa fa-arrow-up"></i></button>
+              <button ng-if="isLeader()" class="pull-right btn btn-default btn-xs" ng-click="openPromoteModal(collab)"><i class="fa fa-arrow-up"></i></button>
             </li>
           </ul>
         </div>

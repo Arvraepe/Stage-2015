@@ -71,7 +71,6 @@ angular.module('stageprojectApp')
           }
         });
       }
-
     };
 
     $scope.cancel = function () {

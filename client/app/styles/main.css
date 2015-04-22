@@ -54,6 +54,19 @@
   padding:10px 15px;
 }
 
+.dropdown-menu li div table thead tr th{
+  padding:2px;
+}
+
+.dropdown-menu li div table tbody{
+  margin-right:10px;
+}
+
+.dropdown-menu li div table{
+  margin-left:10px;
+  margin-right:10px;
+}
+
 .formBackground{
   background-color: #f8f8f8;
   border:solid #e7e7e7 1px;
@@ -63,8 +76,8 @@
 }
 
 .formButtonsNoPadding{
-  padding-right: 0px;
-  padding-left:0px;
+  padding-right: 0;
+  padding-left:0;
   margin-bottom:30px;
 }
 
@@ -258,9 +271,7 @@ body {
   .header {
     margin-bottom: 30px;
     padding-left: 10px;
-  !important;
     padding-right: 10px;
-  !important;
     padding-top: 20px;
   }
   /* Remove the bottom border on the jumbotron for visual effect */

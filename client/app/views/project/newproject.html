@@ -73,13 +73,13 @@
         </p>
       </div>
     </div>
-    <div class="form-group" show-errors="{showSuccess: true}">
+    <div class="form-group">
       <label class="col-md-3 control-label">States</label>
 
       <div class="col-md-9">
         <ui-select multiple tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|ENTER|TAB"
                    ng-model="project.standardStates" ng-disabled="disabled"
-                   search-enabled="true" theme="bootstrap">
+                   search-enabled="true">
           <ui-select-match placeholder="Which states will your tasks have?" style="padding-left:9px;">{{$item}}
           </ui-select-match>
           <ui-select-choices repeat="stat in project.states"></ui-select-choices>

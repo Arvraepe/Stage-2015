@@ -8,7 +8,7 @@
  * Factory in the stageprojectApp.
  */
 angular.module('stageprojectApp')
-  .factory('AuthService', ['userFactory', 'Session','userRequestHandler', function (userFactory, Session, userRequestHandler) {
+  .factory('AuthService', ['Session','userRequestHandler', function (Session, userRequestHandler) {
     var authService = {};
     authService.login = function (config) {
       userRequestHandler.loginUser({
@@ -17,7 +17,6 @@ angular.module('stageprojectApp')
         error: config.error
       });
     };
-
 
     authService.logout = function () {
       Session.destroy();

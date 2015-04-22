@@ -22,15 +22,6 @@ var app = angular.module('stageprojectApp', [
   'ngSanitize'
 ]);
 
-/*angular
- .module('stageprojectApp', [
- 'ngAnimate',
- 'ngCookies',
- 'ngRoute',
- 'ngTouch',
- 'services',
- 'jlareau.pnotify'
- ])*/
 app.config(function ($routeProvider, $locationProvider, USERROLES) {
   $routeProvider
     .when('/', {
@@ -88,6 +79,13 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
     .when('/register/:email/:pid', {
       templateUrl: 'views/user/registeremailproject.html',
       controller: 'RegisterCtrl'
+    })
+    .when('/project/:pid/board/:boardId', {
+      templateUrl: 'views/board/board.html',
+      controller: 'BoardCtrl',
+      data: {
+        authorizedRoles: [USERROLES.user]
+      }
     })
     .otherwise({
       redirectTo: '/'

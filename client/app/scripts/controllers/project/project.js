@@ -8,8 +8,8 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('ProjectCtrl', ['$scope', '$routeParams', 'projectRequestFactory', '$modal', 'notificationFactory', '$window',
-    function ($scope, $routeParams, projectRequestFactory, $modal, notificationFactory, $window) {
+  .controller('ProjectCtrl', ['$scope', '$routeParams', 'projectRequestFactory', '$modal', 'notificationFactory', '$window', 'boardRequestFactory',
+    function ($scope, $routeParams, projectRequestFactory, $modal, notificationFactory, $window, boardRequestFactory) {
       $scope.project = {};
       $scope.collaborators = [];
       $scope.leader = {};
@@ -39,6 +39,50 @@ angular.module('stageprojectApp')
         })
       };
 
+      $scope.openBoardModal = function(size){
+        var modalInstance = $modal.open({
+          templateUrl: 'views/board/newboard.html',
+          controller: 'NewBoardCtrl',
+          size: size,
+          resolve:{
+            projectId: function(){
+              return $routeParams.pid;
+            }
+          }
+        });
+        modalInstance.result.then(function (board) {
+          //TODO: ADD BOARD TO PROJECT SO IT JOINS THE BOARDLISTVIEW
+
+        }, function () {
+        })
+      };
+
+      $scope.openPromoteModal = function(collab,size ){
+        var modalInstance = $modal.open({
+          templateUrl: 'views/project/promoteuser.html',
+          controller: 'PromoteUserCtrl',
+          size: size,
+          resolve:{
+            collaborator: function(){
+              return collab;
+            },
+            projectId: function(){
+              return $routeParams.pid
+            }
+          }
+        });
+        modalInstance.result.then(function (data) {
+          $scope.leader = data.leader;
+          $scope.collaborators = [];
+          angular.forEach(data.collaborators, function (collab) {
+            $scope.collaborators.push(collab);
+          });
+          $scope.project = data;
+        }, function () {
+        })
+      };
+
+
       $scope.getProjectInfo = function () {
         var projectId = {
           projectId: $routeParams.pid
@@ -61,6 +105,7 @@ angular.module('stageprojectApp')
 
 
 
+/*
       $scope.promoteUser = function(collab){
         notificationFactory.createConfirm({
           title:'Promote '+collab.username+' to leader',
@@ -93,6 +138,7 @@ angular.module('stageprojectApp')
           }
         });
       };
+*/
 
       $scope.deleteProject = function () {
         notificationFactory.createConfirm({
@@ -117,9 +163,21 @@ angular.module('stageprojectApp')
 
           }
         });
+      };
 
-
-      }
+      $scope.createNewBoard = function (board) {
+        //naam & deadline nodig
+        board.projectId = $routeParams.pid;
+        boardRequestFactory.createBoard({
+          data: board,
+          success:function(response){
+            $scope.project.boards.push(response.data);
+          },
+          error:function(error){
+            console.log(error);
+          }
+        });
+      };
 
 
     }])

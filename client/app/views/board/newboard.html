@@ -1,0 +1,43 @@
+<div class="modal-header">
+  <h3 class="modal-title">Create board</h3>
+</div>
+<form class="form-horizontal" name="createBoardForm">
+  <div class="modal-body">
+
+    <div class="form-group" show-errors="{showSuccess: true}">
+      <label class="col-md-3 control-label">Name</label>
+
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="boardNameField" placeholder="Board name"
+               ng-model="board.name" required ng-minlength="2"
+               >
+
+        <p class="help-block" ng-if="createBoardForm.boardNameField.$error.required">A board needs to have a
+          name.</p>
+
+        <p class="help-block" ng-if="createBoardForm.boardNameField.$error.minlength">A board name needs to have
+          at least 2 characters.</p>
+
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-md-3 control-label">Deadline</label>
+      <div class="col-md-9">
+        <p class="input-group">
+          <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="board.deadline"
+                 is-open="opened" min-date="minDate"
+                 max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabledTime(date,mode)"
+                 close-text="Close"/>
+          <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open($event)"><i
+                  class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+        </p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" ng-click="createBoard(board)" class="btn btn-primary">Create!</button>
+      <button type="button" class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+  </div>
+</form>

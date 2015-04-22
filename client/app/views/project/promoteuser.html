@@ -1,0 +1,14 @@
+<div class="modal-header">
+  <h3 class="modal-title">Promote a new leader</h3>
+</div>
+<form class="form-horizontal" name="promoteLeaderForm">
+  <div class="modal-body" style="font-size: 18px">
+    Are you you want to promote <strong>{{collaborator.username}}</strong> to be the new leader of the project?
+
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="promoteUserToLeader()">Promote!</button>
+    <button type="button" class="btn btn-warning" ng-click="cancel()">Cancel</button>
+  </div>
+</form>

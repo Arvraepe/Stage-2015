@@ -8,8 +8,7 @@
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
   <!-- build:css(.) styles/vendor.css -->
   <!-- bower:css -->
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
-  <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css"/>
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
   <!-- endbower -->
   <!-- endbuild -->
   <!-- build:css(.tmp) styles/main.css -->
@@ -19,7 +18,7 @@
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="bower_components/pnotify/pnotify.core.css">
   <link rel="stylesheet" href="bower_components/pnotify/pnotify.buttons.css">
-
+  <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css">
 </head>
 <body ng-app="stageprojectApp" ng-controller="ApplicationCtrl">
 <!--[if lt IE 7]>
@@ -40,7 +39,7 @@
           <span class="icon-bar"></span>
         </button>
 
-        <a class="navbar-brand" ng-href="#/">Collaboration app</a>
+        <a class="navbar-brand" ng-href="#/">Hive5</a>
       </div>
       <div class="navbar-right">
         <div class="welcomeUser normalFontColor" ng-if="isAuthorized(userRoles.user)">
@@ -160,7 +159,7 @@
 <script src="scripts/controllers/main.js"></script>
 <script src="scripts/controllers/user/login.js"></script>
 <script src="scripts/controllers/user/register.js"></script>
-<script src="scripts/controllers/dashboard.js"></script>
+<script src="scripts/controllers/user/dashboard.js"></script>
 <script src="scripts/services/authentication/auth_events.js"></script>
 <script src="scripts/services/authentication/user_roles.js"></script>
 <script src="scripts/services/authentication/session.js"></script>
@@ -172,7 +171,7 @@
 <script src="scripts/services/authentication/loginfactory.js"></script>
 <script src="scripts/directives/logindialog.js"></script>
 <script src="scripts/controllers/user/updateuser.js"></script>
-<script src="scripts/controllers/upload.js"></script>
+<script src="scripts/controllers/user/upload.js"></script>
 <script src="scripts/directives/showerrors.js"></script>
 <script src="scripts/services/validation/showerrorsconfig.js"></script>
 <script src="scripts/directives/uniqueusername.js"></script>
@@ -189,6 +188,10 @@
 <script src="scripts/services/requests/userrequesthandler.js"></script>
 <script src="scripts/filters/startfrom.js"></script>
 <script src="scripts/controllers/project/updatedetails.js"></script>
+<script src="scripts/controllers/board/board.js"></script>
+<script src="scripts/services/requests/boardrequestfactory.js"></script>
+<script src="scripts/controllers/board/newboard.js"></script>
+<script src="scripts/controllers/project/promoteuser.js"></script>
 <!-- endbuild -->
 </body>
 </html>
