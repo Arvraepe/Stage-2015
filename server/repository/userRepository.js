@@ -51,13 +51,6 @@ exports.findOneAndUpdate = function(id, update, cb) {
     });
 };
 
-//exports.getUsers = function(cb) {
-//    User.find().lean().exec(function (err, users) {
-//        if(err) cb(err);
-//        cb(null, users);
-//    })
-//};
-
 exports.findUserByEmail = function(email, cb) {
     User.findOne({email : email}).lean().exec(function (err, user) {
         if(err) {

@@ -7,6 +7,7 @@ var projectService = require('./../service/projectService');
 var errorHandler = require('./../response/errorHandler');
 var userService = require('./../service/userService');
 var auth = require('./../service/authenticationService');
+var boardService = require('./../service/boardService');
 
 exports.registerRoutes = function(app) {
     app.post('/project/create', createProject);
@@ -150,9 +151,20 @@ function changeLeader(req, res, next) {
 }
 
 function populateProject(project, callback) {
-    userService.getUsersFromProject(project.collaborators, project.leader, function(err, result) {
-        project.leader = result.leader;
-        project.collaborators = result.collaborators;
+    async.parallel([
+        function(callback) {
+            userService.getUsersFromProject(project.collaborators, project.leader, callback);
+        },
+        function(callback) {
+            boardService.getBoards(project._id, callback);
+        }
+    ], function(err, result) {
+        project.leader = result[0].leader;
+        project.collaborators = result[0].collaborators;
+        project.boards = [];
+        result[1].forEach(function (entry) {
+            project.boards.push(entry);
+        });
         callback(err, project);
     });
 }

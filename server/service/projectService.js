@@ -7,6 +7,7 @@ var mailService = require('./../service/mailService');
 var config = require('./../config.json');
 var async = require('async');
 var uuid = require('node-uuid');
+var boardService = require('./boardService');
 
 exports.createProject = function (params, userId, callback) {
     var messages = projectValidator.validateNewProject(params);
@@ -16,7 +17,10 @@ exports.createProject = function (params, userId, callback) {
         params.leader = userId;
         params.startDate = new Date();
         projectRepo.create(params, function (err, project) {
-            callback(err, null, project);
+            var defaultBoard = getDefaultBoard(project.standardStates, project.deadline, project._id);
+            boardService.createBoard(defaultBoard, function(err, board) {
+                callback(err, null, project);
+            });
         });
     }
 };
@@ -169,4 +173,15 @@ function isLeader(projectId, userId, callback) {
 
 function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
+}
+
+function getDefaultBoard(states, deadline, projectId) {
+    var board = {
+        name: 'General',
+        description: 'General tasks of the project.',
+        deadline: deadline,
+        projectId: projectId,
+        states: states
+    };
+    return board;
 }
