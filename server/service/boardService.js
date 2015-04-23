@@ -10,6 +10,7 @@ exports.createBoard = function (params, callback) {
         callback(null, null, messages)
     } else {
         boardRepo.create(params, function (err, result) {
+            result.states = convertState(result);
             callback(err, result, messages);
         });
     }
@@ -27,3 +28,20 @@ exports.getBoard = function (boardId, callback) {
         callback(err, board);
     });
 };
+
+exports.convertStates = function(boards) {
+    boards.forEach(function (board, index, array) {
+        array[index].states = convertState(board);
+    });
+    return boards;
+};
+
+function convertState(board) {
+    var newStates = [];
+    board.states.forEach(function (state) {
+        var obj = {};
+        obj[state] = 0; //todo count tasks
+        newStates.push(obj);
+    });
+    return newStates;
+}
