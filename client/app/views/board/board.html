@@ -1,6 +1,14 @@
-<div class="col-md-9 noPaddingLeft">
-  <button type="button" ng-click="editBoardModal()" class="btn btn-primary"><i class="fa fa-pencil"> Edit board</i></button>
-  <div ng-if="board.name!=undefined" class="well boardLayout">
-    {{board.name}}
+<ol class="breadcrumb breadCrumb" data-ng-init="getBoardInfo()">
+  <li><a ng-href="#/dashboard">Dashboard</a></li>
+  <li><a ng-href="#/project/{{board.projectId}}">Project</a></li>
+  <li class="active">{{board.name}}</li>
+</ol>
+<button type="button" ng-click="editBoardModal()" class="btn btn-primary"><i class="fa fa-pencil"> Edit board</i></button>
+
+<h2>{{board.name}}</h2>
+
+<div class="col-md-12 noPaddingLeft noPaddingRight" >
+  <div ng-repeat="state in board.states" class="well boardLayout col-md-{{columnWidth}}">
+    {{state}}
   </div>
 </div>

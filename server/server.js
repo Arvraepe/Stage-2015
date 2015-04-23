@@ -16,6 +16,7 @@ mongoose.model('Board', boardSchema);
 var app = restify.createServer();
 var userRoutes = require('./routes/userRoutes');
 var projectRoutes = require('./routes/projectRoutes');
+var boardRoutes = require('./routes/boardRoutes');
 
 app.use(restify.fullResponse());
 app.use(restify.bodyParser());
@@ -29,6 +30,8 @@ directory: 'public',
 
 userRoutes.registerRoutes(app);
 projectRoutes.registerRoutes(app);
+boardRoutes.registerRoutes(app);
+
 app.listen(6543, function() {
     console.log('%s listening at %s', app.name, app.url);
 });

@@ -18,6 +18,9 @@ exports.getBoards = function (projectId, callback) {
 exports.getBoard = function (boardId, callback) {
     //todo check userrights.
     boardRepo.findBoards({_id :boardId}, function(err, boards) {
-        callback(err, boards[0]);
+        var board = boards[0];
+        console.log(board);
+        callback(err, board);
+
     })
 };

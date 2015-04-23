@@ -1,12 +1,13 @@
 /**
  * Created by Glenn on 21-4-2015.
  */
+var async = require('async');
 var auth = require('./../service/authenticationService');
 var projectService = require('./../service/projectService');
 var errorHandler = require('./../response/errorHandler');
 var boardService = require('./../service/boardService');
 
-ezports.registerRoutes = function(app) {
+exports.registerRoutes = function(app) {
     app.post('/board/create', createBoard);
     app.get('/board', getBoard);
 };
@@ -40,7 +41,7 @@ function getBoard(req, res, next) {
             boardService.getBoard(req.params.boardId, callback);
         }
     ], function (err, result) {
-        result = errorHandler.handleResult(err, {board : result}, 'Board fetched succesfully.');
+        result = errorHandler.handleResult(err, {board : result[0]}, 'Board fetched succesfully.');
         res.send(result);
     });
 }

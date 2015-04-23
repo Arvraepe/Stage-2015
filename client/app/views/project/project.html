@@ -6,7 +6,7 @@
     <div ng-repeat="board in project.boards" class="well projectBoardLayout">
       <div class="row">
         <div class="col-md-4 rightBorder">
-          <a ng-href="#/project/{{project._id}}/board/{{board.name}}" class="boardTitle">{{board.name}}</a>
+          <a ng-href="#/project/{{project._id}}/board/{{board._id}}" class="boardTitle">{{board.name}}</a>
           <hr>
           <div>
             <div ng-repeat="state in board.states">

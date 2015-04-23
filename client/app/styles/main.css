@@ -104,6 +104,11 @@
   transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
+.breadCrumb{
+  background-color: #fff;
+  padding:8px 0;
+}
+
 .panelNoPadding {
   padding-left: 0;
   padding-right: 0;
