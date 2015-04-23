@@ -64,7 +64,7 @@
 
       <div class="col-md-9">
 
-        <ui-select multiple tagging theme="bootstrap" tagging-label="false" tagging-tokens="@|SPACE|ENTER"
+        <ui-select multiple tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|ENTER"
                    ng-model="board.states" ng-disabled="disabled"
                    search-enabled="true" theme="bootstrap">
           <ui-select-match placeholder="Invite collaborators" style="padding-left:9px;">{{$item}}</ui-select-match>
