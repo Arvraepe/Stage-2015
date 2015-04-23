@@ -156,15 +156,23 @@ function populateProject(project, callback) {
             userService.getUsersFromProject(project.collaborators, project.leader, callback);
         },
         function(callback) {
-            boardService.getBoards(project._id, callback);
+            boardService.getBoards(project._id, function(err, boards) {
+                boards.forEach(function (board) {
+                    var newStates = [];
+                    board.states.forEach(function (state) {
+                        var obj = {};
+                        obj[state] = 0; //todo count tasks
+                        newStates.push(obj);
+                    });
+                    boards.states = newStates;
+                });
+                callback(err, boards);
+            });
         }
     ], function(err, result) {
         project.leader = result[0].leader;
         project.collaborators = result[0].collaborators;
-        project.boards = [];
-        result[1].forEach(function (entry) {
-            project.boards.push(entry);
-        });
+        project.boards = result[1];
         callback(err, project);
     });
 }
