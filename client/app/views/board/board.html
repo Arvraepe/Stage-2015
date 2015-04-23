@@ -3,12 +3,15 @@
   <li><a ng-href="#/project/{{board.projectId}}">Project</a></li>
   <li class="active">{{board.name}}</li>
 </ol>
-<button type="button" ng-click="editBoardModal()" class="btn btn-primary"><i class="fa fa-pencil"> Edit board</i></button>
 
-<h2>{{board.name}}</h2>
+<h2>{{board.name}} <button type="button" ng-click="editBoardModal()" class="btn btn-primary"><i class="fa fa-pencil"> Edit</i></button>
+</h2>
 
 <div class="col-md-12 noPaddingLeft noPaddingRight" >
   <div ng-repeat="state in board.states" class="well boardLayout col-md-{{columnWidth}}">
-    {{state}}
+    <h4>{{state}}</h4>
+    <div class="col-md-12" style="border:solid 2px #e5e5e5">
+      TASKPLACEHOLDER
+    </div>
   </div>
 </div>

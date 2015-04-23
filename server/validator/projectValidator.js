@@ -64,10 +64,3 @@ function makeMessage(wrong, minlength, maxlength) {
     return { code : 'ERROR', message : wrong + 'needs to be between ' + minlength + ' and ' + maxlength + 'characters long.'};
 }
 
-function convertStates(states) {
-    var result = [];
-    states.forEach(function (entry) {
-        result.push(entry);
-    });
-    return result
-}

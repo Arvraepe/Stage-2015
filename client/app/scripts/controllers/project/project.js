@@ -47,12 +47,15 @@ angular.module('stageprojectApp')
           resolve:{
             projectId: function(){
               return $routeParams.pid;
+            },
+            states:function(){
+              return $scope.project.standardStates;
             }
           }
         });
         modalInstance.result.then(function (board) {
           //TODO: ADD BOARD TO PROJECT SO IT JOINS THE BOARDLISTVIEW
-
+          $scope.project.boards.push(board);
         }, function () {
         })
       };

@@ -8,9 +8,10 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('NewBoardCtrl', function ($scope, $modalInstance, projectId, boardRequestFactory, notificationFactory) {
+  .controller('NewBoardCtrl', function ($scope, $modalInstance, projectId, states, boardRequestFactory, notificationFactory) {
     $scope.board={};
     $scope.dateFormat = 'dd-MMMM-yyyy';
+    $scope.board.states = states;
     $scope.minDate = $scope.minDate ? null : new Date();
     $scope.dateOptions = {
       formatYear: 'yy',
@@ -43,6 +44,10 @@ angular.module('stageprojectApp')
 
         }
       })
+    };
+
+    $scope.getStates=function(){
+      return $scope.standardStates;
     };
 
 
