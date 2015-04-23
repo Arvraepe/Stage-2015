@@ -35,8 +35,6 @@ function register(req, res, next) {
             } else callback(null, result);
         }
     ], function(err, result) {
-        console.log(err);
-        console.log(result);
         result = errorHandler.handleMMResult(err, null, result.messages, 'User registered successfully'); //response doesn't need a data object, so give null as param.
         res.send(result);
     });
@@ -62,8 +60,6 @@ function updateUser(req, res, next) {
 
 function uploadAvatar(req, res, next) {
     userService.upload(req, function(err, user) {
-        console.log(err);
-        console.log(user);
         var userResult = errorHandler.makeUserData(user);
         console.log(userResult);
         var result = errorHandler.handleResult(err, userResult, 'Avatar uploaded successfully.');

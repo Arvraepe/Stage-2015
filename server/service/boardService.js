@@ -6,9 +6,13 @@ var validator = require('./../validator/projectValidator');
 
 exports.createBoard = function (params, callback) {
     var messages = validator.validateBoard(params);
-    boardRepo.create(params, function(err, result) {
-        callback(err, result, messages);
-    })
+    if (messages.length > 0) {
+        callback(null, null, messages)
+    } else {
+        boardRepo.create(params, function (err, result) {
+            callback(err, result, messages);
+        });
+    }
 };
 
 exports.getBoards = function (projectId, callback) {
@@ -17,10 +21,9 @@ exports.getBoards = function (projectId, callback) {
 
 exports.getBoard = function (boardId, callback) {
     //todo check userrights.
-    boardRepo.findBoards({_id :boardId}, function(err, boards) {
+    boardRepo.findBoards({_id: boardId}, function (err, boards) {
         var board = boards[0];
         console.log(board);
         callback(err, board);
-
-    })
+    });
 };

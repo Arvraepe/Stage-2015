@@ -8,7 +8,9 @@ exports.handleProjectErrors = function (err, results) {
     var usersAddedCounter = 0, emailsSentCounter = 0;
     var messages = [];
     var project = {};
-    if(err) {
+    if (err &&err.message == 'mult') {
+        result = resultFact.makeFailureMultipleMessages(results)
+    }else if(err) {
         result = resultFact.makeFailureResult('ERROR', err.message);
     } else {
         results.forEach(function (entry) {

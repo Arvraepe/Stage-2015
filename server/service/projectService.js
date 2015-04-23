@@ -12,7 +12,7 @@ var boardService = require('./boardService');
 exports.createProject = function (params, userId, callback) {
     var messages = projectValidator.validateNewProject(params);
     if (messages.length !== undefined && messages.length !== 0) {
-        callback(null, messages);
+        callback(new Error('mult'), messages);
     } else {
         params.leader = userId;
         params.startDate = new Date();

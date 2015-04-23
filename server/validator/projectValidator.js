@@ -16,12 +16,13 @@ exports.validateBoard = function(board) {
 
 function validateProjectOrBoard(params) {
     var messages = [];
+    console.log(params);
     params.standardStates = params.standardStates || params.states;
     if(!checkName(params.name)) {
-        messages.push(makeMessage('name', 2, 75));
+        messages.push(makeMessage('Name', 2, 75));
     }
     if(!checkDesc(params.description)) {
-        messages.push(makeMessage('description', 5, 1000));
+        messages.push(makeMessage('Description', 5, 1000));
     }
     if(params.deadline != undefined) {
         var dateDeadline = new Date(params.deadline);
@@ -30,9 +31,11 @@ function validateProjectOrBoard(params) {
         }
     }
     if(!checkStates(params.standardStates)) {
-        messages.push(makeMessage('state', 2, 20));
+        messages.push(makeMessage('State', 2, 20));
     }
-    return messages;}
+    console.log('validated');
+    return messages;
+}
 
 function checkName(name) {
     return name.length > 2 && name.length < 75;
@@ -61,7 +64,7 @@ function checkStates(states) {
 }
 
 function makeMessage(wrong, minlength, maxlength) {
-    return { code : 'ERROR', message : wrong + 'needs to be between ' + minlength + ' and ' + maxlength + 'characters long.'};
+    return { code : 'ERROR', message : wrong + ' needs to be between ' + minlength + ' and ' + maxlength + 'characters long.'};
 }
 
 function convertStates(states) {
