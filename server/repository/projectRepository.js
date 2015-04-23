@@ -9,7 +9,8 @@ exports.create = function (project, cb) {
         leader: project.leader,
         startDate: project.startDate,
         deadline: project.deadline,
-        standardStates: project.standardStates
+        standardStates: project.standardStates,
+        code: project.code.toUpperCase()
     });
     newProject.save(cb);
 };

@@ -4,9 +4,11 @@
 var auth = require('./../service/authenticationService');
 var projectService = require('./../service/projectService');
 var errorHandler = require('./../response/errorHandler');
+var boardService = require('./../service/boardService');
 
 ezports.registerRoutes = function(app) {
-    app.post('/board/create', createBoard)
+    app.post('/board/create', createBoard);
+    app.get('/board', getBoard);
 };
 
 function createBoard(req, res, next) {
@@ -28,6 +30,17 @@ function createBoard(req, res, next) {
         }
     ], function(err, result){
         result = errorHandler.handleMMResult(err, result.result, result.messages, 'A new board was created for your project.');
+        res.send(result);
+    });
+}
+
+function getBoard(req, res, next) {
+    async.parallel([
+        function(callback) {
+            boardService.getBoard(req.params.boardId, callback);
+        }
+    ], function (err, result) {
+        result = errorHandler.handleResult(err, {board : result}, 'Board fetched succesfully.');
         res.send(result);
     });
 }
