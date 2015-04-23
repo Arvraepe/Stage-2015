@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc function
- * @name stageprojectApp.controller:ProjectProjectCtrl
+ * @name stageprojectApp.controller:ProjectCtrl
  * @description
  * # ProjectCtrl
  * Controller of the stageprojectApp

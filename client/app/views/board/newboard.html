@@ -20,6 +20,27 @@
 
       </div>
     </div>
+
+    <div class="form-group" show-errors="{showSuccess: true}">
+      <label class="col-md-3 control-label">Description</label>
+
+      <div class="col-md-9">
+        <textarea type="text" class="form-control" name="boardDescriptionField" placeholder="Board description"
+                  ng-model="board.description" required ng-minlength="5"
+                  ng-maxlength="1000" style="resize: none"></textarea>
+
+        <p class="help-block" ng-if="createBoardForm.boardDescriptionField.$error.required">This field can't be
+          empty.</p>
+
+        <p class="help-block" ng-if=createBoardForm.boardDescriptionField.$error.minlength">A project name needs to
+          have at least 5
+          characters.</p>
+
+        <p class="help-block" ng-if="createBoardForm.boardDescriptionField.$error.maxlength">A project name can have up
+          to 1000 characters.</p>
+      </div>
+    </div>
+
     <div class="form-group">
       <label class="col-md-3 control-label">Deadline</label>
       <div class="col-md-9">

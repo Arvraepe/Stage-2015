@@ -23,6 +23,24 @@
           characters.</p>
       </div>
     </div>
+
+    <div class="form-group" show-errors="{showSuccess: true}">
+      <label class="col-md-3 control-label">Code</label>
+
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="projectCodeField" placeholder="Project short name"
+               ng-model="project.code" required ng-minlength="2" ng-pattern="/^[A-Z]*$/"
+               ng-maxlength="8">
+
+        <p class="help-block" ng-if="newprojectForm.projectCodeField.$error.required">This field is required.</p>
+        <p class="help-block" ng-if="newprojectForm.projectCodeField.$error.pattern">Short code needs to be in capital letters.</p>
+        <p class="help-block" ng-if="newprojectForm.projectCodeField.$error.minlength">The short code's minimum length is 2 characters.</p>
+
+        <p class="help-block" ng-if="newprojectForm.projectCodeField.$error.maxlength">The short code's maximum length is 8 characters.</p>
+      </div>
+    </div>
+
+
     <div class="form-group" show-errors="{showSuccess: true}">
       <label class="col-md-3 control-label">Description</label>
 
