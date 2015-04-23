@@ -23,7 +23,7 @@ angular.module('stageprojectApp')
       getBoardInfo: function (config) {
         requestFactory.sendRequest({
           params: config.params,
-          path: 'board/getboardinfo',
+          path: 'board',
           method: 'GET',
           success: config.success,
           error: config.error

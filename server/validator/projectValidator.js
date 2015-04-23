@@ -38,7 +38,7 @@ function checkDeadline(date) {
 function checkStates(states) {
     var res = true;
     states.forEach(function (entry) {
-        if(entry.status.length < 2 || entry.status.length > 20) {
+        if(entry.length < 2 || entry.length > 20) {
             res = false;
         }
     });

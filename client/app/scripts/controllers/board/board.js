@@ -13,7 +13,7 @@ angular.module('stageprojectApp')
 
     $scope.getBoardInfo = function(){
         var boardName = {
-          boardId:$routeParams.boardName
+          boardId:$routeParams.boardId
         };
         boardRequestFactory.getBoardInfo({
           params: boardName,

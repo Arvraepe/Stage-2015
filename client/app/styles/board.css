@@ -1,0 +1,12 @@
+.projectBoardLayout{
+  margin-top:30px;
+
+}
+
+.boardTitle{
+  font-size: 20px;
+}
+
+.rightBorder{
+  border-right: solid 2px #e5e5e5;
+}
