@@ -2,7 +2,19 @@
  * Created by Glenn on 13-4-2015.
  */
 
-exports.validateNewProject = function(params) {
+exports.validateNewProject = function(project) {
+    var messages =  validateProjectOrBoard(project);
+    if(!checkCode(project.code)) {
+        messages.push(makeMessage('Code', 2, 8));
+    }
+    return messages;
+};
+
+exports.validateBoard = function(board) {
+    return validateProjectOrBoard(board);
+};
+
+function validateProjectOrBoard(params) {
     var messages = [];
     params.standardStates = params.standardStates || params.states;
     if(!checkName(params.name)) {
@@ -20,11 +32,14 @@ exports.validateNewProject = function(params) {
     if(!checkStates(params.standardStates)) {
         messages.push(makeMessage('state', 2, 20));
     }
-    return messages;
-};
+    return messages;}
 
 function checkName(name) {
     return name.length > 2 && name.length < 75;
+}
+
+function checkCode(code) {
+    return code.length > 2 && code.length < 8;
 }
 
 function checkDesc(desc) {
