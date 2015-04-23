@@ -17,5 +17,5 @@ exports.create = function (board, callback) {
 };
 
 exports.findBoards = function (condition, callback) {
-    Board.find(condition, callback);
+    Board.find(condition).lean().exec(callback);
 };

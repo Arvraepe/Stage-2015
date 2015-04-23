@@ -157,19 +157,20 @@ function populateProject(project, callback) {
         },
         function(callback) {
             boardService.getBoards(project._id, function(err, boards) {
-                boards.forEach(function (board) {
+                boards.forEach(function (board, index, array) {
                     var newStates = [];
                     board.states.forEach(function (state) {
                         var obj = {};
                         obj[state] = 0; //todo count tasks
                         newStates.push(obj);
                     });
-                    boards.states = newStates;
+                   array[index].states = newStates;
                 });
                 callback(err, boards);
             });
         }
     ], function(err, result) {
+        console.log(result);
         project.leader = result[0].leader;
         project.collaborators = result[0].collaborators;
         project.boards = result[1];
