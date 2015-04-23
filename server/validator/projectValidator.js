@@ -4,6 +4,7 @@
 
 exports.validateNewProject = function(params) {
     var messages = [];
+    params.standardStates = params.standardStates || params.states;
     if(!checkName(params.name)) {
         messages.push(makeMessage('name', 2, 75));
     }
@@ -16,12 +17,9 @@ exports.validateNewProject = function(params) {
             messages.push({code: 'ERROR', message: "Deadline can't already be expired."});
         }
     }
-    /*if(!checkStates(params.standardStates)) {
+    if(!checkStates(params.standardStates)) {
         messages.push(makeMessage('state', 2, 20));
-    } else {
-        params.standardStates = convertStates(params.standardStates);
-    }*/
-    console.log(messages);
+    }
     return messages;
 };
 

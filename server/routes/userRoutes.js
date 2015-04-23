@@ -62,7 +62,12 @@ function updateUser(req, res, next) {
 
 function uploadAvatar(req, res, next) {
     userService.upload(req, function(err, user) {
-        var result = errorHandler.handleResult(err, errorHandler.makeUserData(user), 'Avatar uploaded successfully.');
+        console.log(err);
+        console.log(user);
+        var userResult = errorHandler.makeUserData(user);
+        console.log(userResult);
+        var result = errorHandler.handleResult(err, userResult, 'Avatar uploaded successfully.');
+        console.log(result);
         res.send(result);
     });
     next();

@@ -125,6 +125,7 @@ exports.upload = function (req, callback) {
                 if (err)callback(err);
                 userRepo.findOneAndUpdate(decoded, {imageUrl: config.imageUrl + user.username + ext}, function (err, updatedUser) {
                     if (err) callback(err);
+                    console.log(updatedUser);
                     callback(null, filterUser(updatedUser));
                 })
             });

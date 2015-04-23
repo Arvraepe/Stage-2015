@@ -71,12 +71,14 @@ exports.handleUser = function(err, user, token) {
 };
 
 exports.makeUserData = function (user) {
-    makeUserData(user);
+    return makeUserData(user);
 };
 
 function makeUserData(user) {
     var userResult = {};
+    console.log('from err');
     userResult.user = user;
     userResult.user.role = 'user';
+    console.log(userResult);
     return userResult;
 }
