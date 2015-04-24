@@ -26,7 +26,6 @@ function register(req, res, next) {
             userService.registerUser(req.params, callback);
         },
         function(messages, user, callback) {
-            console.log(user);
             var result = { messages : messages };
             if(req.params.projectId != undefined) {
                 projectService.addRegisteredCollab(user._id, req.params.projectId, function(err) {
@@ -61,9 +60,7 @@ function updateUser(req, res, next) {
 function uploadAvatar(req, res, next) {
     userService.upload(req, function(err, user) {
         var userResult = errorHandler.makeUserData(user);
-        console.log(userResult);
         var result = errorHandler.handleResult(err, userResult, 'Avatar uploaded successfully.');
-        console.log(result);
         res.send(result);
     });
     next();

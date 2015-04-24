@@ -78,9 +78,7 @@ exports.makeUserData = function (user) {
 
 function makeUserData(user) {
     var userResult = {};
-    console.log('from err');
     userResult.user = user;
     userResult.user.role = 'user';
-    console.log(userResult);
     return userResult;
 }

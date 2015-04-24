@@ -162,7 +162,6 @@ function populateProject(project, callback) {
             });
         }
     ], function(err, result) {
-        console.log(result);
         project.leader = result[0].leader;
         project.collaborators = result[0].collaborators;
         project.boards = result[1];

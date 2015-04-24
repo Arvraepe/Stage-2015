@@ -16,7 +16,6 @@ exports.validateBoard = function(board) {
 
 function validateProjectOrBoard(params) {
     var messages = [];
-    console.log(params);
     params.standardStates = params.standardStates || params.states;
     if(!checkName(params.name)) {
         messages.push(makeMessage('Name', 2, 75));
@@ -33,7 +32,6 @@ function validateProjectOrBoard(params) {
     if(!checkStates(params.standardStates)) {
         messages.push(makeMessage('State', 2, 20));
     }
-    console.log('validated');
     return messages;
 }
 
