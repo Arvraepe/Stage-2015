@@ -12,8 +12,12 @@ angular.module('stageprojectApp')
     $scope.board = board;
 
     $scope.deleteBoard = function () {
+      var boardId = {
+        _id : $scope.board._id,
+        projectId : $scope.board.projectId
+      };
       boardRequestFactory.deleteBoard({
-        params: $scope.board._id,
+        params: boardId,
         success: function(response){
           notificationFactory.createNotification(response);
           $modalInstance.close($scope.board);
@@ -23,6 +27,10 @@ angular.module('stageprojectApp')
         }
 
       })
-    }
+    };
+
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
 
   });

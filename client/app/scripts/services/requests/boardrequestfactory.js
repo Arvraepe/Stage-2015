@@ -39,7 +39,7 @@ angular.module('stageprojectApp')
           error: config.error
         })
       },
-      deleteProject: function(config) {
+      deleteBoard: function(config) {
         requestFactory.sendRequest({
           path: 'board',
           method: 'delete',

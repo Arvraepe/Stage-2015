@@ -8,7 +8,7 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('ProjectCtrl', ['$scope', '$routeParams', 'projectRequestFactory', '$modal', 'notificationFactory', '$window', 'boardRequestFactory',
+  .controller('ProjectCtrl', ['$scope', '$routeParams', 'projectRequestFactory', '$modal', 'notificationFactory', '$window', 'boardRequestFactory', '$filter',
     function ($scope, $routeParams, projectRequestFactory, $modal, notificationFactory, $window, boardRequestFactory, $filter) {
       $scope.project = {};
       $scope.collaborators = [];
@@ -194,10 +194,7 @@ angular.module('stageprojectApp')
           }
         });
         modalInstance.result.then(function (data) {
-          $scope.project.boards = $filter('filter')($scope.project.boards, {_id: data._id});
-
-
-
+          $scope.project.boards = $filter('filter')($scope.project.boards, {_id: '!'+data._id});
         }, function () {
         })
       };
