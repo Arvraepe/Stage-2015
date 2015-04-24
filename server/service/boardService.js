@@ -22,10 +22,8 @@ exports.getBoards = function (projectId, callback) {
 };
 
 exports.getBoard = function (boardId, callback) {
-    //todo check userrights.
     boardRepo.findBoards({_id: boardId}, function (err, boards) {
         var board = boards[0];
-        console.log(board);
         callback(err, board);
     });
 };
@@ -35,6 +33,10 @@ exports.convertStates = function(boards) {
         array[index].states = convertState(board);
     });
     return boards;
+};
+
+exports.findOneAndUpdate = function(id, board, callback) {
+    boardRepo.findOneAndUpdate({_id : id}, board, callback);
 };
 
 function convertState(board) {

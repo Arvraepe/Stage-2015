@@ -147,6 +147,10 @@ exports.addRegisteredCollab = function(userId, projectId, callback) {
     });
 };
 
+exports.isLeader = function(projectId, userId, callback) {
+    isLeader(projectId, userId, callback);
+};
+
 function addCollab(projectId, users, callback) {
     projectRepo.addCollab(projectId, users, callback);
 }

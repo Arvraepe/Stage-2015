@@ -10,6 +10,7 @@ var boardService = require('./../service/boardService');
 exports.registerRoutes = function(app) {
     app.post('/board/create', createBoard);
     app.get('/board', getBoard);
+    app.put('/board', updateBoard);
 };
 
 function createBoard(req, res, next) {
@@ -36,13 +37,44 @@ function createBoard(req, res, next) {
 }
 
 function getBoard(req, res, next) {
+    //todo checkrights
     async.parallel([
         function(callback) {
             boardService.getBoard(req.params.boardId, callback);
+        },
+        function(callback) {
+            auth.verifyToken(req.params.token, callback)
         }
     ], function (err, result) {
-        result = errorHandler.handleResult(err, {board : result[0]}, 'Board fetched succesfully.');
-        res.send(result);
+        projectService.isLeader(result[0].projectId, result[1], function(error, isLeader) {
+            err = err || error;
+            if(isLeader) {
+                result = errorHandler.handleResult(err, {board : result[0]}, 'Board fetched succesfully.');
+            } else {
+                result = errorHandler.handleMMResult(new Error('You are not the leader of this project, you cannot create boards.'))
+            }
+            res.send(result);
+        });
     });
 }
 
+function updateBoard(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            auth.verifyToken(req.params.token, callback)
+        },
+        function(userId, callback){
+            projectService.isLeader(req.params.projectId, userId, callback)
+        },
+        function(isLeader, callback) {
+            if(isLeader) {
+                boardService.findOneAndUpdate(req.params._id, req.params, callback);
+            } else {
+                callback(new Error('You are not leader of this project, you cannot update a board.'));
+            }
+        }
+    ], function(err, result) {
+        result = errorHandler.handleResult(err, {board: result}, 'Board updated.');
+        res.send(result);
+    });
+}

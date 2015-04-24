@@ -19,3 +19,7 @@ exports.create = function (board, callback) {
 exports.findBoards = function (condition, callback) {
     Board.find(condition).lean().exec(callback);
 };
+
+exports.findOneAndUpdate = function(condition, board, callback) {
+    Board.findOneAndUpdate(condition, board, {new : true}).lean().exec(callback);
+};
