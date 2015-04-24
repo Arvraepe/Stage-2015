@@ -32,9 +32,18 @@ angular.module('stageprojectApp')
 
       updateBoard: function (config) {
         requestFactory.sendRequest({
-          params: config.params,
+          data:config.data,
           path: 'board',
           method: 'PUT',
+          success: config.success,
+          error: config.error
+        })
+      },
+      deleteProject: function(config) {
+        requestFactory.sendRequest({
+          path: 'board',
+          method: 'delete',
+          params: config.params,
           success: config.success,
           error: config.error
         })

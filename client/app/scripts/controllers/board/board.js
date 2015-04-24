@@ -43,6 +43,8 @@ angular.module('stageprojectApp')
       });
       modalInstance.result.then(function (data) {
         $scope.board = data;
+        $scope.amountOfStates = $scope.board.states.length;
+        $scope.columnWidth= Math.floor(12/$scope.amountOfStates);
       }, function () {
       })
     };

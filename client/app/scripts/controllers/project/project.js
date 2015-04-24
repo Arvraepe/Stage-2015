@@ -9,7 +9,7 @@
  */
 angular.module('stageprojectApp')
   .controller('ProjectCtrl', ['$scope', '$routeParams', 'projectRequestFactory', '$modal', 'notificationFactory', '$window', 'boardRequestFactory',
-    function ($scope, $routeParams, projectRequestFactory, $modal, notificationFactory, $window, boardRequestFactory) {
+    function ($scope, $routeParams, projectRequestFactory, $modal, notificationFactory, $window, boardRequestFactory, $filter) {
       $scope.project = {};
       $scope.collaborators = [];
       $scope.leader = {};
@@ -180,6 +180,26 @@ angular.module('stageprojectApp')
             console.log(error);
           }
         });
+      };
+
+      $scope.openDeleteBoardModal = function(board,size ){
+        var modalInstance = $modal.open({
+          templateUrl: 'views/board/deleteboard.html',
+          controller: 'DeleteBoardCtrl',
+          size: size,
+          resolve:{
+            board: function(){
+              return board;
+            }
+          }
+        });
+        modalInstance.result.then(function (data) {
+          $scope.project.boards = $filter('filter')($scope.project.boards, {_id: data._id});
+
+
+
+        }, function () {
+        })
       };
 
 
