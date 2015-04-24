@@ -29,7 +29,6 @@ angular.module('stageprojectApp')
 
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
-      console.log("cancel pressed");
     };
 
     $scope.createBoard = function(){

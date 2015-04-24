@@ -1,0 +1,85 @@
+<div class="modal-header">
+  <h3 class="modal-title">Update board</h3>
+</div>
+<form class="form-horizontal" name="editBoardForm">
+  <div class="modal-body">
+
+    <div class="form-group" show-errors="{showSuccess: true}">
+      <label class="col-md-3 control-label">Name</label>
+
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="boardNameField" placeholder="Board name"
+               ng-model="board.name" required ng-minlength="2"
+          >
+
+        <p class="help-block" ng-if="editBoardForm.boardNameField.$error.required">A board needs to have a
+          name.</p>
+
+        <p class="help-block" ng-if="editBoardForm.boardNameField.$error.minlength">A board name needs to have
+          at least 2 characters.</p>
+
+      </div>
+    </div>
+
+    <div class="form-group" show-errors="{showSuccess: true}">
+      <label class="col-md-3 control-label">Description</label>
+
+      <div class="col-md-9">
+        <textarea type="text" class="form-control" name="boardDescriptionField" placeholder="Board description"
+                  ng-model="board.description" required ng-minlength="5"
+                  ng-maxlength="1000" style="resize: none"></textarea>
+
+        <p class="help-block" ng-if="editBoardForm.boardDescriptionField.$error.required">This field can't be
+          empty.</p>
+
+        <p class="help-block" ng-if="editBoardForm.boardDescriptionField.$error.minlength">A project name needs to
+          have at least 5
+          characters.</p>
+
+        <p class="help-block" ng-if="editBoardForm.boardDescriptionField.$error.maxlength">A project name can have up
+          to 1000 characters.</p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-md-3 control-label">Deadline</label>
+
+      <div class="col-md-9">
+        <p class="input-group">
+          <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="board.deadline"
+                 is-open="opened" min-date="minDate"
+                 max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabledTime(date,mode)"
+                 close-text="Close"/>
+          <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open($event)"><i
+                  class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+        </p>
+      </div>
+    </div>
+
+
+    <div class="form-group" show-errors="{showSuccess: true}">
+      <label class="col-md-3 control-label">States</label>
+
+      <div class="col-md-9">
+
+        <ui-select multiple tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|ENTER"
+                   ng-model="board.states" ng-disabled="disabled"
+                   search-enabled="true" theme="bootstrap">
+          <ui-select-match placeholder="Invite collaborators" style="padding-left:9px;">{{$item}}</ui-select-match>
+          <ui-select-choices repeat="state in standardStates">
+            {{state}}
+          </ui-select-choices>
+        </ui-select>
+      </div>
+    </div>
+
+
+    <div class="modal-footer">
+      <button type="button" ng-click="updateBoard(board)" class="btn btn-primary">Create!</button>
+      <button type="button" class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+  </div>
+</form>
+

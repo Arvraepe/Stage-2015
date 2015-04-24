@@ -28,6 +28,16 @@ angular.module('stageprojectApp')
           success: config.success,
           error: config.error
         })
+      },
+
+      updateBoard: function (config) {
+        requestFactory.sendRequest({
+          params: config.params,
+          path: 'board',
+          method: 'PUT',
+          success: config.success,
+          error: config.error
+        })
       }
     }
   });
