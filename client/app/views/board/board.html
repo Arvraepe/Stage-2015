@@ -1,10 +1,10 @@
 <ol class="breadcrumb breadCrumb" data-ng-init="getBoardInfo()">
   <li><a ng-href="#/dashboard">Dashboard</a></li>
   <li><a ng-href="#/project/{{board.projectId}}">Project</a></li>
-  <li class="active">{{board.name}}</li>
+  <li class="active">{{board.name|capitalize}}</li>
 </ol>
 
-<h2>{{board.name}} <button type="button" ng-click="openEditBoardModal()" class="btn btn-primary btn-sm"><i class="fa fa-pencil"> Edit</i></button>
+<h2>{{board.name|capitalize}} <button type="button" ng-click="openEditBoardModal()" class="btn btn-primary btn-sm"><i class="fa fa-pencil"> Edit</i></button>
 </h2>
 
 <div class="col-md-12 noPaddingLeft noPaddingRight" >

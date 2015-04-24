@@ -8,8 +8,8 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('LoginCtrl', ['$scope', 'loginFactory', '$rootScope', 'AUTHEVENTS', 'AuthService', 'notificationService',
-    '$window', 'userFactory','Session', function ($scope, loginFactory, $rootScope, AUTHEVENTS, AuthService, notificationService, $window, userFactory, Session) {
+  .controller('LoginCtrl', ['$scope', 'loginFactory', '$rootScope', 'AUTHEVENTS', 'AuthService', 'notificationService', '$location',
+     'Session', function ($scope, loginFactory, $rootScope, AUTHEVENTS, AuthService, notificationService, $location, Session) {
       $scope.credentials = {
         username: '',
         password: ''
@@ -24,7 +24,8 @@ angular.module('stageprojectApp')
             }
             $rootScope.$broadcast(AUTHEVENTS.loginSuccess);
             $scope.setCurrentUser(response.data.user, response.data.token);
-            $window.location.href = '#/dashboard';
+            $location.path('/dashboard');
+           // $window.location.href = '#/dashboard';
 
           },
           error: function(error){

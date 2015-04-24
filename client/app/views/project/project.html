@@ -1,4 +1,8 @@
 <div ng-init="getProjectInfo()">
+  <ol class="breadcrumb breadCrumb">
+    <li><a ng-href="#/dashboard">Dashboard</a></li>
+    <li class="active">Project</li>
+  </ol>
   <div class="col-md-9 noPaddingLeft">
     <h2>{{project.name}}</h2>
     <button ng-if="isLeader()" type="button" ng-click="openBoardModal()" class="btn btn-success btn-block"><i
@@ -6,25 +10,27 @@
     <div ng-repeat="board in project.boards" class="well projectBoardLayout">
       <div class="row">
         <div class="col-md-4 rightBorder">
-          <a ng-href="#/project/{{project._id}}/board/{{board._id}}" class="boardTitle">{{board.name}}</a>
+          <a ng-href="#/project/{{project._id}}/board/{{board._id}}" class="boardTitle">{{board.name|capitalize}}</a>
           <hr>
           <div>
             <div ng-repeat="state in board.states">
               <div ng-repeat="(key, value) in state">
-                {{key}}
-                <span class="badge">{{value}}</span>
+                <div class="col-md-7 noPaddingLeft">
+                  {{key}}
+                </div>
+                <div class="col-md-5 noPaddingLeft">
+                  <span class="badge">{{value}}</span>
+                </div>
               </div>
             </div>
 
           </div>
         </div>
         <div class="col-md-8">
-          <div class="pull-right">
-            <button type="button" class="btn btn-xs btn-default" ng-click="openDeleteBoardModal(board)"><i class="fa fa-times"></i>
-            </button>
-
+          <div class="pull-right" ng-if="isLeader()">
+            <button type="button" class="btn btn-xs btn-danger" ng-click="openDeleteBoardModal(board)"> Delete</button>
           </div>
-          TASKSPERBOARDNOTIFICATIONSPLACEHOLDER
+          MOSTRECENTTASKSCHANGEDPERBOARDPLACEHOLDER
         </div>
       </div>
     </div>

@@ -32,17 +32,21 @@ angular.module('stageprojectApp')
     };
 
     $scope.createBoard = function(){
-      $scope.board.projectId = projectId;
-      boardRequestFactory.createBoard({
-        data : $scope.board,
-        success:function(response){
-          $modalInstance.close(response.data.board);
-          notificationFactory.createNotification(response);
-        },
-        error: function(error){
+      $scope.$broadcast('show-errors-check-validity');
+      if($scope.createBoardForm.$valid){
+        $scope.board.projectId = projectId;
+        boardRequestFactory.createBoard({
+          data : $scope.board,
+          success:function(response){
+            $modalInstance.close(response.data.board);
+            notificationFactory.createNotification(response);
+          },
+          error: function(error){
 
-        }
-      })
+          }
+        })
+      }
+
     };
 
     $scope.getStates=function(){

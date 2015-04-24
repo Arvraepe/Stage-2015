@@ -12,16 +12,20 @@ angular.module('stageprojectApp')
     $scope.board = angular.copy(board);
 
     $scope.updateBoard = function(){
-      boardRequestFactory.updateBoard({
-        data : $scope.board,
-        success:function(response){
-          $modalInstance.close(response.data.board);
-          notificationFactory.createNotification(response);
-        },
-        error: function(error){
+      $scope.$broadcast('show-errors-check-validity');
+      if($scope.editBoardForm.$valid){
+        boardRequestFactory.updateBoard({
+          data : $scope.board,
+          success:function(response){
+            $modalInstance.close(response.data.board);
+            notificationFactory.createNotification(response);
+          },
+          error: function(error){
 
-        }
-      })
+          }
+        });
+      }
+
     };
 
 
