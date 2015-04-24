@@ -11,6 +11,7 @@ exports.registerRoutes = function(app) {
     app.post('/board/create', createBoard);
     app.get('/board', getBoard);
     app.put('/board', updateBoard);
+    app.del('/board', deleteBoard);
 };
 
 function createBoard(req, res, next) {
@@ -75,6 +76,27 @@ function updateBoard(req, res, next) {
         }
     ], function(err, result) {
         result = errorHandler.handleResult(err, {board: result}, 'Board updated.');
+        res.send(result);
+    });
+}
+
+function deleteBoard(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            auth.verifyToken(req.params.token, callback)
+        },
+        function(userId, callback){
+            projectService.isLeader(req.params.projectId, userId, callback)
+        },
+        function(isLeader, callback) {
+            if(isLeader) {
+                boardService.delete(req.param._id);
+            } else {
+                callback(new Error('You are not leader of this project, you cannot update a board.'));
+            }
+        }
+    ], function(err, result) {
+        result = errorHandler.handleResult(err, null, 'Board updated.');
         res.send(result);
     });
 }

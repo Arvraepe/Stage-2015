@@ -39,6 +39,10 @@ exports.findOneAndUpdate = function(id, board, callback) {
     boardRepo.findOneAndUpdate({_id : id}, board, callback);
 };
 
+exports.delete = function(id, callback) {
+    boardRepo.findOneAndRemove({_id : id}, callback);
+}
+
 function convertState(board) {
     var newStates = [];
     board.states.forEach(function (state) {
