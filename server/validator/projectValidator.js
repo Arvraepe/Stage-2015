@@ -44,7 +44,8 @@ function checkCode(code) {
 }
 
 function checkDesc(desc) {
-    return desc.length > 5 && desc.length < 1000;
+    desc = desc || '';
+    return desc.length > 4 && desc.length < 1000;
 }
 
 function checkDeadline(date) {

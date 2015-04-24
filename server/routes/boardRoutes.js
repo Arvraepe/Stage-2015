@@ -32,6 +32,7 @@ function createBoard(req, res, next) {
             });
         }
     ], function(err, result) {
+        console.log(result);
         result = errorHandler.handleMMResult(err, {board : result.result}, result.messages, 'A new board was created for your project.');
         res.send(result);
     });

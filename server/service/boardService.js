@@ -6,6 +6,7 @@ var validator = require('./../validator/projectValidator');
 
 exports.createBoard = function (params, callback) {
     var messages = validator.validateBoard(params);
+    console.log(messages);
     if (messages.length > 0) {
         callback(null, null, messages)
     } else {
