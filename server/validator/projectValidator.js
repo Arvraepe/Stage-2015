@@ -36,10 +36,12 @@ function validateProjectOrBoard(params) {
 }
 
 function checkName(name) {
+    name = name || '';
     return name.length > 2 && name.length < 75;
 }
 
 function checkCode(code) {
+    code = code || '';
     return code.length > 2 && code.length < 8;
 }
 
@@ -54,6 +56,10 @@ function checkDeadline(date) {
 
 function checkStates(states) {
     var res = true;
+    states = states || [];
+    if (states.length < 1 || states.length > 10) {
+        res=false;
+    }
     states.forEach(function (entry) {
         if(entry.length < 2 || entry.length > 20) {
             res = false;

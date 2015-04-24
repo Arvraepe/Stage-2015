@@ -37,7 +37,9 @@ exports.convertStates = function(boards) {
 };
 
 exports.findOneAndUpdate = function(id, board, callback) {
-    boardRepo.findOneAndUpdate({_id : id}, board, callback);
+    var messages = validator.validateBoard(board);
+    if(messages.length > 0) callback(null, null, messages);
+    else boardRepo.findOneAndUpdate({_id : id}, board, callback);
 };
 
 exports.delete = function(id, callback) {

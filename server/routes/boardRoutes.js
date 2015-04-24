@@ -38,7 +38,6 @@ function createBoard(req, res, next) {
 }
 
 function getBoard(req, res, next) {
-    //todo checkrights
     async.parallel([
         function(callback) {
             boardService.getBoard(req.params.boardId, callback);
@@ -69,13 +68,16 @@ function updateBoard(req, res, next) {
         },
         function(isLeader, callback) {
             if(isLeader) {
-                boardService.findOneAndUpdate(req.params._id, req.params, callback);
+                boardService.findOneAndUpdate(req.params._id, req.params, function(err, board, messages) {
+                    var result = { result: board, messages: messages };
+                    callback(err, result);
+                });
             } else {
                 callback(new Error('You are not leader of this project, you cannot update a board.'));
             }
         }
     ], function(err, result) {
-        result = errorHandler.handleResult(err, {board: result}, 'Board updated.');
+        result = errorHandler.handleMMResult(err, {board: result.result}, result.messages, 'Board updated.');
         res.send(result);
     });
 }
