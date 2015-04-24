@@ -32,8 +32,7 @@ function createBoard(req, res, next) {
             });
         }
     ], function(err, result) {
-        console.log(result);
-        result = errorHandler.handleMMResult(err, {board : result.result}, result.messages, 'A new board was created for your project.');
+        result = errorHandler.handleMMResult(err, {board : result.result}, result.messages, 'The ' + result.result.name + ' board was created for your project.');
         res.send(result);
     });
 }
@@ -91,7 +90,7 @@ function deleteBoard(req, res, next) {
         },
         function(isLeader, callback) {
             if(isLeader) {
-                boardService.delete(req.params._id, callback);
+                boardService.delete(req.param._id);
             } else {
                 callback(new Error('You are not leader of this project, you cannot update a board.'));
             }
