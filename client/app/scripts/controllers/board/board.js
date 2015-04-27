@@ -49,6 +49,25 @@ angular.module('stageprojectApp')
       })
     };
 
+    $scope.openCreateTaskModal = function(size){
+      var modalInstance = $modal.open({
+        templateUrl: 'views/task/createtask.html',
+        controller: 'CreateTaskCtrl',
+        size: size,
+        resolve:{
+          board: function(){
+            return $scope.board;
+          }
+        }
+      });
+      modalInstance.result.then(function (data) {
+        $scope.board = data;
+        $scope.amountOfStates = $scope.board.states.length;
+        $scope.columnWidth= Math.floor(12/$scope.amountOfStates);
+      }, function () {
+      })
+    };
+
 
 
 

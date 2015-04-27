@@ -4,8 +4,16 @@
   <li class="active">{{board.name|capitalize}}</li>
 </ol>
 
-<h2>{{board.name|capitalize}} <button type="button" ng-click="openEditBoardModal()" class="btn btn-primary btn-sm"><i class="fa fa-pencil"> Edit</i></button>
-</h2>
+
+    <h2>{{board.name|capitalize}} <button type="button" ng-click="openEditBoardModal()" class="btn btn-primary btn-sm"><i class="fa fa-pencil"> Edit</i></button>
+      <div class="col-md-2 pull-right">
+        <button type="button" class="btn btn-success btn-block" ng-click="openCreateTaskModal()"><i class="fa fa-plus-circle"></i> Task</button>
+      </div>
+
+    </h2>
+
+
+
 
 <div class="col-md-12 noPaddingLeft noPaddingRight" >
   <div ng-repeat="state in board.states" class="well boardLayout col-md-{{columnWidth}}">

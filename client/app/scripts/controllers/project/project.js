@@ -8,8 +8,8 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('ProjectCtrl', ['$scope', '$routeParams', 'projectRequestFactory', '$modal', 'notificationFactory', '$window', 'boardRequestFactory', '$filter',
-    function ($scope, $routeParams, projectRequestFactory, $modal, notificationFactory, $window, boardRequestFactory, $filter) {
+  .controller('ProjectCtrl', ['$scope', '$routeParams', 'projectRequestFactory', '$modal', 'notificationFactory', '$location', 'boardRequestFactory', '$filter',
+    function ($scope, $routeParams, projectRequestFactory, $modal, notificationFactory, $location, boardRequestFactory, $filter) {
       $scope.project = {};
       $scope.collaborators = [];
       $scope.leader = {};
@@ -155,7 +155,7 @@ angular.module('stageprojectApp')
               params: projectId,
               success: function (response) {
                 notificationFactory.createNotification(response);
-                $window.location.href = '#/dashboard';
+                $location.path('/dashboard');
               },
               error: function (error) {
                 console.log(error);

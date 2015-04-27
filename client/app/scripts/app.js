@@ -87,6 +87,10 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
         authorizedRoles: [USERROLES.user]
       }
     })
+    .when('/project/:pid/board/:boardId/task/:taskId', {
+      templateUrl: 'views/task.html',
+      controller: 'TaskCtrl'
+    })
     .otherwise({
       redirectTo: '/'
     });
