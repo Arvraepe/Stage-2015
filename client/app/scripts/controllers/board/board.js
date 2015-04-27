@@ -23,6 +23,8 @@ angular.module('stageprojectApp')
             $scope.board = response.data.board;
             $scope.amountOfStates = $scope.board.states.length;
             $scope.columnWidth= Math.floor(12/$scope.amountOfStates);
+            $scope.board.collaborators = response.data.collaborators;
+            $scope.board.leader = response.data.leader;
           },
           error: function(error){
             console.log(error);
