@@ -19,7 +19,6 @@ var taskSchema = mongoose.Schema({
     deadline: Date,
     state: String,
     assignee: String,
-    uniqueLinks: [String],
     comments: [commentSchema]
 });
 var Task = mongoose.model('Task', taskSchema);
