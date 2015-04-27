@@ -21,7 +21,7 @@ angular.module('stageprojectApp')
       },
       createTask: function(config) {
         requestFactory.sendRequest({
-          path: 'task',
+          path: 'task/create',
           method: 'POST',
           data :config.data,
           success: config.success,
