@@ -48,7 +48,6 @@ exports.handleResult = function(err, result, message) {
 };
 
 exports.handleMMResult = function(err, result, messages, successMessage) {
-    console.log(messages);
     if(err) {
         result = resultFact.makeFailureResult('ERROR', err.message);
     } else if(messages != null && messages.length > 0) {

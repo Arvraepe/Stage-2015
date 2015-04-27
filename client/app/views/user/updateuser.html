@@ -2,10 +2,10 @@
   <h2 class="text-center">Update profile</h2>
 
   <div class="col-md-3">
-    <img ng-show="currentUser.imageUrl" src="{{currentUser.imageUrl}}"
+    <img ng-show="currentUser.imageUrl" ng-src="{{currentUser.imageUrl}}"
          alt="UserAvatarImage" class="img-center">
     <img ng-show="!currentUser.imageUrl || currentUser.imageUrl == undefined"
-      src="http://localhost:6543/public/profilepicture.jpg" alt="StandardProfileImage" class="img-center">
+      ng-src="http://localhost:6543/avatars/profilepicture.png" alt="StandardProfileImage" class="img-center">
     <div ng-controller="UploadCtrl" class="form-group marginTop50">
       <div class="col-md-offset-4 col-md-5">
         <div class="btn btn-success" ng-file-select ng-model="files"><i class="fa fa-upload"></i> Upload avatar</div>
