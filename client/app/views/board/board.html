@@ -17,9 +17,16 @@
 
 <div class="col-md-12 noPaddingLeft noPaddingRight" >
   <div ng-repeat="state in board.states" class="well boardLayout col-md-{{columnWidth}}">
-    <h4>{{state}}</h4>
-    <div class="col-md-12" style="border:solid 2px #e5e5e5">
+    <h4>{{state.name}}</h4>
+
+    <ul class="col-md-12" style="border:solid 2px #e5e5e5" as-sortable="taskSortOptions" ng-model="board.states.tasks">
+      <li data-ng-repeat="task in tasks" data-as-sortable-item>
+        <div as-sortable-item-handle>
+          {{task.identifier}}
+        </div>
+      </li>
+
       TASKPLACEHOLDER
-    </div>
+    </ul>
   </div>
 </div>

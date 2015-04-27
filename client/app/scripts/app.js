@@ -19,7 +19,8 @@ var app = angular.module('stageprojectApp', [
   'LocalStorageModule',
   'ui.bootstrap',
   'ui.select',
-  'ngSanitize'
+  'ngSanitize',
+  'ui.sortable'
 ]);
 
 app.config(function ($routeProvider, $locationProvider, USERROLES) {

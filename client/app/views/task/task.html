@@ -4,3 +4,8 @@
   <li><a ng-href="#/project/{{board.projectId}}/board/{{board._id}}">Board</a></li>
   <li class="active">{{task.name|capitalize}}</li>
 </ol>
+
+<h2>{{task.name|capitalize}} <button type="button" ng-click="openEditTaskModal()" class="btn btn-primary btn-sm"><i class="fa fa-pencil"> Edit</i></button>
+
+
+</h2>

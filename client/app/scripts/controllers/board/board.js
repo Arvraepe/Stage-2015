@@ -71,6 +71,15 @@ angular.module('stageprojectApp')
       })
     };
 
+    $scope.taskSortOptions = {
+      itemMoved:function(event){
+        event.source.itemScope.modelValue.status = event.dest.sortableScope.$parent.column.name;
+      },
+      orderChanged: function(event){
+
+      },
+    }
+
 
 
 
