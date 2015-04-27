@@ -10,7 +10,7 @@ var taskService = require('./../service/taskService');
 var errorHandler = require('./../response/errorHandler');
 
 exports.registerRoutes = function(app) {
-    app.post('task/create', createTask);
+    app.post('/task/create', createTask);
 };
 
 function createTask(req, res, next) {
@@ -59,3 +59,4 @@ function createTask(req, res, next) {
         res.send(result);
     })
 }
+

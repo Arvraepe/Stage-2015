@@ -22,3 +22,7 @@ exports.create = function(task, callback) {
     });
     newTask.save(callback);
 };
+
+exports.findTasks = function(condition, callback) {
+    Task.find(condition).lean().exec(callback);
+};

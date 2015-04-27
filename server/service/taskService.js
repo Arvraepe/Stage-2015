@@ -38,6 +38,10 @@ exports.createTask = function(task, callback) {
     }
 };
 
+exports.getTasks = function (boardId, callback) {
+    taskRepo.findTasks({boardId: boardId}, callback);
+};
+
 function getTaskIdentifier(boardId, callback) {
     taskRepo.getTaskIdentifier(boardId, callback);
 }
