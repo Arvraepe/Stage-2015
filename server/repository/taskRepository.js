@@ -21,4 +21,4 @@ exports.create = function(task, callback) {
         assignee: task.assignee,
     });
     newTask.save(callback);
-}
+};

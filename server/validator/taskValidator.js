@@ -20,11 +20,14 @@ exports.validateNewTask = function(task, boardDeadline) {
 };
 
 function validateString(string, minLength, maxLength){
-    return string.length >= minLength && string.length <= maxLength && string instanceof String;
+    return string.length >= minLength && string.length <= maxLength;
 }
 
 function validateDate(taskDeadline, boardDeadline) {
-    return taskDeadline <= boardDeadline && taskDeadline > new Date();
+    taskDeadline = new Date(taskDeadline);
+    if(taskDeadline instanceof Date) return true;
+    else if(boardDeadline == undefined) return taskDeadline > new Date();
+    else return taskDeadline <= boardDeadline && taskDeadline > new Date();
 }
 
 function makeMessage(wrong, minlength, maxlength) {
