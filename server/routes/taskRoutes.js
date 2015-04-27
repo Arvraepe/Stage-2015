@@ -10,7 +10,7 @@ var taskService = require('./../service/taskService');
 var errorHandler = require('./../response/errorHandler');
 
 exports.registerRoutes = function(app) {
-    app.post('task/create', createTask);
+    app.post('/task/create', createTask);
 };
 
 function createTask(req, res, next) {
@@ -40,7 +40,7 @@ function createTask(req, res, next) {
         },
         function(results, callback) {
             var project = results[0], boards = results[1];
-            if(project.leader == task.assignee || project.collaborators.indexOf(task.assignee) > -1) {
+            if(project.leader == task.assignee._id || project.collaborators.indexOf(task.assignee._id) > -1) {
                 taskService.getTaskIdentifier(boards, function(err, number) {
                     task.identifier = project.code + '-' + number;
                     callback(err);
@@ -54,7 +54,9 @@ function createTask(req, res, next) {
             });
         }
     ], function(err, result) {
+        result = result ||{};
         result = errorHandler.handleMMResult(err, result.task, result.messages, 'A new task was created.')
         res.send(result);
     })
 }
+

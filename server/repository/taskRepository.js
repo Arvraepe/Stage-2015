@@ -21,4 +21,8 @@ exports.create = function(task, callback) {
         assignee: task.assignee,
     });
     newTask.save(callback);
-}
+};
+
+exports.findTasks = function(condition, callback) {
+    Task.find(condition).lean().exec(callback);
+};

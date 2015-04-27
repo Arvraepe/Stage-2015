@@ -15,10 +15,15 @@ exports.getTaskIdentifier = function (boards, callback) {
     async.parallel(tasks, function(err, result) {
         var number = 1;
         result.forEach(function (identifier) {
-            var iNumber = identifier.split('-')[1];
-            if(iNumber >= number) {
-                number = iNumber + 1;
-            }
+            identifier.forEach(function(entry){
+                console.log(entry);
+                if(entry.identifier.length > 0) {
+                    var iNumber = entry.identifier.split('-')[1];
+                    if (iNumber >= number) {
+                        number = parseInt(iNumber) + 1;
+                    }
+                }
+            });
         });
         callback(err, number);
     });
@@ -31,6 +36,10 @@ exports.createTask = function(task, callback) {
     } else {
         taskRepo.create(task, callback);
     }
+};
+
+exports.getTasks = function (boardId, callback) {
+    taskRepo.findTasks({boardId: boardId}, callback);
 };
 
 function getTaskIdentifier(boardId, callback) {
