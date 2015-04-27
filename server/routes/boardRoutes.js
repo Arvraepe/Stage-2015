@@ -70,25 +70,10 @@ function getBoard(req, res, next) {
             });
         },
         function(result, callback) {
-            var board = result.board;
-            var states = board.states;
-            board.states = [];
-            taskService.getTasks(board._id, function(err, tasks) {
-                states.forEach(function (state) {
-                    var stateObj = { name: state };
-                    stateObj.tasks = [];
-                    tasks.forEach(function (task) {
-                        if(task.state == state) {
-                            stateObj.tasks.push(task);
-                        }
-                    });
-                    board.states.push(stateObj);
-                });
-                result.board = board;
-                callback(err, result);
-            });
+            taskService.fillTasks(result, callback);
         }
     ], function(err, result) {
+        console.log(result);
         result = errorHandler.handleResult(err, result, 'Fetched board.');
         res.send(result);
     });

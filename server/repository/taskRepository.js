@@ -18,7 +18,7 @@ exports.create = function(task, callback) {
         important: task.important,
         deadline: task.deadline,
         state: task.state,
-        assignee: task.assignee,
+        assignee: task.assignee
     });
     newTask.save(callback);
 };

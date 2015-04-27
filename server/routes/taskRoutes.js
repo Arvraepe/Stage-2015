@@ -28,6 +28,7 @@ function createTask(req, res, next) {
         },
         function(results, callback) {
             var userId = results[0], board = results[1];
+            task.state = board.states[0];
             task.creator = userId;
             async.parallel([
                 function(callback) {
