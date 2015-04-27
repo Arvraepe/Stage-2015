@@ -20,9 +20,9 @@
     <h4>{{state.name}}</h4>
 
     <ul class="col-md-12" style="border:solid 2px #e5e5e5" as-sortable="taskSortOptions" ng-model="board.states.tasks">
-      <li data-ng-repeat="task in tasks" data-as-sortable-item>
+      <li data-ng-repeat="task in tasks" as-sortable-item>
         <div as-sortable-item-handle>
-          {{task.identifier}}
+          {{task.title}}
         </div>
       </li>
 

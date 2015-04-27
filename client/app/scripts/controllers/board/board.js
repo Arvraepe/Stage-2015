@@ -13,6 +13,7 @@ angular.module('stageprojectApp')
     $scope.amountOfStates = 0;
     $scope.columnWidth = 0;
 
+
     $scope.getBoardInfo = function(){
         var boardName = {
           boardId:$routeParams.boardId
@@ -26,6 +27,7 @@ angular.module('stageprojectApp')
             $scope.board.collaborators = response.data.collaborators;
             $scope.board.collaborators.push(angular.copy(response.data.leader));
             $scope.board.leader = response.data.leader;
+            $scope.board.tasks=[];
           },
           error: function(error){
             console.log(error);
@@ -63,10 +65,8 @@ angular.module('stageprojectApp')
           }
         }
       });
-      modalInstance.result.then(function (data) {
-        $scope.board = data;
-        $scope.amountOfStates = $scope.board.states.length;
-        $scope.columnWidth= Math.floor(12/$scope.amountOfStates);
+      modalInstance.result.then(function (task) {
+        $scope.board.states[0].tasks.push(task);
       }, function () {
       })
     };

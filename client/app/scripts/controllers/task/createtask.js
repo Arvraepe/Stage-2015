@@ -23,7 +23,7 @@ angular.module('stageprojectApp')
         taskRequestFactory.createTask({
           data: taskInfo,
           success: function (response) {
-
+            $modalInstance.close(response.data);
           },
           error: function (error) {
             console.log(error);
