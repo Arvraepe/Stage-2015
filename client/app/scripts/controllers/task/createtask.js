@@ -11,9 +11,11 @@ angular.module('stageprojectApp')
   .controller('CreateTaskCtrl', function ($scope, board, taskRequestFactory, $modalInstance) {
     $scope.board = board;
     $scope.task = {};
+    $scope.uiselect = {};
     $scope.task.important = false;
 
     $scope.createTask = function (task) {
+      task.assignee = angular.copy($scope.uiselect.assignee._id);
       if ($scope.createTaskForm.$valid) {
         task.boardId = $scope.board._id;
         var taskInfo = {
