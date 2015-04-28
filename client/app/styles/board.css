@@ -11,4 +11,6 @@
   border-right: solid 2px #e5e5e5;
 }
 
-
+.dragPlaceholder{
+  border: dashed 2px #e5e5e5;
+}

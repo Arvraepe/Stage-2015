@@ -89,7 +89,7 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
       }
     })
     .when('/project/:pid/board/:boardId/task/:taskId', {
-      templateUrl: 'views/task.html',
+      templateUrl: 'views/task/task.html',
       controller: 'TaskCtrl'
     })
     .otherwise({

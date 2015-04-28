@@ -10,12 +10,25 @@
 angular.module('stageprojectApp')
   .controller('EditBoardCtrl', function ($scope, $modalInstance, board, boardRequestFactory,notificationFactory) {
     $scope.board = angular.copy(board);
+    $scope.states =[];
+    function getStatesFromBoard(){
+      angular.forEach($scope.board.states, function(state){
+        $scope.states.push(state.name);
+      })
+    }
+    getStatesFromBoard();
+
+
+
 
     $scope.updateBoard = function(){
       $scope.$broadcast('show-errors-check-validity');
       if($scope.editBoardForm.$valid){
+        var boardInfo = angular.copy($scope.board);
+        boardInfo.states = $scope.states;
+
         boardRequestFactory.updateBoard({
-          data : $scope.board,
+          data : boardInfo,
           success:function(response){
             $modalInstance.close(response.data.board);
             notificationFactory.createNotification(response);

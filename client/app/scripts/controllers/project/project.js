@@ -168,6 +168,24 @@ angular.module('stageprojectApp')
         });
       };
 
+      $scope.openDeleteProjectModal = function (size) {
+        var modalInstance = $modal.open({
+          templateUrl: 'views/project/deleteproject.html',
+          controller: 'DeleteProjectCtrl',
+          size: size,
+          resolve:{
+            project: function(){
+              return $scope.project;
+            }
+          }
+        });
+        modalInstance.result.then(function (data) {
+          $location.path('/dashboard');
+        }, function () {
+        })
+
+      };
+
       $scope.createNewBoard = function (board) {
         //naam & deadline nodig
         board.projectId = $routeParams.pid;
@@ -194,6 +212,7 @@ angular.module('stageprojectApp')
           }
         });
         modalInstance.result.then(function (data) {
+
           $scope.project.boards = $filter('filter')($scope.project.boards, {_id: '!'+data._id});
         }, function () {
         })

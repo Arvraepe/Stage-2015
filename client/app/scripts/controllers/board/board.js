@@ -77,7 +77,8 @@ angular.module('stageprojectApp')
       orderChanged: function(event){
 
       },
-    }
+      additionalPlaceholderClass:'dragPlaceholder'
+    };
 
 
 
