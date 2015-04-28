@@ -26,6 +26,10 @@ exports.findProjects = function(condition, callback) {
     Project.find(condition).lean().exec(callback);
 };
 
+exports.findProject = function(condition, callback) {
+    Project.findOne(condition).lean().exec(callback);
+};
+
 exports.deleteProject = function(projectId, callback) {
     Project.findOneAndRemove({_id : projectId}, callback);
 };

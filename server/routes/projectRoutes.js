@@ -81,16 +81,7 @@ function updateProject(req, res, next) {
             projectService.checkAndAddCollabs(messages, project, userExists, callback);
         },
         function(result, callback) {
-            var project = {};
-            result.forEach(function (entry) {
-                if(entry.description != undefined) {
-                    project = entry;
-                }
-            });
-            populateProject(project, function (err, pProject) {
-                result[result.length -1] = pProject;
-                callback(err, result);
-            });
+            projectService.processUpdate(result, callback);
         }
     ], function(err, result) {
         var response = errorHandler.handleProjectErrors(err, result, 'Projects updated successfully.');
@@ -106,9 +97,6 @@ function getProject(req, res, next) {
         },
         function(userId, callback) {
             projectService.getProject(req.params.projectId, userId, callback);
-        },
-        function(project, callback) {
-            populateProject(project, callback);
         }
     ], function(err, result) {
         var response = errorHandler.handleResult(err, result, 'Project fetched successfully.');
@@ -139,32 +127,10 @@ function changeLeader(req, res, next) {
         },
         function(userId, callback) {
             projectService.changeLeader(req.params, userId, callback);
-        },
-        function (project, callback) {
-            populateProject(project, callback);
         }
     ], function(err, result) {
         var response = errorHandler.handleResult(err, result, 'You are no longer leader of this project.');
         res.send(response);
     });
     next();
-}
-
-function populateProject(project, callback) {
-    async.parallel([
-        function(callback) {
-            userService.getUsersFromProject(project.collaborators, project.leader, callback);
-        },
-        function(callback) {
-            boardService.getBoards(project._id, function(err, boards) {
-                boards = boardService.convertStates(boards);
-                callback(err, boards);
-            });
-        }
-    ], function(err, result) {
-        project.leader = result[0].leader;
-        project.collaborators = result[0].collaborators;
-        project.boards = result[1];
-        callback(err, project);
-    });
 }
