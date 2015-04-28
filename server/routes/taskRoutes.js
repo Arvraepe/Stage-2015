@@ -41,7 +41,7 @@ function createTask(req, res, next) {
         },
         function(results, callback) {
             var project = results[0], boards = results[1];
-            if(project.leader == task.assignee._id || project.collaborators.indexOf(task.assignee._id) > -1) {
+            if(project.leader == task.assignee || project.collaborators.indexOf(task.assignee) > -1) {
                 taskService.getTaskIdentifier(boards, function(err, number) {
                     task.identifier = project.code + '-' + number;
                     callback(err);

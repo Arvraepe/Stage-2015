@@ -27,7 +27,6 @@ angular.module('stageprojectApp')
             $scope.board.collaborators = response.data.collaborators;
             $scope.board.collaborators.push(angular.copy(response.data.leader));
             $scope.board.leader = response.data.leader;
-            $scope.board.tasks=[];
           },
           error: function(error){
             console.log(error);

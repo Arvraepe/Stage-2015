@@ -19,14 +19,20 @@
   <div ng-repeat="state in board.states" class="well boardLayout col-md-{{columnWidth}}">
     <h4>{{state.name}}</h4>
 
-    <ul class="col-md-12" style="border:solid 2px #e5e5e5" as-sortable="taskSortOptions" ng-model="board.states.tasks">
-      <li data-ng-repeat="task in tasks" as-sortable-item>
-        <div as-sortable-item-handle>
-          {{task.title}}
+    <ul class="col-md-12 noPaddingLeft noPaddingRight"  style="list-style-type:none" as-sortable="taskSortOptions" ng-model="state.tasks">
+      <li ng-repeat="task in state.tasks" as-sortable-item>
+        <div as-sortable-item-handle class="panel panel-default">
+          <div class="panel-heading">
+            <div class="panel-title">
+              <a ng-href="#/project/{{board.projectId}}/board/{{board._id}}/task/{{task._id}}">{{task.identifier}} <span class="pull-right" ng-if="task.important"><i class="fa fa-flag"></i>
+              </span></a>
+            </div>
+          </div>
+          <div class="panel-body">
+            {{task.title}}
+          </div>
         </div>
       </li>
-
-      TASKPLACEHOLDER
     </ul>
   </div>
 </div>
