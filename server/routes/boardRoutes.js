@@ -6,7 +6,6 @@ var auth = require('./../service/authenticationService');
 var projectService = require('./../service/projectService');
 var errorHandler = require('./../response/errorHandler');
 var boardService = require('./../service/boardService');
-var userService = require('./../service/userService');
 var taskService = require('./../service/taskService');
 
 exports.registerRoutes = function (app) {

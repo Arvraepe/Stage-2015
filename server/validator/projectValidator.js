@@ -57,7 +57,7 @@ function checkDeadline(date) {
 function checkStates(states) {
     var res = true;
     states = states || [];
-    if (states.length < 1 || states.length > 10) {
+    if (states.length < 1 || states.length > 5) {
         res=false;
     }
     states.forEach(function (entry) {
