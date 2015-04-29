@@ -18,27 +18,25 @@ exports.createBoard = function (params, callback) {
 };
 
 exports.getBoards = function (projectId, callback) {
-    boardRepo.findBoards({projectId: projectId}, callback);
+    var select = 'name deadline states';
+    boardRepo.selectBoards({projectId: projectId}, select, callback);
 };
 
 exports.getBoard = function (boardId, callback) {
-    boardRepo.findBoards({_id: boardId}, function (err, boards) {
-        var board = boards[0];
-        callback(err, board);
-    });
+    boardRepo.findBoard({_id: boardId}, callback);
 };
 
 exports.convertStates = function(boards) {
     boards.forEach(function (board, index, array) {
-        array[index].states = convertState(board);
+        array[index].statesMap = convertState(board);
     });
     return boards;
 };
 
-exports.findOneAndUpdate = function(id, board, callback) {
+exports.updateBoard = function(board, callback) {
     var messages = validator.validateBoard(board);
     if(messages.length > 0) callback(null, null, messages);
-    else boardRepo.findOneAndUpdate({_id : id}, board, callback);
+    else boardRepo.findOneAndUpdate({_id : board._id}, board, callback);
 };
 
 exports.delete = function(id, callback) {

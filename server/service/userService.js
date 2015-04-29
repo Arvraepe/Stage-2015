@@ -286,27 +286,26 @@ exports.findALike = function(username, callback) {
     }
 };
 
-exports.getUsersFromProject = function(collaborators, leader, callback) {
+exports.getUsersFromProject = function(project, callback) {
+    var select = '_id username firstname lastname';
     var tasks = [
         function(cb) {
-            userRepo.findUser({_id : leader}, cb)
+            userRepo.selectUser({ _id : project.leader }, select,  cb)
         }
     ];
-    collaborators.forEach(function (entry) {
+    project.collaborators.forEach(function (entry) {
         tasks.push(function (cb) {
-            userRepo.findUser({_id : entry}, cb);
+            userRepo.selectUser({_id : entry}, select, cb);
         });
     });
     async.parallel(tasks, function(err, results) {
-        results = filterUsers(results);
-        var result ={
-            leader : results.pop(),
-            collaborators : []
-        };
+        var leader = results.shift();
+        project.leader = filterName(leader);
+        project.collaborators = [];
         results.forEach(function (entry) {
-            result.collaborators.push(entry);
+            project.collaborators.push(filterName(entry));
         });
-        callback(err, result);
+        callback(err, project);
     })
 };
 
@@ -337,6 +336,10 @@ exports.sortResults = function(userId, myProjects, otherProjects, users, callbac
     });
 };
 
+function filterName(user) {
+    user.name = user.firstname + ' ' + user.lastname;
+    return _.omit(user, ['firstname', 'lastname']);
+}
 
 function filterUser(user) {
     return _.omit(user, ['password', 'salt', '__v', 'recovery']);

@@ -8,6 +8,7 @@ var config = require('./../config.json');
 var async = require('async');
 var uuid = require('node-uuid');
 var boardService = require('./boardService');
+var userService = require('./userService');
 
 exports.createProject = function (params, userId, callback) {
     var messages = projectValidator.validateNewProject(params);
@@ -29,7 +30,7 @@ exports.checkAndAddCollabs = function (messages, project, usersExist, callback) 
     var tasks = [];
     usersExist.forEach(function (entry) {
         if (!entry.exists) {
-            if (entry.email !== undefined) {
+            if (entry.email !== undefined) { // this is an email that does not exist in our db, we will send an invitation email.
                 tasks.push(function (cb) {
                     var uId = uuid.v1();
                     var link = config.domain + config.registerPath + entry.email + '/' + uId;
@@ -37,30 +38,30 @@ exports.checkAndAddCollabs = function (messages, project, usersExist, callback) 
                     project.uniqueLinks.push(uId);
                     projectRepo.findOneAndUpdate(project._id, project);
                     mailService.inviteCoworkers(entry.email, link, cb);
-                })
-            } else {
+                });
+            } else { //this is a string that is not a valid email address, the system will assume the user entered a username which is not in our db and will sent an appropriate WARN message.
                 tasks.push(function (cb) {
                     messages = messages || {};
                     messages.message = {code: 'WARN', message: entry.message};
                     cb(null, messages);
                 });
             }
-        } else {
+        } else { //the user exists, callback with the required data.
             tasks.push(function (cb) {
                 cb(null, {add: entry.user._id, projectId: project._id, leader : project.leader});
             });
         }
     });
     async.parallel(tasks, function (err, results) {
-        var users = [];
+        var users = []; // this will contain all the existing users which will be added to the project
         var projectId = '';
         var leaderEntry = {};
         results.forEach(function (entry) {
-            if (entry.add != undefined) {
-                if(entry.add != entry.leader) {
+            if (entry.add != undefined) { // this is a user that exists
+                if(entry.add != entry.leader) { // add to the users array
                     users.push(entry.add);
-                    projectId = entry.projectId;
-                } else {
+                    projectId = entry.projectId; //set the projectId, will be the same value for every entry that has 'add' property
+                } else {//leader tried to add himself as a collaborator, this is not possible.
                     leaderEntry = entry;
                     results.push({message : {code : 'WARN', message : 'You cannot add yourself to a project you own.'}});
                 }
@@ -93,7 +94,14 @@ exports.getOtherProjects = function(userId, callback) {
 };
 
 exports.getProject = function(projectId, userId, callback) {
-    checkProject(projectId, userId, callback);
+    async.waterfall([
+        function(callback) {
+            checkProject(projectId, userId, callback);
+        },
+        function(project, callback) {
+            populateProject(project, callback);
+        }
+    ], callback);
 };
 
 exports.deleteProject = function(projectId, userId, callback) {
@@ -121,15 +129,26 @@ exports.updateProject = function(userId, params, callback) {
 };
 
 exports.changeLeader = function (params, leaderId, callback) {
-    isLeader(params.projectId, leaderId, function(err, isleader) {
-        if(isleader) {
-            projectRepo.findProjects({_id : params.projectId}, function(err, project) {
-                project[0].leader = project[0].collaborators.splice(project[0].collaborators.indexOf(params.userId), 1)[0];
-                project[0].collaborators.push(leaderId);
-                projectRepo.findOneAndUpdate({_id : params.projectId}, project[0], callback);
-            })
+    async.waterfall([
+        function(callback) {
+            isLeader(params.projectId, leaderId, callback);
+        },
+        function(isLeader, callback) {
+            if(!isLeader) {
+                callback(new Error('You cannot promote someone to leader if you are not the leader.'));
+            } else {
+                projectRepo.findProject({ _id: params.projectId}, callback);
+            }
+        },
+        function(project, callback) {
+            project.leader = project.collaborators.splice(project.collaborators.indexOf(params.userId), 1)[0];
+            project.collaborators.push(leaderId);
+            projectRepo.findOneAndUpdate({_id : params.projectId}, project, callback);
+        },
+        function(project, callback) {
+            populateProject(project, callback);
         }
-    });
+    ], callback);
 };
 
 exports.addRegisteredCollab = function(userId, projectId, callback) {
@@ -148,6 +167,40 @@ exports.isLeader = function(projectId, userId, callback) {
     isLeader(projectId, userId, callback);
 };
 
+exports.processUpdate = function(result, callback) {
+    var project = {};
+    result.forEach(function (entry) {
+        if(entry.description != undefined) {
+            project = entry;
+        }
+    });
+    populateProject(project, function (err, pProject) {
+        result[result.length -1] = pProject;
+        callback(err, result);
+    });
+};
+
+exports.getProjectDesc = function(projectId, userId, callback) {
+    checkProject(projectId, userId, callback);
+};
+
+exports.getParentProject = function(board, userId, callback) {
+    var select = "name code collaborators leader startDate deadline";
+    async.waterfall([
+        function(callback) {
+            projectRepo.selectProject({_id: board.projectId}, select, callback);
+        },
+        function(project, callback) {
+            if(userInProject(project, userId)) userService.getUsersFromProject(project, callback);
+            else callback(new Error('You are not a member of this project.'));
+        }
+    ], callback);
+};
+
+function userInProject(project, userId) {
+    return project.leader == userId || project.collaborators.indexOf(userId) > -1;
+}
+
 function addCollab(projectId, users, callback) {
     projectRepo.addCollab(projectId, users, callback);
 }
@@ -162,6 +215,7 @@ function checkProject(projectId, userId, callback) {
         }
     });
 }
+
 
 function isLeader(projectId, userId, callback) {
     projectRepo.findProjects({_id: projectId}, function(err, project) {
@@ -188,4 +242,23 @@ function getDefaultBoard(states, deadline, projectId) {
         states: states
     };
     return board;
+}
+
+function populateProject(project, callback) {
+    async.parallel([
+        function(callback) {
+            userService.getUsersFromProject(project, callback);
+        },
+        function(callback) {
+            boardService.getBoards(project._id, function(err, boards) {
+                boards = boardService.convertStates(boards);
+                callback(err, boards);
+            });
+        }
+    ], function(err, result) {
+        project.leader = result[0].leader;
+        project.collaborators = result[0].collaborators;
+        project.boards = result[1];
+        callback(err, project);
+    });
 }
