@@ -11,7 +11,7 @@ exports.createBoard = function (params, callback) {
     } else {
         boardRepo.create(params, function (err, result) {
             result = result.toObject();
-            result.states = convertState(result);
+            result = convertState(result);
             callback(err, result, messages);
         });
     }
