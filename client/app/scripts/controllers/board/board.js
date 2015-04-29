@@ -108,10 +108,19 @@ angular.module('stageprojectApp')
         }
       });
       modalInstance.result.then(function (task) {
-        $scope.board.states[0].tasks.push(task);
+        //$scope.board.states[0].tasks.push(task);
+        addTaskToState(task);
       }, function () {
       })
     };
+
+    function addTaskToState(task){
+      angular.forEach($scope.board.states, function(state){
+        if(state.name===task.state){
+          state.tasks.push(task);
+        }
+      })
+    }
 
     $scope.taskSortOptions = {
       itemMoved:function(event){
