@@ -348,6 +348,10 @@ exports.populateTasks = function(tasks, callback) {
     async.parallel(taskArray, callback);
 };
 
+exports.populateTask = function(task, callback) {
+    populateTask(task, callback);
+};
+
 function populateTask(task, callback) {
     var select = '_id username firstname lastname imageUrl';
     async.parallel([

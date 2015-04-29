@@ -37,7 +37,7 @@ exports.getTasks = function(board, callback) {
         function(tasks, callback) {
             userService.populateTasks(tasks, callback)
         }
-    ])
+    ], callback)
 
 };
 

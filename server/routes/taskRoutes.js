@@ -8,6 +8,7 @@ var boardService = require('./../service/boardService');
 var projectService = require('./../service/projectService');
 var taskService = require('./../service/taskService');
 var errorHandler = require('./../response/errorHandler');
+var userService = require('./../service/userService');
 
 exports.registerRoutes = function(app) {
     app.post('/task/create', createTask);
@@ -32,7 +33,7 @@ function createTask(req, res, next) {
             task.creator = userId;
             async.parallel([
                 function(callback) {
-                    projectService.getProject(board.projectId, userId, callback);
+                    projectService.getProjectDesc(board.projectId, userId, callback);
                 },
                 function(callback) {
                     boardService.getBoards(board.projectId, callback);
@@ -51,12 +52,15 @@ function createTask(req, res, next) {
             }
         }, function(callback) {
             taskService.createTask(task, function(err, result, messages) {
-                callback(err, { task: result, messages: messages });
+                callback(err, task, messages);
             });
+        },
+        function(task, messages, callback) {
+            if(messages.length > 0) callback(new Error());
+            userService.populateTask(task, callback);
         }
     ], function(err, result) {
-        result = result ||{};
-        result = errorHandler.handleMMResult(err, result.task, result.messages, 'A new task was created.')
+        result = errorHandler.handleMMResult(err, { task: result }, result.messages, 'A new task was created.');
         res.send(result);
     })
 }
