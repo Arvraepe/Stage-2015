@@ -8,7 +8,6 @@ var errorHandler = require('./../response/errorHandler');
 var auth = require('./../service/authenticationService');
 
 exports.registerRoutes = function (app) {
-
     app.post('/register', register);
     app.post('/login', login);
     app.get('/user/exists', userExists);

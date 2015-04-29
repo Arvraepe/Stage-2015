@@ -256,8 +256,7 @@ function populateProject(project, callback) {
             });
         }
     ], function(err, result) {
-        project.leader = result[0].leader;
-        project.collaborators = result[0].collaborators;
+        project = result[0];
         project.boards = result[1];
         callback(err, project);
     });

@@ -21,7 +21,7 @@ var config  = require('./../config.json');
 exports.registerUser = function (user, callback) {
     var messages = validator.validateRegistration(user);
     if (messages.length === 0) {
-        async.waterfall([
+        async.series([
             function(callback) {
                 async.parallel([
                     function(callback) {
@@ -335,6 +335,34 @@ exports.sortResults = function(userId, myProjects, otherProjects, users, callbac
         callback(err, result);
     });
 };
+
+exports.populateTasks = function(tasks, callback) {
+    var taskArray = [];
+    tasks.forEach(function(task) {
+        taskArray.push(
+            function (callback) {
+                populateTask(task, callback);
+            }
+        )
+    });
+    async.parallel(taskArray, callback);
+};
+
+function populateTask(task, callback) {
+    var select = '_id username firstname lastname imageUrl';
+    async.parallel([
+        function(callback) {
+            userRepo.selectUser({ _id: task.creator }, select, callback);
+        },
+        function(callback) {
+            userRepo.selectUser({ _id: task.assignee }, select, callback);
+        }
+    ], function(err, results) {
+        task.creator = results[0];
+        task.assignee = results[1];
+        callback(err, task);
+    })
+}
 
 function filterName(user) {
     user.name = user.firstname + ' ' + user.lastname;
