@@ -85,12 +85,21 @@ exports.checkAndAddCollabs = function (messages, project, usersExist, callback) 
     });
 };
 
-exports.getMyProjects = function(userId, callback) {
-    projectRepo.findProjects({leader : userId}, callback);
-};
-
-exports.getOtherProjects = function(userId, callback) {
-    projectRepo.findProjects({collaborators : userId}, callback);
+exports.getProjects = function(userId, callback) {
+    async.parallel([
+        function(callback) {
+            getMyProjects(userId, callback);
+        },
+        function(callback) {
+            getOtherProjects(userId, callback);
+        }
+    ], function(err, results) {
+        var result = {
+            myProjects: results[0],
+            otherProjects: results[1]
+        };
+        callback(err, result);
+    })
 };
 
 exports.getProject = function(projectId, userId, callback) {
@@ -134,16 +143,13 @@ exports.changeLeader = function (params, leaderId, callback) {
             isLeader(params.projectId, leaderId, callback);
         },
         function(isLeader, callback) {
-            if(!isLeader) {
-                callback(new Error('You cannot promote someone to leader if you are not the leader.'));
-            } else {
-                projectRepo.findProject({ _id: params.projectId}, callback);
-            }
+            if(!isLeader) callback(new Error('You cannot promote someone to leader if you are not the leader.'));
+            else projectRepo.findProject({ _id: params.projectId }, callback);
         },
         function(project, callback) {
             project.leader = project.collaborators.splice(project.collaborators.indexOf(params.userId), 1)[0];
             project.collaborators.push(leaderId);
-            projectRepo.findOneAndUpdate({_id : params.projectId}, project, callback);
+            projectRepo.findOneAndUpdate({ _id : params.projectId }, project, callback);
         },
         function(project, callback) {
             populateProject(project, callback);
@@ -203,11 +209,33 @@ exports.checkAuthority = function(board, userId, callback) {
             projectRepo.findProject({ _id: board.projectId }, callback);
         },
         function(project, callback) {
+            console.log(project);
             if(project.leader == userId || project.collaborators.indexOf(userId) > -1) callback(null, board);
             else callback(new Error('You are not a member of the project, you cannot see any of it\'s components'));
         }
     ], callback)
 };
+
+exports.getMembers = function(projectId, userId, callback) {
+    var select = "leader collaborators";
+    projectRepo.selectProject({ _id: projectId }, select, function(err, project) {
+        if(userInProject(project, userId)) {
+            var result = { members: project.collaborators };
+            result.members.push(project.leader);
+            callback(err, result)
+        } else {
+            callback(new Error('You are not a member of the project, you cannot see any of it\'s components'));
+        }
+    });
+};
+
+function getMyProjects(userId, callback) {
+    projectRepo.findProjects({leader : userId}, callback);
+}
+
+function getOtherProjects(userId, callback) {
+    projectRepo.findProjects({collaborators : userId}, callback);
+}
 
 function userInProject(project, userId) {
     return project.leader == userId || project.collaborators.indexOf(userId) > -1;
@@ -218,8 +246,8 @@ function addCollab(projectId, users, callback) {
 }
 
 function checkProject(projectId, userId, callback) {
-    projectRepo.findProjects({_id : projectId}, function(err, projects) {
-        var project = projects[0]; //we searched using id but the search returns an array, so we need the first element.
+    projectRepo.findProject({_id : projectId}, function(err, project) {
+        var project = project;
         if(project.leader == userId || project.collaborators.indexOf(userId) > -1) {
             callback(err, project);
         } else {
