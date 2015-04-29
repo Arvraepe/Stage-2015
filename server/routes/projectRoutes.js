@@ -48,15 +48,7 @@ function getProjects(req, res, next) {
             auth.verifyToken(req.params.token, callback);
         },
         function(userId, callback) {
-            projectService.getMyProjects(userId, function(err, myProjects) {
-                callback(err, userId, myProjects);
-            });
-        },
-        function(userId, myProjects, callback) {
-            projectService.getOtherProjects(userId, function(err, otherProjects) {
-                var result = {otherProjects : otherProjects, myProjects: myProjects};
-                callback(err, result);
-            });
+            projectService.getProjects(userId, callback);
         }
     ], function(err, result) {
         var response = errorHandler.handleResult(err, result);
@@ -142,11 +134,7 @@ function getMembers(req, res, next) {
             auth.verifyToken(req.token, callback)
         },
         function(userId, callback) {
-            projectService.getProject(req.params.projectId, userId, function(err, project) {
-                var members = project.collaborators;
-                members.push(project.leader);
-                callback(err, members)
-            });
+            projectService.getMembers(req.params.projectId, userId, callback);
         }
     ], function(err, members) {
         res.send(errorHandler.handleResult(err, { members : members }, 'members fetched.'));
