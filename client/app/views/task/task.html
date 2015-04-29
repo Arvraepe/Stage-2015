@@ -1,11 +1,24 @@
 <ol class="breadcrumb breadCrumb" data-ng-init="getTaskInfo()">
   <li><a ng-href="#/dashboard">Dashboard</a></li>
-  <li><a ng-href="#/project/{{board.projectId}}">Project</a></li>
-  <li><a ng-href="#/project/{{board.projectId}}/board/{{board._id}}">Board</a></li>
-  <li class="active">{{task.name|capitalize}}</li>
+  <li><a ng-href="#/project/{{projectId}}">Project</a></li>
+  <li><a ng-href="#/project/{{projectId}}/board/{{boardId}}">Board</a></li>
+  <li class="active">{{task.title|capitalize}}</li>
 </ol>
 
-<h2>{{task.name|capitalize}} <button type="button" ng-click="openEditTaskModal()" class="btn btn-primary btn-sm"><i class="fa fa-pencil"> Edit</i></button>
+<div class="col-md-9 noPaddingLeft">
+  <h2>{{task.title|capitalize}} <button type="button" ng-click="openEditTaskModal()" class="btn btn-primary btn-sm"><i class="fa fa-pencil"> Edit</i></button></h2>
+  {{task.description}}
+
+  <div ng-repeat="comment in task.comments | limitTo:5">
+    {{comment}}
+  </div>
+  <button class="btn btn-primary" ng-click="isCollapsed = !isCollapsed"><i class="fa fa-plus-circle"> Comment</i></button>
+  <div collapse="isCollapsed">
+    <form name="commentTaskForm" ng-submit="makeComment(comment)">
+      <textarea ng-model="comment" class="form-control" input="text"></textarea>
+      <button type="submit" class="btn btn-success">Add comment</button>
+    </form>
+  </div>
+</div>
 
 
-</h2>
