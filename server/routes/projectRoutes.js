@@ -99,7 +99,7 @@ function getProject(req, res, next) {
             projectService.getProject(req.params.projectId, userId, callback);
         }
     ], function(err, result) {
-        var response = errorHandler.handleResult(err, result, 'Project fetched successfully.');
+        var response = errorHandler.handleResult(err, { project: result }, 'Project fetched successfully.');
         res.send(response);
     });
     next();

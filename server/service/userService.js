@@ -287,7 +287,7 @@ exports.findALike = function(username, callback) {
 };
 
 exports.getUsersFromProject = function(project, callback) {
-    var select = '_id username firstname lastname';
+    var select = '_id username firstname lastname imageUrl';
     var tasks = [
         function(cb) {
             userRepo.selectUser({ _id : project.leader }, select,  cb)
