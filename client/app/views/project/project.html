@@ -13,7 +13,7 @@
           <a ng-href="#/project/{{project._id}}/board/{{board._id}}" class="boardTitle">{{board.name|capitalize}}</a>
           <hr>
           <div>
-            <div ng-repeat="state in board.states">
+            <div ng-repeat="state in board.statesMap">
               <div ng-repeat="(key, value) in state">
                 <div class="col-md-7 noPaddingLeft">
                   {{key}}

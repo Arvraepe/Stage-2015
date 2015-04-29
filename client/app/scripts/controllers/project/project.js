@@ -93,11 +93,10 @@ angular.module('stageprojectApp')
         projectRequestFactory.getProjectById({
           params: projectId,
           success: function (response) {
-            angular.forEach(response.data.collaborators, function (collab) {
-              $scope.collaborators.push(collab);
+            angular.forEach(response.data.project.collaborators, function (collab) { $scope.collaborators.push(collab);
             });
-            $scope.leader = response.data.leader;
-            $scope.project = response.data;
+            $scope.leader = response.data.project.leader;
+            $scope.project = response.data.project;
 
           },
           error: function (error) {

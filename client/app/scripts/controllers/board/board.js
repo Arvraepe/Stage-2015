@@ -13,7 +13,7 @@ angular.module('stageprojectApp')
     $scope.amountOfStates = 0;
     $scope.columnWidth = 0;
 
-    function calculateTimeDifference(){
+    function calculateTimeDifference() {
       var now = moment();
       var deadline = moment($scope.board.deadline);
       var duration = moment.duration(deadline.diff(now));
@@ -23,8 +23,11 @@ angular.module('stageprojectApp')
 
 
     $scope.isLeader = function () {
-      return ($scope.board.leader._id === $scope.$parent.currentUser._id);
+      if ($scope.board.leader != undefined) {
+        return ($scope.board.leader._id === $scope.$parent.currentUser._id);
+      }
     };
+
 
 
     $scope.getBoardInfo = function(){
@@ -37,9 +40,10 @@ angular.module('stageprojectApp')
             $scope.board = response.data.board;
             $scope.amountOfStates = $scope.board.states.length;
             $scope.columnWidth= Math.floor(100/$scope.amountOfStates) + '%';
-            $scope.board.collaborators = response.data.collaborators;
-            $scope.board.collaborators.push(angular.copy(response.data.leader));
-            $scope.board.leader = response.data.leader;
+            $scope.board.collaborators = response.data.board.parentProject.collaborators;
+            $scope.board.collaborators.push(angular.copy(response.data.board.parentProject.leader));
+            $scope.board.leader = response.data.board.parentProject.leader;
+            addTasksToStates();
             calculateTimeDifference();
           },
           error: function(error){
@@ -47,6 +51,26 @@ angular.module('stageprojectApp')
           }
         })
     };
+
+    function addTasksToStates(){
+      var states = [];
+      angular.forEach($scope.board.states, function(state){
+        var stateObj = {
+          name: state,
+          tasks : []
+        };
+        states.push(stateObj);
+      });
+      angular.forEach($scope.board.tasks, function(task){
+
+        angular.forEach(states, function(state){
+          if(task.state == state.name){
+            state.tasks.push(task);
+          }
+        });
+      });
+      $scope.board.states = states;
+    }
 
     $scope.openEditBoardModal = function(size){
       var modalInstance = $modal.open({
@@ -63,6 +87,11 @@ angular.module('stageprojectApp')
         $scope.board = data;
         $scope.amountOfStates = $scope.board.states.length;
         $scope.columnWidth= Math.floor(100/$scope.amountOfStates)+'%';
+        $scope.board.collaborators = data.parentProject.collaborators;
+        $scope.board.collaborators.push(angular.copy(data.parentProject.leader));
+        $scope.board.leader = data.parentProject.leader;
+        addTasksToStates();
+        calculateTimeDifference();
       }, function () {
       })
     };
