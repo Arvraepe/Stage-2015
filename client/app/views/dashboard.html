@@ -15,7 +15,7 @@
     <div class="panel-heading">
       <div class="panel-title">
         {{title}}
-      <span class="dropdown pull-right" dropdown style="font-size: 12px;">
+      <span class="dropdown pull-right" dropdown style="font-size: 16px;">
       <a href class="dropdown-toggle" dropdown-toggle style="color:#333">
         <i class="fa fa-cog fa-"></i>
       </a>
@@ -32,7 +32,7 @@
       <div class="panelPadding" ng-if="projectsToShow.length == 0">You have no projects yet.</div>
       <ul class="nav nav-pills nav-stacked projectsList">
         <li ng-repeat="project in projectsToShow | startFrom:currentPage*pageSize | limitTo:pageSize">
-          <a ng-href="#/project/{{project._id}}">{{project.name}}<span class="badge pull-right"><i class="fa fa-user"></i> {{project.collaborators.length + 1}}</span></a>
+          <a ng-href="#/project/{{project._id}}">{{project.name}}<span class="badge dashboardBadge pull-right"><i class="fa fa-user"></i> {{project.collaborators.length + 1}}</span></a>
         </li>
       </ul>
         <button type="button" class="btn btn-default pull-left projectsPadding" ng-hide="currentPage==0" ng-click="currentPage=currentPage-1">&lt;&lt;</button>

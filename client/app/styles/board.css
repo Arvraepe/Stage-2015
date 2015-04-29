@@ -14,3 +14,44 @@
 .dragPlaceholder{
   border: dashed 2px #e5e5e5;
 }
+
+.taskTitle{
+  font-size: 18px;
+}
+
+.assignedTo{
+  font-style: italic;
+  font-size:12px;
+}
+
+.stateLayout{
+  float:left;
+  position: relative;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.boardRightBorder{
+  border-right: dashed 2px #e5e5e5;
+}
+
+.boardLeftBorder{
+  border-left: dashed 2px #e5e5e5;
+}
+
+.btnMarginLeft{
+  margin-left:12px;
+}
+
+.deadlineOver{
+  color: #ff6666;
+}
+
+.lazyTime{
+  font-size: 14px;
+}
+
+.deadlineClose{
+    color: #555;
+}

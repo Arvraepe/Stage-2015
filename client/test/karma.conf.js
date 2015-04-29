@@ -27,6 +27,8 @@ module.exports = function(config) {
       'app/bower_components/angular-route/angular-route.js',
       'app/bower_components/angular-touch/angular-touch.js',
       'app/bower_components/ng-sortable/dist/ng-sortable.js',
+      'app/bower_components/moment/moment.js',
+      'app/bower_components/angular-moment/angular-moment.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

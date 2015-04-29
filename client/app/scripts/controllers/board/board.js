@@ -13,6 +13,19 @@ angular.module('stageprojectApp')
     $scope.amountOfStates = 0;
     $scope.columnWidth = 0;
 
+    function calculateTimeDifference(){
+      var now = moment();
+      var deadline = moment($scope.board.deadline);
+      var duration = moment.duration(deadline.diff(now));
+      var days = duration.asDays();
+      $scope.lazyDate = days;
+    }
+
+
+    $scope.isLeader = function () {
+      return ($scope.board.leader._id === $scope.$parent.currentUser._id);
+    };
+
 
     $scope.getBoardInfo = function(){
         var boardName = {
@@ -23,10 +36,11 @@ angular.module('stageprojectApp')
           success:function(response){
             $scope.board = response.data.board;
             $scope.amountOfStates = $scope.board.states.length;
-            $scope.columnWidth= Math.floor(12/$scope.amountOfStates);
+            $scope.columnWidth= Math.floor(100/$scope.amountOfStates) + '%';
             $scope.board.collaborators = response.data.collaborators;
             $scope.board.collaborators.push(angular.copy(response.data.leader));
             $scope.board.leader = response.data.leader;
+            calculateTimeDifference();
           },
           error: function(error){
             console.log(error);
@@ -48,7 +62,7 @@ angular.module('stageprojectApp')
       modalInstance.result.then(function (data) {
         $scope.board = data;
         $scope.amountOfStates = $scope.board.states.length;
-        $scope.columnWidth= Math.floor(12/$scope.amountOfStates);
+        $scope.columnWidth= Math.floor(100/$scope.amountOfStates)+'%';
       }, function () {
       })
     };
@@ -79,6 +93,8 @@ angular.module('stageprojectApp')
       },
       additionalPlaceholderClass:'dragPlaceholder'
     };
+
+
 
 
 

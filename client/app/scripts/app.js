@@ -20,7 +20,8 @@ var app = angular.module('stageprojectApp', [
   'ui.bootstrap',
   'ui.select',
   'ngSanitize',
-  'ui.sortable'
+  'ui.sortable',
+  'angularMoment'
 ]);
 
 app.config(function ($routeProvider, $locationProvider, USERROLES) {

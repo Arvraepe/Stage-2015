@@ -73,6 +73,7 @@ angular.module('stageprojectApp')
       }
     };
 
+
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
     };
