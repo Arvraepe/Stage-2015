@@ -27,7 +27,6 @@ function createBoard(req, res, next) {
             })
         },
         function (project, userId, callback) {
-            console.log(project);
             if (project.leader != userId) callback(new Error('You are not the leader of this project, you cannot create boards.'));
             else boardService.createBoard(req.params, function (err, result, messages) {
                 var results = {result: result, messages: messages};
@@ -52,18 +51,12 @@ function getBoard(req, res, next) {
                 }
             ], callback);
         },
-        function (results, callback) {
+        function(results, callback) {
             var board = results[0], userId = results[1];
-            projectService.getProject(board.projectId, userId, function(err, project) {
-                var result = { board: board, leader: project.leader, collaborators: project.collaborators};
-                callback(err, result);
-            });
-        },
-        function (result, callback) {
-            taskService.fillTasks(result, callback);
+            populateBoard(board, userId, callback);
         }
-    ], function (err, result) {
-        result = errorHandler.handleResult(err, result, 'Fetched board.');
+    ], function(err, board) {
+        var result = errorHandler.handleResult(err, { board: board }, 'Board fetched.');
         res.send(result);
     });
 }
@@ -74,20 +67,24 @@ function updateBoard(req, res, next) {
             auth.verifyToken(req.params.token, callback)
         },
         function (userId, callback) {
-            projectService.isLeader(req.params.projectId, userId, callback)
-        },
-        function (isLeader, callback) {
-            if (isLeader) {
-                boardService.findOneAndUpdate(req.params._id, req.params, function (err, board, messages) {
-                    var result = {result: board, messages: messages};
-                    callback(err, result);
-                });
-            } else {
-                callback(new Error('You are not leader of this project, you cannot update a board.'));
-            }
+            async.waterfall([
+                function(callback) {
+                    projectService.isLeader(req.params.projectId, userId, callback)
+                },
+                function (isLeader, callback) {
+                    if (isLeader) {
+                        boardService.updateBoard(req.params, function (err, board, messages) {
+                            if(messages) callback(new Error('Unable to process the request'));
+                            callback(err, board);
+                        });
+                    } else callback(new Error('You are not leader of this project, you cannot update a board.'));
+                }
+            ], function(err, board) {
+                populateBoard(board, userId, callback);
+            });
         }
-    ], function (err, result) {
-        result = errorHandler.handleMMResult(err, {board: result.result}, result.messages, 'Board updated.');
+    ], function (err, board) {
+        var result = errorHandler.handleResult(err, {board: board}, 'Board updated.');
         res.send(result);
     });
 }
@@ -110,5 +107,20 @@ function deleteBoard(req, res, next) {
     ], function (err, result) {
         result = errorHandler.handleResult(err, null, 'Board updated.');
         res.send(result);
+    });
+}
+
+function populateBoard(board, userId, callback) {
+    async.parallel([
+        function(callback) {
+            projectService.getParentProject(board, userId, callback)
+        },
+        function(callback) {
+            taskService.getTasks(board, callback)
+        }
+    ], function(err, results) {
+        board.parentProject = results[0];
+        board.tasks = results[1];
+        callback(err, board);
     });
 }

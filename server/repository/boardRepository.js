@@ -27,3 +27,11 @@ exports.findOneAndUpdate = function(condition, board, callback) {
 exports.findOneAndRemove = function(condition, callback) {
     Board.findOneAndRemove(condition, callback);
 };
+
+exports.findBoard = function (condition, callback) {
+    Board.findOne(condition).lean().exec(callback);
+};
+
+exports.selectBoards = function(condition, select, callback) {
+    Board.find(condition).select(select).lean().exec(callback);
+};

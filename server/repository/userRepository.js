@@ -71,13 +71,15 @@ exports.findUserByUuid = function(uuid, cb) {
                 cb(null, user);
             });
         } else {
-            cb(new Error('you clicked an invalid link'))
+            cb(new Error('You clicked an invalid link.'))
         }
     });
 };
 
+exports.selectUser = function(condition, select, callback) {
+    User.findOne(condition).select(select).lean().exec(callback);
+};
+
 exports.findLike = function (username, cb) {
-    User.find({username : new RegExp(username, 'i')}).limit(10).lean().exec(function(err, users) {
-        cb(err, users);
-    })
+    User.find({username : new RegExp(username, 'i')}).limit(10).lean().exec(cb);
 };

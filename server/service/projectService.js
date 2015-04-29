@@ -182,6 +182,23 @@ exports.processUpdate = function(result, callback) {
 
 exports.getProjectDesc = function(projectId, userId, callback) {
     checkProject(projectId, userId, callback);
+};
+
+exports.getParentProject = function(board, userId, callback) {
+    var select = "name code collaborators leader startDate deadline";
+    async.waterfall([
+        function(callback) {
+            projectRepo.selectProject({_id: board.projectId}, select, callback);
+        },
+        function(project, callback) {
+            if(userInProject(project, userId)) userService.getUsersFromProject(project, callback);
+            else callback(new Error('You are not a member of this project.'));
+        }
+    ], callback);
+};
+
+function userInProject(project, userId) {
+    return project.leader == userId || project.collaborators.indexOf(userId) > -1;
 }
 
 function addCollab(projectId, users, callback) {
@@ -198,6 +215,7 @@ function checkProject(projectId, userId, callback) {
         }
     });
 }
+
 
 function isLeader(projectId, userId, callback) {
     projectRepo.findProjects({_id: projectId}, function(err, project) {
@@ -229,7 +247,7 @@ function getDefaultBoard(states, deadline, projectId) {
 function populateProject(project, callback) {
     async.parallel([
         function(callback) {
-            userService.getUsersFromProject(project.collaborators, project.leader, callback);
+            userService.getUsersFromProject(project, callback);
         },
         function(callback) {
             boardService.getBoards(project._id, function(err, boards) {
