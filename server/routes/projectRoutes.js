@@ -16,6 +16,7 @@ exports.registerRoutes = function(app) {
     app.del('/project/delete', deleteProject);
     app.put('/project/update', updateProject);
     app.put('/project/changeleader', changeLeader);
+    app.get('/project/members', getMembers);
 };
 
 function createProject(req, res, next) {
@@ -133,4 +134,21 @@ function changeLeader(req, res, next) {
         res.send(response);
     });
     next();
+}
+
+function getMembers(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            auth.verifyToken(req.token, callback)
+        },
+        function(userId, callback) {
+            projectService.getProject(req.params.projectId, userId, function(err, project) {
+                var members = project.collaborators;
+                members.push(project.leader);
+                callback(err, members)
+            });
+        }
+    ], function(err, members) {
+        res.send(errorHandler.handleResult(err, { members : members }, 'members fetched.'));
+    })
 }

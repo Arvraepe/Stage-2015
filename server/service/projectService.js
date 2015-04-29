@@ -197,6 +197,18 @@ exports.getParentProject = function(board, userId, callback) {
     ], callback);
 };
 
+exports.checkAuthority = function(board, userId, callback) {
+    async.waterfall([
+        function(callback) {
+            projectRepo.findProject({ _id: board.projectId }, callback);
+        },
+        function(project, callback) {
+            if(project.leader == userId || project.collaborators.indexOf(userId) > -1) callback(null, board);
+            else callback(new Error('You are not a member of the project, you cannot see any of it\'s components'));
+        }
+    ], callback)
+};
+
 function userInProject(project, userId) {
     return project.leader == userId || project.collaborators.indexOf(userId) > -1;
 }

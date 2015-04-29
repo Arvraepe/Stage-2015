@@ -5,6 +5,7 @@ var async = require('async');
 var taskRepo = require('./../repository/taskRepository');
 var validator = require('./../validator/taskValidator');
 var userService = require('./../service/userService');
+var boardService = require('./../service/boardService');
 
 exports.getTaskIdentifier = function (boards, callback) {
     var tasks = [];
@@ -48,6 +49,23 @@ exports.createTask = function(task, callback) {
     } else {
         taskRepo.create(task, callback);
     }
+};
+
+exports.getTask = function(taskId, userId, callback) {
+    async.waterfall([
+        function(callback) {
+            taskRepo.findTask(taskId, callback);
+        },
+        function(task, callback) {
+            boardService.checkAuthority(task, userId, callback);
+        },
+        function(boardStates, task, callback) {
+            userService.populateTask(task, function(err, pTask) {
+                callback(err, { task: pTask, boardStates: boardStates });
+            });
+        }
+    ], callback);
+
 };
 
 function getTasks(boardId, callback) {
