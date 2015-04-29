@@ -10,7 +10,9 @@
 angular.module('stageprojectApp')
   .controller('TaskCtrl', function ($scope, $routeParams, taskRequestFactory, projectRequestFactory) {
     $scope.task = {};
-    $scope.projectId = $routeParams.pid;
+    $scope.projectId = {
+      projectId:$routeParams.pid
+    };
     $scope.boardId = $routeParams.boardId;
     $scope.isCollapsed = true;
     var taskId = {
