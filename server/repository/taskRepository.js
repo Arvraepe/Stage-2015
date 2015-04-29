@@ -26,3 +26,7 @@ exports.create = function(task, callback) {
 exports.findTasks = function(condition, callback) {
     Task.find(condition).lean().exec(callback);
 };
+
+exports.findTask = function(condition, callback) {
+    Task.findOne(condition).lean().exec(callback);
+};

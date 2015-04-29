@@ -104,7 +104,7 @@ function deleteBoard(req, res, next) {
             }
         }
     ], function (err, result) {
-        result = errorHandler.handleResult(err, null, 'Board updated.');
+        result = errorHandler.handleResult(err, null, 'Board deleted.');
         res.send(result);
     });
 }

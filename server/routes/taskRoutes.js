@@ -12,6 +12,7 @@ var userService = require('./../service/userService');
 
 exports.registerRoutes = function(app) {
     app.post('/task/create', createTask);
+    app.get('/task', getTask);
 };
 
 function createTask(req, res, next) {
@@ -62,6 +63,19 @@ function createTask(req, res, next) {
     ], function(err, result) {
         result = errorHandler.handleMMResult(err, { task: result }, result.messages, 'A new task was created.');
         res.send(result);
+    })
+}
+
+function getTask(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            auth.verifyToken(req.params.token, callback);
+        },
+        function(userId, callback) {
+            taskService.getTask(req.params._id, userId, callback);
+        }
+    ], function(err, result) {
+        res.send(errorHandler.handleResult(err, result, 'Task fetched.'));
     })
 }
 
