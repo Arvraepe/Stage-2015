@@ -315,15 +315,15 @@ exports.findUser = function(condition, callback) {
     });
 };
 
-exports.sortResults = function(userId, myProjects, otherProjects, users, callback) {
+exports.sortResults = function(userId, projects, users, callback) {
     users.forEach(function (user, index, theUsers) {
         theUsers[index].value = 0;
-        myProjects.forEach(function (project) {
+        projects.myProjects.forEach(function (project) {
             if(project.collaborators.length > 0 && project.collaborators.indexOf(user._id > -1)) {
                 theUsers[index].value += 1;
             }
         });
-        otherProjects.forEach(function (project) {
+        projects.otherProjects.forEach(function (project) {
             if((project.collaborators.length > 0 && project.collaborators.indexOf(user._id > -1) || project.leader == user._id)) {
                 theUsers[index].value +=1;
             }

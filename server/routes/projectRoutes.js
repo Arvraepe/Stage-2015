@@ -131,7 +131,7 @@ function changeLeader(req, res, next) {
 function getMembers(req, res, next) {
     async.waterfall([
         function(callback) {
-            auth.verifyToken(req.token, callback)
+            auth.verifyToken(req.params.token, callback)
         },
         function(userId, callback) {
             projectService.getMembers(req.params.projectId, userId, callback);

@@ -20,17 +20,20 @@ function createBoard(req, res, next) {
         function (callback) {
             auth.verifyToken(req.params.token, callback)
         },
-        function (userId, callback) {
-            projectService.getProjectDesc(req.params.projectId, userId, function (err, project) {
-                callback(err, project, userId);
+        function(userId, callback) {
+            async.series([
+                function(callback) {
+                    projectService.getProjectAsLeader(req.params.projectId, userId, callback)
+                },
+                function(callback) {
+                    boardService.createBoard(req.params, function (err, result, messages) {
+                        var results = {result: result, messages: messages};
+                        callback(err, results)
+                    });
+                }
+            ], function(err, results) {
+                callback(err, results[1]);
             })
-        },
-        function (project, userId, callback) {
-            if (project.leader != userId) callback(new Error('You are not the leader of this project, you cannot create boards.'));
-            else boardService.createBoard(req.params, function (err, result, messages) {
-                var results = {result: result, messages: messages};
-                callback(err, results)
-            });
         }
     ], function (err, result) {
         result = errorHandler.handleMMResult(err, {board: result.result}, result.messages, 'The ' + result.result.name + ' board was created for your project.');

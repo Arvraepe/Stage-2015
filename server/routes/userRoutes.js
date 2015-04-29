@@ -148,22 +148,17 @@ function findLike(req, res, next) {
             auth.verifyToken(req.params.token, callback);
         },
         function(userId, callback) {
-            projectService.getMyProjects(userId, function (err, projects) {
+            projectService.getProjects(userId, function(err, projects) {
                 callback(err, userId, projects);
             });
         },
-        function (userId, myProjects, callback) {
-            projectService.getOtherProjects(userId, function (err, projects) {
-                callback(err, userId, myProjects, projects);
-            });
-        },
-        function (userId, myProjects, otherProjects, callback) {
+        function (userId, projects, callback) {
             userService.findALike(req.params.username, function(err, users) {
-                callback(err, userId, myProjects, otherProjects, users);
+                callback(err, userId, projects, users);
             });
         },
-        function (userId, myProjects, otherProjects, users, callback) {
-            userService.sortResults(userId, myProjects, otherProjects, users, callback);
+        function (userId, projects, users, callback) {
+            userService.sortResults(userId, projects, users, callback);
         }
     ], function(err, result) {
         var result = errorHandler.handleResult(err, {users : result}, 'Users fetched successfully.');
