@@ -30,3 +30,7 @@ exports.findTasks = function(condition, callback) {
 exports.findTask = function(condition, callback) {
     Task.findOne(condition).lean().exec(callback);
 };
+
+exports.findOneAndUpdate = function(condition, task, callback) {
+    Task.findOneAndUpdate(condition, task, callback);
+};

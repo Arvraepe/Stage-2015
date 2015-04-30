@@ -35,3 +35,7 @@ exports.findBoard = function (condition, callback) {
 exports.selectBoards = function(condition, select, callback) {
     Board.find(condition).select(select).lean().exec(callback);
 };
+
+exports.selectBoard = function(condition, select, callback) {
+    Board.findOne(condition).select(select).lean().exec(callback);
+};
