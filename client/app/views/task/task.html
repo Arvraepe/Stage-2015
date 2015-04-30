@@ -6,21 +6,24 @@
 </ol>
 
 <div class="col-md-9 noPaddingLeft">
-  <h2>{{task.title|capitalize}} <button type="button" ng-click="openEditTaskModal()" class="btn btn-primary btn-sm"><i class="fa fa-pencil"> Edit</i></button></h2>
+  <h2>Task: {{task.title|capitalize}} <button type="button" ng-click="openEditTaskModal()" class="btn btn-primary btn-sm"><i class="fa fa-pencil"> Edit</i></button></h2>
   <div>
     <h4>
       <span>Description</span>
     </h4>
     {{task.description}}
-    <hr/>
   </div>
 
   <div ng-if="task.comments.length > 0">
     <h4>
       <span>Comments</span>
     </h4>
-    <div ta-bind ng-repeat="comment in task.comments | limitTo:5">
-      {{comment}}
+    <div ng-repeat="comment in task.comments | limitTo:5">
+      <div  class="comment">
+        <div style="font-weight: bold;"><img ng-src="{{comment.user.imageUrl}}" alt="profilepic" class="smallerAvatar"> {{comment.user.firstname}} {{comment.user.lastname}}</div>
+        <div>{{comment.timeStamp|date:'medium'}}</div>
+        <div ta-bind ng-model="comment.comment">{{comment.comment}}</div>
+      </div>
     </div>
     <hr/>
   </div>

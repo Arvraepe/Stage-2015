@@ -125,17 +125,31 @@ angular.module('stageprojectApp')
     $scope.taskSortOptions = {
       itemMoved:function(event){
         event.source.itemScope.modelValue.state = event.dest.sortableScope.$parent.state.name;
-        var task = {};
-        task._id =event.source.itemScope.modelValue._id;
+        var task = {
+          task:{
+            _id : event.source.itemScope.modelValue._id,
+            state : event.source.itemScope.modelValue.state,
+            assignee : event.source.itemScope.modelValue.assignee._id,
+            creator : event.source.itemScope.modelValue.creator._id,
+            title : event.source.itemScope.modelValue.title,
+            description:event.source.itemScope.modelValue.description
+          }
+        };
+        /*task._id =event.source.itemScope.modelValue._id;
         task.state = event.source.itemScope.modelValue.state;
-
+        task.assignee = event.source.itemScope.modelValue.assignee._id;
+        task.creator = event.source.itemScope.modelValue.creator._id;*/
         console.log(event);
         taskRequestFactory.changeState({
           data: task,
           success:function(response){
             //event.source.itemScope.modelValue = response.data;
             //taken opnieuw tekenen
-
+            angular.forEach($scope.board.tasks, function (task, index, array) {
+              if(task._id === response.data.task._id){
+                array[index] = response.data.task;
+              }
+            })
           },
           error: function(error){
             console.log(error);

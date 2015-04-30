@@ -27,3 +27,11 @@ h4:before {
 h4:before {
   left: 0;
 }
+
+.comment{
+  background-color: #f8f8f8;
+  border:solid #e7e7e7 1px;
+  border-radius: 5px;
+  padding-top: 25px;
+  margin-bottom:30px;
+}

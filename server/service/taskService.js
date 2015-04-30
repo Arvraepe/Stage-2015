@@ -94,7 +94,10 @@ exports.createTask = function (task, userId, callback) {
 
 exports.postComment = function(taskId, userId, comment, callback) {
     async.waterfall([
-        function(callback) {
+        function (callback) {
+          taskRepo.findTask({_id:taskId},callback);
+        },
+        function(task, callback) {
             boardService.checkAuthority(task, userId, callback)
         },
         function(authorized, callback) {
@@ -107,7 +110,7 @@ exports.postComment = function(taskId, userId, comment, callback) {
 exports.getTask = function (taskId, userId, callback) {
     async.waterfall([
         function (callback) {
-            taskRepo.findTask(taskId, callback);
+            taskRepo.findTask({ _id:taskId}, callback);
         },
         function (task, callback) {
             boardService.checkAuthority(task, userId, function(err, authorized) {
@@ -153,15 +156,7 @@ function createComment(taskId, userId, comment, callback) {
         comment: comment,
         timeStamp: new Date()
     };
-    async.waterfall([
-        function(callback) {
-            taskRepo.findTask({ _id: taskId }, callback)
-        },
-        function(task, callback) {
-            task.comments.push(comment);
-            taskRepo.findOneAndUpdate({ _id: taskId }, task, callback);
-        }
-    ], function(err, task) {
+    taskRepo.addComment(taskId, comment, function(err) {
         callback(err, comment);
     });
 }

@@ -50,7 +50,7 @@ function postComment(req, res, next) {
             taskService.postComment(req.params._id, userId, req.params.comment, callback);
         }
     ], function(err, result) {
-        res.send(errorHandler.handleResult(err, result, 'Comment added to task.'));
+        res.send(errorHandler.handleResult(err, {comment:result}, 'Comment added to task.'));
     })
 }
 
