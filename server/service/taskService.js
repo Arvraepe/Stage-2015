@@ -100,6 +100,9 @@ exports.postComment = function(taskId, userId, comment, callback) {
         function(authorized, callback) {
             if(!authorized) callback(new Error('You are not a member of this project, you can\'t comment on it'));
             else createComment(taskId, userId, comment, callback);
+        },
+        function(comment, callback) {
+            userService.populateComment(comment, callback);
         }
     ], callback);
 };

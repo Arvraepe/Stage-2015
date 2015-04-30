@@ -10,7 +10,7 @@ var fileHandler = require('./../handler/fileHandler');
 var uuid = require('node-uuid');
 var validator = require('./../validator/userValidator');
 var async = require('async');
-var config  = require('./../config.json');
+var config = require('./../config.json');
 
 
 /**
@@ -22,16 +22,16 @@ exports.registerUser = function (user, callback) {
     var messages = validator.validateRegistration(user);
     if (messages.length === 0) {
         async.series([
-            function(callback) {
+            function (callback) {
                 async.parallel([
-                    function(callback) {
+                    function (callback) {
                         userRepo.userExists({username: new RegExp(user.username, 'i')}, callback);
                     },
-                    function(callback) {
-                        userRepo.userExists({email : new RegExp(user.email, 'i')}, callback);
+                    function (callback) {
+                        userRepo.userExists({email: new RegExp(user.email, 'i')}, callback);
                     }
-                ], function(err, results) { // results will always be an array of 2 booleans.
-                    if(results[0] || results[1]) {
+                ], function (err, results) { // results will always be an array of 2 booleans.
+                    if (results[0] || results[1]) {
                         var message = results[0] ? 'Username already exists.' : 'A user has already registered using this email.';
                         callback(new Error(message));
                     } else callback();
@@ -57,7 +57,7 @@ exports.registerUser = function (user, callback) {
  * @param callback = function(err, token, user) token is a json web token for session management, user is a user object who is now logged in.
  */
 exports.loginUser = function (credentials, callback) {
-    userRepo.findUser({username : credentials.username}, function (err, user) {
+    userRepo.findUser({username: credentials.username}, function (err, user) {
         if (user != null && validateUser(credentials.password, user.salt, user.password)) {
             var token = authService.issueToken(user._id);
             callback(null, token, filterUser(user));
@@ -79,12 +79,12 @@ exports.updateUser = function (params, calback) {
         authService.verifyToken(params.token, function (err, decoded) {
             if (err) calback(err);
             userRepo.findUserById(decoded, function (err, user) {
-                userRepo.userExists({email : params.email}, function(err, exists) {
-                    if(user.email == params.email) {
+                userRepo.userExists({email: params.email}, function (err, exists) {
+                    if (user.email == params.email) {
                         exists = false;
                     }
                     if (err) calback(err);
-                    if(exists) {
+                    if (exists) {
                         calback(new Error('A user has already registered using this email.'));
                     } else {
                         if (params.newPassword != undefined) {
@@ -142,33 +142,10 @@ exports.getUserFromToken = function (token, callback) {
     })
 };
 
-//exports.changePassword = function (params, callback) {
-//    if(validator.validateChangedPassword(params.password)) {
-//        authService.verifyToken(params.token, function (err, decoded) {
-//            if (err) callback(err);
-//            userRepo.findUserById(decoded, function (err, user) {
-//                if (user != null && !err && validateUser(params.oldPassword, user.salt, user.password)) {
-//                    var encryptedPassword = encryptPassword(params.newPassword, user.salt);
-//                    userRepo.findOneAndUpdate(decoded, {password: encryptedPassword}, callback);
-//                    callback();
-//                } else {
-//                    if (err) {
-//                        callback(err)
-//                    } else {
-//                        callback(new Error('The password you provided was wrong!'));
-//                    }
-//                }
-//            });
-//        });
-//    } else {
-//        callback(new Error('The provided password is not valid.'));
-//    }
-//};
-
 exports.resetPassword = function (params, callback) {
     userRepo.findUserByEmail(params.email, function (err, user) {
         if (err) callback(err);
-        if(user == null) {
+        if (user == null) {
             callback(new Error('There is no user registered with that email'));
         } else {
             var tomorrow = new Date();
@@ -247,28 +224,28 @@ exports.confirmEmails = function (emails, callback) {
 exports.findCollaborators = function (users, callback) {
     var tasks = [];
     users.forEach(function (entry) {
-        if(entry.indexOf("@") > -1) {
-            tasks.push(function(cb) {
+        if (entry.indexOf("@") > -1) {
+            tasks.push(function (cb) {
                 userRepo.findUserByEmail(entry, cb);
             });
         } else {
-            tasks.push(function(cb) {
-                userRepo.findUser({username : entry}, cb);
+            tasks.push(function (cb) {
+                userRepo.findUser({username: entry}, cb);
             });
         }
     });
-    async.parallel(tasks, function(err, results) {
+    async.parallel(tasks, function (err, results) {
         var counter = 0;
         var result = [];
         results.forEach(function (entry) {
             if (entry == null) {
-                if(users[counter].indexOf("@") > -1) {
-                    result.push({exists : false, email: users[counter]});
+                if (users[counter].indexOf("@") > -1) {
+                    result.push({exists: false, email: users[counter]});
                 } else {
-                    result.push({exists : false, message: users[counter] + ' does not exist'});
+                    result.push({exists: false, message: users[counter] + ' does not exist'});
                 }
             } else {
-                result.push({exists : true, user: entry});
+                result.push({exists: true, user: entry});
             }
             counter++;
         });
@@ -276,9 +253,9 @@ exports.findCollaborators = function (users, callback) {
     });
 };
 
-exports.findALike = function(username, callback) {
-    if(username.length>=2) {
-        userRepo.findLike(username, function(err, users) {
+exports.findALike = function (username, callback) {
+    if (username.length >= 2) {
+        userRepo.findLike(username, function (err, users) {
             callback(err, filterUsers(users));
         });
     } else {
@@ -286,19 +263,19 @@ exports.findALike = function(username, callback) {
     }
 };
 
-exports.getUsersFromProject = function(project, callback) {
+exports.getUsersFromProject = function (project, callback) {
     var select = '_id username firstname lastname imageUrl';
     var tasks = [
-        function(cb) {
-            userRepo.selectUser({ _id : project.leader }, select,  cb)
+        function (cb) {
+            userRepo.selectUser({_id: project.leader}, select, cb)
         }
     ];
     project.collaborators.forEach(function (entry) {
         tasks.push(function (cb) {
-            userRepo.selectUser({_id : entry}, select, cb);
+            userRepo.selectUser({_id: entry}, select, cb);
         });
     });
-    async.parallel(tasks, function(err, results) {
+    async.parallel(tasks, function (err, results) {
         var leader = results.shift();
         project.leader = filterName(leader);
         project.collaborators = [];
@@ -309,36 +286,36 @@ exports.getUsersFromProject = function(project, callback) {
     })
 };
 
-exports.findUser = function(condition, callback) {
-    userRepo.findUser(condition, function(err, user) {
+exports.findUser = function (condition, callback) {
+    userRepo.findUser(condition, function (err, user) {
         callback(err, filterUser(user));
     });
 };
 
-exports.sortResults = function(userId, projects, users, callback) {
+exports.sortResults = function (userId, projects, users, callback) {
     users.forEach(function (user, index, theUsers) {
         theUsers[index].value = 0;
         projects.myProjects.forEach(function (project) {
-            if(project.collaborators.length > 0 && project.collaborators.indexOf(user._id > -1)) {
+            if (project.collaborators.length > 0 && project.collaborators.indexOf(user._id > -1)) {
                 theUsers[index].value += 1;
             }
         });
         projects.otherProjects.forEach(function (project) {
-            if((project.collaborators.length > 0 && project.collaborators.indexOf(user._id > -1) || project.leader == user._id)) {
-                theUsers[index].value +=1;
+            if ((project.collaborators.length > 0 && project.collaborators.indexOf(user._id > -1) || project.leader == user._id)) {
+                theUsers[index].value += 1;
             }
         })
     });
-    async.sortBy(users, function(item, callback) {
+    async.sortBy(users, function (item, callback) {
         callback(null, item.value);
-    }, function(err, result) {
+    }, function (err, result) {
         callback(err, result);
     });
 };
 
-exports.populateTasks = function(tasks, callback) {
+exports.populateTasks = function (tasks, callback) {
     var taskArray = [];
-    tasks.forEach(function(task) {
+    tasks.forEach(function (task) {
         taskArray.push(
             function (callback) {
                 populateTask(task, callback);
@@ -348,24 +325,50 @@ exports.populateTasks = function(tasks, callback) {
     async.parallel(taskArray, callback);
 };
 
-exports.populateTask = function(task, callback) {
+exports.populateTask = function (task, callback) {
     populateTask(task, callback);
 };
+
+exports.populateComment = function(comment, callback) {
+    populateComment(comment, callback);
+};
+
+function populateComment(comment, callback) {
+    var select = '_id username firstname lastname imageUrl';
+    userRepo.selectUser({_id: comment.userId}, select, function(err, user) {
+        comment.user = user;
+        callback(err, _.omit(comment, 'userId'));
+    });
+}
 
 function populateTask(task, callback) {
     var select = '_id username firstname lastname imageUrl';
     async.parallel([
-        function(callback) {
-            userRepo.selectUser({ _id: task.creator }, select, callback);
+        function (callback) {
+            userRepo.selectUser({_id: task.creator}, select, callback);
+        },
+        function (callback) {
+            userRepo.selectUser({_id: task.assignee}, select, callback);
         },
         function(callback) {
-            userRepo.selectUser({ _id: task.assignee }, select, callback);
+            populateComments(task.comments, callback);
         }
-    ], function(err, results) {
+    ], function (err, results) {
         task.creator = results[0];
         task.assignee = results[1];
+        task.comments = results[2];
         callback(err, task);
     })
+}
+
+function populateComments(comments, callback) {
+    var tasks = [];
+    comments.forEach(function(comment) {
+        tasks.push(function(callback) {
+            populateComment(comment, callback);
+        })
+    });
+    async.parallel(tasks, callback);
 }
 
 function filterName(user) {
