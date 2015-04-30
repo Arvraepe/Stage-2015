@@ -20,7 +20,7 @@ exports.createBoard = function (params, callback) {
 };
 
 exports.getBoards = function (projectId, callback) {
-    var select = 'name deadline states';
+    var select = 'name deadline states projectId';
     boardRepo.selectBoards({projectId: projectId}, select, callback);
 };
 
@@ -53,9 +53,14 @@ exports.checkAuthority = function(task, userId, callback) {
         function(board, callback) {
             projectService.checkAuthority(board, userId, callback);
         }
-    ], function(err, board) {
-        callback(err, board.states, task);
+    ], function(err, authorized) {
+        callback(err, authorized);
     });
+};
+
+exports.getStates = function(boardId, callback) {
+    var select = "states";
+    boardRepo.selectBoard({ _id: boardId }, select, callback);
 };
 
 function getBoard(boardId, callback) {
