@@ -21,7 +21,8 @@ var app = angular.module('stageprojectApp', [
   'ui.select',
   'ngSanitize',
   'ui.sortable',
-  'angularMoment'
+  'angularMoment',
+  'textAngular'
 ]);
 
 app.config(function ($routeProvider, $locationProvider, USERROLES) {
@@ -100,6 +101,22 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
 
 app.config(function(uiSelectConfig) {
   uiSelectConfig.theme = 'bootstrap';
+});
+
+app.config(function($provide){
+  $provide.decorator('taOptions', ['taRegisterTool', '$delegate', function(taRegisterTool, taOptions){
+    // $delegate is the taOptions we are decorating
+    // register the tool with textAngular
+    taRegisterTool('usernameFind', {
+      iconclass: "fa fa-male red",
+      action: function(){
+        this.$editor().wrapSelection('forecolor', 'red');
+      }
+    });
+    // add the button to the default toolbar definition
+    taOptions.toolbar[1].push('usernameFind');
+    return taOptions;
+  }]);
 });
 
 

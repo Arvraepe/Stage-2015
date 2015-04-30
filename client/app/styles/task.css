@@ -1,0 +1,29 @@
+.toolbar {
+  margin: 12px 0;
+}
+
+h4 {
+  position: relative;
+
+}
+
+h4 span {
+  background: #fff;
+  padding-left:0;
+  padding-right:15px;
+  position: relative;
+  z-index: 1;
+}
+
+h4:before {
+  background: #eee;
+  content: "";
+  display: block;
+  height: 1px;
+  position: absolute;
+  top: 50%;
+  width: 100%;
+}
+h4:before {
+  left: 0;
+}

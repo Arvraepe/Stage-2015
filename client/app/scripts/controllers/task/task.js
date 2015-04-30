@@ -8,7 +8,7 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('TaskCtrl', function ($scope, $routeParams, taskRequestFactory, projectRequestFactory) {
+  .controller('TaskCtrl', function ($scope, $routeParams, taskRequestFactory, projectRequestFactory, editorFactory) {
     $scope.task = {};
     $scope.projectId = {
       projectId:$routeParams.pid
@@ -24,11 +24,8 @@ angular.module('stageprojectApp')
         params: taskId,
         success: function (response) {
           $scope.task = response.data.task;
-          var projectId= {
-            projectId: $routeParams.pid
-          };
           projectRequestFactory.getCollaboratorsForProject({
-            params: projectId,
+            params: $scope.projectId,
             success:function(response){
               $scope.collaborators = response.data.members;
             },
@@ -43,19 +40,26 @@ angular.module('stageprojectApp')
       })
     };
 
-    $scope.makeComment = function(comment){
-      var commentInfo = angular.copy(taskId);
-      commentInfo.comment = comment;
+    $scope.createComment = function(comment){
+      taskId.comment = comment;
      taskRequestFactory.createComment({
-       data: commentInfo,
+       data: taskId,
        success:function(response){
-
+         $scope.task.comments.push(response.data.comment);
+         taskId = {
+           _id : $routeParams.taskId
+         };
        },
        error: function(error){
-
+          console.log(error);
        }
      })
-    }
+    };
+
+    $scope.createStyle = function (sort, inputField) {
+      editorFactory.createStyle(sort, inputField);
+    };
+    $scope.comment='';
 
 
   });

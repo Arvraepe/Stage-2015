@@ -9,6 +9,8 @@
   <!-- build:css(.) styles/vendor.css -->
   <!-- bower:css -->
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap-css-only/css/bootstrap.css" />
+  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
   <!-- endbower -->
   <!-- endbuild -->
   <!-- build:css(.tmp) styles/main.css -->
@@ -17,6 +19,8 @@
   <link rel="stylesheet" href="styles/whhg.css">
   <link rel="stylesheet" href="styles/board.css">
   <link rel="stylesheet" href="styles/dashboard.css">
+  <link rel="stylesheet" href="styles/task.css">
+  <link rel='stylesheet' href='bower_components/textAngular/src/textAngular.css'>
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="bower_components/pnotify/pnotify.core.css">
   <link rel="stylesheet" href="bower_components/pnotify/pnotify.buttons.css">
@@ -143,6 +147,13 @@
 <script src="bower_components/angular-route/angular-route.js"></script>
 <script src="bower_components/angular-touch/angular-touch.js"></script>
 <script src="bower_components/angular-moment/angular-moment.js"></script>
+<script src="bower_components/rangy/rangy-core.min.js"></script>
+<script src="bower_components/rangy/rangy-cssclassapplier.min.js"></script>
+<script src="bower_components/rangy/rangy-selectionsaverestore.min.js"></script>
+<script src="bower_components/rangy/rangy-serializer.min.js"></script>
+<script src="bower_components/textAngular/src/textAngular.js"></script>
+<script src="bower_components/textAngular/src/textAngular-sanitize.js"></script>
+<script src="bower_components/textAngular/src/textAngularSetup.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
 <script src="bower_components/pnotify/pnotify.core.js"></script>
@@ -159,7 +170,9 @@
 <script src="bower_components/ng-sortable/dist/ng-sortable.js"></script>
 <script src="bower_components/moment/moment.js"></script>
 <script src="bower_components/angular-moment/angular-moment.min.js"></script>
-
+<script src='bower_components/textAngular/dist/textAngular-rangy.min.js'></script>
+<script src='bower_components/textAngular/dist/textAngular-sanitize.min.js'></script>
+<script src='bower_components/textAngular/dist/textAngular.min.js'></script>
 <!-- build:js({.tmp,app}) scripts/scripts.js -->
 <script src="scripts/app.js"></script>
 <script src="scripts/controllers/main.js"></script>
@@ -205,6 +218,9 @@
 <script src="scripts/services/requests/taskrequestfactory.js"></script>
 <script src="scripts/controllers/task/task.js"></script>
 <script src="scripts/controllers/deleteproject.js"></script>
+<script src="scripts/services/editorfactory.js"></script>
+<script src="scripts/directives/commentform.js"></script>
+<script src="scripts/directives/commenttoolbar.js"></script>
 <!-- endbuild -->
 </body>
 </html>

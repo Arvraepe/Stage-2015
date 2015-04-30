@@ -29,6 +29,13 @@ module.exports = function(config) {
       'app/bower_components/ng-sortable/dist/ng-sortable.js',
       'app/bower_components/moment/moment.js',
       'app/bower_components/angular-moment/angular-moment.js',
+      'app/bower_components/rangy/rangy-core.min.js',
+      'app/bower_components/rangy/rangy-cssclassapplier.min.js',
+      'app/bower_components/rangy/rangy-selectionsaverestore.min.js',
+      'app/bower_components/rangy/rangy-serializer.min.js',
+      'app/bower_components/textAngular/src/textAngular.js',
+      'app/bower_components/textAngular/src/textAngular-sanitize.js',
+      'app/bower_components/textAngular/src/textAngularSetup.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

@@ -8,7 +8,7 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('BoardCtrl', function ($scope, $routeParams, boardRequestFactory,$modal) {
+  .controller('BoardCtrl', function ($scope, $routeParams, boardRequestFactory,$modal, taskRequestFactory) {
     $scope.board = {};
     $scope.amountOfStates = 0;
     $scope.columnWidth = 0;
@@ -124,7 +124,23 @@ angular.module('stageprojectApp')
 
     $scope.taskSortOptions = {
       itemMoved:function(event){
-        event.source.itemScope.modelValue.status = event.dest.sortableScope.$parent.column.name;
+        event.source.itemScope.modelValue.state = event.dest.sortableScope.$parent.state.name;
+        var task = {};
+        task._id =event.source.itemScope.modelValue._id;
+        task.state = event.source.itemScope.modelValue.state;
+
+        console.log(event);
+        taskRequestFactory.changeState({
+          data: task,
+          success:function(response){
+            //event.source.itemScope.modelValue = response.data;
+            //taken opnieuw tekenen
+
+          },
+          error: function(error){
+            console.log(error);
+          }
+        })
       },
       orderChanged: function(event){
 
