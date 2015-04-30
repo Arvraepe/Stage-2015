@@ -130,6 +130,23 @@ exports.getTask = function (taskId, userId, callback) {
     ], callback);
 };
 
+exports.updateTask = function(task, userId, callback) {
+    if(task.creator == userId || task.assignee == userId) {
+        var messages = validator.validateNewTask(task);
+        if(messages.length > 0) callback(messages);
+        else {
+            async.waterfall([
+                function(callback) {
+                    taskRepo.findOneAndUpdate({ _id: task._id }, task, callback);
+                },
+                function (task, callback) {
+                    userService.populateTask(task, callback);
+                }
+            ], callback)
+        }
+    } else callback(new Error('You can not edit this task.'));
+};
+
 function createComment(taskId, userId, comment, callback) {
     var comment = {
         userId: userId,

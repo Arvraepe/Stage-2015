@@ -32,5 +32,5 @@ exports.findTask = function(condition, callback) {
 };
 
 exports.findOneAndUpdate = function(condition, task, callback) {
-    Task.findOneAndUpdate(condition, task, callback);
+    Task.findOneAndUpdate(condition, { new : true }, task, callback);
 };

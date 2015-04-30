@@ -4,16 +4,14 @@
 var async = require('async');
 var auth = require('./../service/authenticationService');
 var validator = require('./../validator/taskValidator');
-var boardService = require('./../service/boardService');
-var projectService = require('./../service/projectService');
 var taskService = require('./../service/taskService');
 var errorHandler = require('./../response/errorHandler');
-var userService = require('./../service/userService');
 
 exports.registerRoutes = function(app) {
     app.post('/task/create', createTask);
     app.get('/task', getTask);
     app.post('/task/comment', postComment);
+    app.put('/task', updateTask);
 };
 
 function createTask(req, res, next) {
@@ -53,5 +51,18 @@ function postComment(req, res, next) {
         }
     ], function(err, result) {
         res.send(errorHandler.handleResult(err, result, 'Comment added to task.'));
+    })
+}
+
+function updateTask(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            auth.verifyToken(req.params.token, callback)
+        },
+        function(userId, callback) {
+            taskService.updateTask(req.params.task, userId, callback);
+        }
+    ], function(err, task) {
+        res.send(errorHandler.handleResult(err, { task: task }, 'Task updated.'));
     })
 }
