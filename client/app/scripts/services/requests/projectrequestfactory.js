@@ -76,7 +76,7 @@ angular.module('stageprojectApp')
       },
       getCollaboratorsForProject : function(config){
         requestFactory.sendRequest({
-          path:'project/members',
+          path:'project/membersDesc',
           method:'GET',
           params:config.params,
           success:config.success,
