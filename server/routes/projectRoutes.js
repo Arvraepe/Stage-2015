@@ -7,7 +7,6 @@ var projectService = require('./../service/projectService');
 var errorHandler = require('./../response/errorHandler');
 var userService = require('./../service/userService');
 var auth = require('./../service/authenticationService');
-var boardService = require('./../service/boardService');
 
 exports.registerRoutes = function(app) {
     app.post('/project/create', createProject);

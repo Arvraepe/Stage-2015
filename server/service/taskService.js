@@ -31,7 +31,7 @@ function getTaskIdentifier (boards, callback) {
     });
 }
 
-exports.getTasks = function (board, callback) {
+exports.populateBoard = function (board, callback) {
     async.waterfall([
         function (callback) {
             taskRepo.findTasks({boardId: board._id}, callback);
@@ -39,7 +39,10 @@ exports.getTasks = function (board, callback) {
         function (tasks, callback) {
             userService.populateTasks(tasks, callback)
         }
-    ], callback)
+    ], function(err, result) {
+        board.tasks = result;
+        callback(err, board);
+    })
 
 };
 
@@ -61,7 +64,7 @@ exports.createTask = function (task, userId, callback) {
             function (authorized, callback) {
                 if (!authorized[0]) callback(new Error('You are not a member of this project, you cannot create tasks.'));
                 else if (!authorized[1]) callback(new Error('Assignee must be a member of the project'));
-                else boardService.getBoard(task.boardId, callback);
+                else boardService.getBoardById(task.boardId, callback);
             },
             function (board, callback) {
                 task.creator = userId;

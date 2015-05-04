@@ -4,6 +4,7 @@
 var boardRepo = require('./../repository/boardRepository');
 var validator = require('./../validator/projectValidator');
 var projectService = require('./projectService');
+var taskService = require('./taskService');
 var async = require('async');
 
 exports.createBoard = function (params, userId, callback) {
@@ -33,8 +34,21 @@ exports.getBoards = function (projectId, callback) {
     boardRepo.selectBoards({projectId: projectId}, select, callback);
 };
 
-exports.getBoard = function (boardId, callback) {
-    getBoard(boardId, callback);
+exports.getBoard = function (boardId,userId,  callback) {
+    async.waterfall([
+        function(callback) {
+            getBoard(boardId, callback);
+        },
+        function(board, callback) {
+            projectService.getParentProject(board, userId, function(err, project) {
+                board.parentProject = project;
+                callback(err, board);
+            })
+        },
+        function(board, callback) {
+            taskService.populateBoard(board, callback);
+        }
+    ], callback)
 };
 
 exports.convertStates = function(boards) {
@@ -70,6 +84,10 @@ exports.checkAuthority = function(task, userId, callback) {
 exports.getStates = function(boardId, callback) {
     var select = "states";
     boardRepo.selectBoard({ _id: boardId }, select, callback);
+};
+
+exports.getBoardById = function(boardId, callback) {
+    boardRepo.findBoard({ _id: boardId }, callback);
 };
 
 function getBoard(boardId, callback) {

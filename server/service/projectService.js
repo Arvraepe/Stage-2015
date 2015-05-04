@@ -238,8 +238,7 @@ function addCollab(projectId, users, callback) {
 
 function checkProject(projectId, userId, callback) {
     projectRepo.findProject({_id: projectId}, function (err, project) {
-        var project = project;
-        if (project.leader == userId || project.collaborators.indexOf(userId) > -1) {
+        if (userInProject(project, userId)) {
             callback(err, project);
         } else {
             callback(new Error('You have no rights to see this project.'));
