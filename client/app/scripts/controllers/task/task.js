@@ -13,6 +13,9 @@ angular.module('stageprojectApp')
     $scope.projectId = {
       projectId:$routeParams.pid
     };
+    $scope.isCreator = function(){
+      return $scope.task.creator._id ===$scope.$parent.currentUser._id;
+    };
     $scope.boardId = $routeParams.boardId;
     $scope.isCollapsed = true;
     var taskId = {

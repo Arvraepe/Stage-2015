@@ -32,6 +32,32 @@ h4:before {
   background-color: #f8f8f8;
   border:solid #e7e7e7 1px;
   border-radius: 5px;
-  padding-top: 25px;
+  padding-top: 20px;
+  padding-left:20px;
+  padding-right:20px;
   margin-bottom:30px;
+}
+
+.ta-toolbar{
+  margin-bottom:20px;
+}
+
+.commentHeader{
+  font-weight:bold;
+  padding-bottom:12px;
+  border-bottom: solid 1px #e5e5e5;
+}
+
+.commentBody{
+  padding-top:15px;
+  padding-bottom:10px;
+}
+
+.commentDate {
+  font-weight:normal;
+}
+
+.taskDescription{
+  padding: 20px 0;
+  font-size: 17px;
 }

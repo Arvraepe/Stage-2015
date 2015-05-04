@@ -1,0 +1,26 @@
+<div class="modal-header" data-ng-init="getTasks()">
+  <h3 class="modal-title">Link a task</h3>
+</div>
+<form class="form-horizontal" name="selectCollaboratorForm">
+  <div class="modal-body">
+    <div class="form-group">
+      <label class="col-md-3 control-label">Task</label>
+
+      <div class="col-md-9">
+        <ui-select tagging multiple theme="bootstrap" tagging-label="false" tagging-tokens=",|ENTER|TAB"
+                   ng-model="selectedTask.task" ng-disabled="disabled" title="Select a collaborator"
+                   search-enabled="true" >
+          <ui-select-match placeholder="Collaborator">{{$item}}</ui-select-match>
+          <ui-select-choices repeat="collab in tasks">
+            {{task.title}}
+          </ui-select-choices>
+        </ui-select>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="returnTask()">Promote!</button>
+    <button type="button" class="btn btn-warning" ng-click="cancel()">Cancel</button>
+  </div>
+</form>

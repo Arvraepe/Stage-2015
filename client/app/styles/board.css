@@ -53,5 +53,9 @@
 }
 
 .deadlineClose{
-    color: #555;
+  color: #555;
+}
+
+h3, .boardTitles{
+  font-size: 18px
 }

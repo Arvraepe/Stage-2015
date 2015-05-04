@@ -82,6 +82,15 @@ angular.module('stageprojectApp')
           success:config.success,
           error:config.error
         })
+      },
+      getTasks : function(config){
+        requestFactory.sendRequest({
+          path:'tasks',
+          method:'GET',
+          params:config.params,
+          success:config.success,
+          error:config.error
+        })
       }
     }
 

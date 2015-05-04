@@ -103,13 +103,35 @@ app.config(function(uiSelectConfig) {
   uiSelectConfig.theme = 'bootstrap';
 });
 
-app.config(function($provide){
+/*app.config(function($provide, $modal){
   $provide.decorator('taOptions', ['taRegisterTool', '$delegate', function(taRegisterTool, taOptions){
     // $delegate is the taOptions we are decorating
     // register the tool with textAngular
     taRegisterTool('usernameFind', {
       iconclass: "fa fa-male red",
       action: function(){
+          var modalInstance = $modal.open({
+            templateUrl: 'views/project/projecttasks.html',
+            controller: 'ProjectUsersCtrl',
+            size: size,
+            resolve:{
+              board: function(){
+                return $scope.board;
+              }
+            }
+          });
+          modalInstance.result.then(function (task) {
+            //$scope.board.states[0].tasks.push(task);
+            addTaskToState(task);
+          }, function () {
+          });
+
+
+
+
+
+
+
         this.$editor().wrapSelection('forecolor', 'red');
       }
     });
@@ -117,7 +139,7 @@ app.config(function($provide){
     taOptions.toolbar[1].push('usernameFind');
     return taOptions;
   }]);
-});
+});*/
 
 
 app.run(function ($rootScope, $location, AUTHEVENTS, AuthService, userFactory, Session, localStorageService, loginFactory) {
