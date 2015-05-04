@@ -196,8 +196,8 @@ exports.getParentProject = function (board, userId, callback) {
     ], callback);
 };
 
-exports.checkAuthority = function (board, userId, callback) {
-    projectRepo.findProject({_id: board.projectId}, function (err, project) {
+exports.checkAuthority = function (projectId, userId, callback) {
+    projectRepo.findProject({_id: projectId}, function (err, project) {
         callback(err, userInProject(project, userId));
     });
 };

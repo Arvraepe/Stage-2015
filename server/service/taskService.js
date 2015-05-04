@@ -150,6 +150,19 @@ exports.updateTask = function(task, userId, callback) {
     } else callback(new Error('You can not edit this task.'));
 };
 
+exports.getTasks = function(projectId, userId, callback) {
+    async.waterfall([
+        function(callback) {
+            projectService.checkAuthority(projectId, userId, callback)
+        },
+        function(authorized, callback) {
+            if(authorized) {
+                taskRepo.findTasks({ projectId: projectId }, callback);
+            }
+        }
+    ], callback)
+};
+
 function createComment(taskId, userId, comment, callback) {
     var comment = {
         userId: userId,

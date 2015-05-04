@@ -60,7 +60,7 @@ exports.checkAuthority = function(task, userId, callback) {
             boardRepo.findBoard({ _id: task.boardId }, callback)
         },
         function(board, callback) {
-            projectService.checkAuthority(board, userId, callback);
+            projectService.checkAuthority(board.projectId, userId, callback);
         }
     ], function(err, authorized) {
         callback(err, authorized);
