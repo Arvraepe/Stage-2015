@@ -8,7 +8,7 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('TaskCtrl', function ($scope, $routeParams, taskRequestFactory, projectRequestFactory, editorFactory) {
+  .controller('TaskCtrl', function ($scope, $routeParams, taskRequestFactory, projectRequestFactory) {
     $scope.task = {};
     $scope.projectId = {
       projectId:$routeParams.pid

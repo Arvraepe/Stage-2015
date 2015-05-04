@@ -31,19 +31,11 @@ function createBoard(req, res, next) {
 
 function getBoard(req, res, next) {
     async.waterfall([
-        function (callback) {
-            async.parallel([
-                function (callback) {
-                    boardService.getBoard(req.params.boardId, callback);
-                },
-                function (callback) {
-                    auth.verifyToken(req.params.token, callback)
-                }
-            ], callback);
+        function(callback) {
+            auth.verifyToken(req.params.token, callback);
         },
-        function(results, callback) {
-            var board = results[0], userId = results[1];
-            populateBoard(board, userId, callback);
+        function(userId, callback) {
+            boardService.getBoard(req.params.boardId, userId, callback);
         }
     ], function(err, board) {
         var result = errorHandler.handleResult(err, { board: board }, 'Board fetched.');
