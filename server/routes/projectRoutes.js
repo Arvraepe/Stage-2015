@@ -107,7 +107,7 @@ function deleteProject(req, res, next) {
             projectService.deleteProject(req.params.projectId, userId, callback);
         }
     ], function(err, result) {
-        var response = errorHandler.handleResult(err, {}, 'project has been deleted.');
+        var response = errorHandler.handleResult(err, {}, 'Project has been deleted.');
         res.send(response);
     });
     next();

@@ -6,15 +6,24 @@ var validator = require('./../validator/projectValidator');
 var projectService = require('./projectService');
 var async = require('async');
 
-exports.createBoard = function (params, callback) {
+exports.createBoard = function (params, userId, callback) {
     var messages = validator.validateBoard(params);
     if (messages.length > 0) {
-        callback(null, null, messages)
+        callback(messages);
     } else {
-        boardRepo.create(params, function (err, result) {
-            result = result.toObject();
-            result.statesMap = convertState(result);
-            callback(err, result, messages);
+        async.series([
+            function(callback) {
+                projectService.getProjectAsLeader(params.projectId, userId, callback);
+            },
+            function(callback) {
+                boardRepo.create(params, function (err, result) {
+                    result = result.toObject();
+                    result.statesMap = convertState(result);
+                    callback(err, result);
+                });
+            }
+        ], function(err, results) {
+            callback(err, results[1]);
         });
     }
 };
@@ -51,7 +60,7 @@ exports.checkAuthority = function(task, userId, callback) {
             boardRepo.findBoard({ _id: task.boardId }, callback)
         },
         function(board, callback) {
-            projectService.checkAuthority(board, userId, callback);
+            projectService.checkAuthority(board.projectId, userId, callback);
         }
     ], function(err, authorized) {
         callback(err, authorized);

@@ -13,6 +13,7 @@ var taskSchema = mongoose.Schema({
     title: String,
     description : String,
     boardId: String,
+    projectId: String,
     creator : String,
     identifier: String,
     important: Boolean,

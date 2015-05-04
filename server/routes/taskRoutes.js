@@ -12,6 +12,7 @@ exports.registerRoutes = function(app) {
     app.get('/task', getTask);
     app.post('/task/comment', postComment);
     app.put('/task', updateTask);
+    app.get('/tasks', getTasks);
 };
 
 function createTask(req, res, next) {
@@ -64,5 +65,18 @@ function updateTask(req, res, next) {
         }
     ], function(err, task) {
         res.send(errorHandler.handleResult(err, { task: task }, 'Task updated.'));
+    });
+}
+
+function getTasks(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            auth.verifyToken(req.params.token, callback);
+        },
+        function(userId, callback) {
+            taskService.getTasks(req.params.projectId, userId, callback);
+        }
+    ], function(err, tasks) {
+        res.send(errorHandler.handleResult(err, { tasks: tasks }, tasks.length + ' tasks fetched.'));
     })
 }

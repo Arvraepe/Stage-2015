@@ -35,6 +35,11 @@ projectRoutes.registerRoutes(app);
 boardRoutes.registerRoutes(app);
 taskRoutes.registerRoutes(app);
 
+app.on('InternalServerError', function (req, res, err, cb) {
+    err = { success : false, messages : [{ code: 'ERROR', messages: 'Something went wrong. Please try again.' }] };
+    return cb();
+});
+
 app.listen(6543, function() {
     console.log('%s listening at %s', app.name, app.url);
 });
