@@ -15,7 +15,8 @@ exports.registerRoutes = function(app) {
     app.del('/project/delete', deleteProject);
     app.put('/project/update', updateProject);
     app.put('/project/changeleader', changeLeader);
-    app.get('/project/members', getMembers);
+    app.get('/project/membersDesc', getMembersDesc);
+    app.get('/project/members', getMembers)
 };
 
 function createProject(req, res, next) {
@@ -127,6 +128,19 @@ function changeLeader(req, res, next) {
     next();
 }
 
+function getMembersDesc(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            auth.verifyToken(req.params.token, callback)
+        },
+        function(userId, callback) {
+            projectService.getMembersDesc(req.params.projectId, userId, callback);
+        }
+    ], function(err, members) {
+        res.send(errorHandler.handleResult(err, { members : members }, 'members fetched.'));
+    })
+}
+
 function getMembers(req, res, next) {
     async.waterfall([
         function(callback) {
@@ -137,5 +151,4 @@ function getMembers(req, res, next) {
         }
     ], function(err, members) {
         res.send(errorHandler.handleResult(err, { members : members }, 'members fetched.'));
-    })
-}
+    })}
