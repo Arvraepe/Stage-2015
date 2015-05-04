@@ -101,12 +101,12 @@ function deleteBoard(req, res, next) {
 }
 
 function populateBoard(board, userId, callback) {
-    async.parallel([
+    async.series([
         function(callback) {
             projectService.getParentProject(board, userId, callback)
         },
         function(callback) {
-            taskService.getTasks(board, callback)
+            taskService.getTasks(board.projectId, userId, callback)
         }
     ], function(err, results) {
         board.parentProject = results[0];

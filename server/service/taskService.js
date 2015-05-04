@@ -162,6 +162,9 @@ exports.getTasks = function(projectId, userId, callback) {
             if(authorized) {
                 taskRepo.findTasks({ projectId: projectId }, callback);
             }
+        },
+        function (tasks, callback) {
+            userService.populateTasks(tasks, callback);
         }
     ], callback)
 };

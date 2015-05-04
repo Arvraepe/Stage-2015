@@ -13,6 +13,7 @@ exports.create = function(task, callback) {
         title: task.title,
         description : task.description,
         boardId: task.boardId,
+        projectId: task.projectId,
         creator : task.creator,
         identifier: task.identifier,
         important: task.important,
