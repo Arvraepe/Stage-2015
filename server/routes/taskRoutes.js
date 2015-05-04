@@ -64,5 +64,5 @@ function updateTask(req, res, next) {
         }
     ], function(err, task) {
         res.send(errorHandler.handleResult(err, { task: task }, 'Task updated.'));
-    })
+    });
 }

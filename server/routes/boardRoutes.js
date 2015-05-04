@@ -21,22 +21,10 @@ function createBoard(req, res, next) {
             auth.verifyToken(req.params.token, callback)
         },
         function(userId, callback) {
-            async.series([
-                function(callback) {
-                    projectService.getProjectAsLeader(req.params.projectId, userId, callback)
-                },
-                function(callback) {
-                    boardService.createBoard(req.params, function (err, result, messages) {
-                        var results = {result: result, messages: messages};
-                        callback(err, results)
-                    });
-                }
-            ], function(err, results) {
-                callback(err, results[1]);
-            })
+            boardService.createBoard(req.params, userId, callback);
         }
     ], function (err, result) {
-        result = errorHandler.handleMMResult(err, {board: result.result}, result.messages, 'The ' + result.result.name + ' board was created for your project.');
+        result = errorHandler.handleMMResult(err, {board: result}, result.messages, 'The ' + result.name + ' board was created for your project.');
         res.send(result);
     });
 }
