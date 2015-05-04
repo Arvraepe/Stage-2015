@@ -19,7 +19,7 @@ exports.createProject = function (params, userId, callback) {
         params.startDate = new Date();
         projectRepo.create(params, function (err, project) {
             var defaultBoard = getDefaultBoard(project.standardStates, project.deadline, project._id);
-            boardService.createBoard(defaultBoard,userId, function (err, board) {
+            boardService.createBoard(defaultBoard, userId, function (err, board) {
                 callback(err, null, project);
             });
         });
@@ -190,8 +190,7 @@ exports.getParentProject = function (board, userId, callback) {
             projectRepo.selectProject({_id: board.projectId}, select, callback);
         },
         function (project, callback) {
-            if (userInProject(project, userId)) userService.getUsersFromProject(project, callback);
-            else callback(new Error('You are not a member of this project.'));
+            userService.getUsersFromProject(project, callback);
         }
     ], callback);
 };
@@ -202,7 +201,35 @@ exports.checkAuthority = function (projectId, userId, callback) {
     });
 };
 
-exports.getMembers = function (projectId, userId, callback) {
+exports.getMembersDesc = function (projectId, userId, callback) {
+    getMembersDesc(projectId, userId, callback);
+};
+
+exports.getMembers = function(projectId, userId, callback) {
+    async.waterfall([
+        function(callback) {
+            getMembersDesc(projectId, userId, callback);
+        },
+        function(members, callback) {
+            var tasks = [];
+            members.forEach(function(entry) {
+                tasks.push(
+                    function(callback) {
+                        userService.findUser({ _id: entry}, callback);
+                    }
+                );
+            });
+            async.parallel(tasks, callback);
+        }
+    ], callback);
+};
+
+exports.getProjectCode = function (projectId, callback) {
+    var select = 'code';
+    projectRepo.selectProject({ _id: projectId }, select, callback);
+};
+
+function getMembersDesc(projectId, userId, callback) {
     var select = "leader collaborators";
     projectRepo.selectProject({_id: projectId}, select, function (err, project) {
         if (userInProject(project, userId)) {
@@ -213,12 +240,7 @@ exports.getMembers = function (projectId, userId, callback) {
             callback(new Error('You are not a member of the project.'));
         }
     });
-};
-
-exports.getProjectCode = function (projectId, callback) {
-    var select = 'code';
-    projectRepo.selectProject({ _id: projectId }, select, callback);
-};
+}
 
 function getMyProjects(userId, callback) {
     projectRepo.findProjects({leader: userId}, callback);

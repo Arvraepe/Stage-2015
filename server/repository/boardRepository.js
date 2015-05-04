@@ -21,7 +21,14 @@ exports.findBoards = function (condition, callback) {
 };
 
 exports.findOneAndUpdate = function(condition, board, callback) {
-    Board.findOneAndUpdate(condition, board, {new : true}).lean().exec(callback);
+    var newBoard = {
+        name: board.name,
+        description: board.description,
+        deadline: board.deadline,
+        projectId: board.projectId,
+        states: board.states
+    };
+    Board.findOneAndUpdate(condition, newBoard, {new : true}).lean().exec(callback);
 };
 
 exports.findOneAndRemove = function(condition, callback) {
