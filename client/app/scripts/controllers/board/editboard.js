@@ -24,8 +24,16 @@ angular.module('stageprojectApp')
     $scope.updateBoard = function(){
       $scope.$broadcast('show-errors-check-validity');
       if($scope.editBoardForm.$valid){
-        var boardInfo = angular.copy($scope.board);
-        boardInfo.states = $scope.states;
+        //var boardInfo = angular.copy($scope.board);
+        var boardInfo = {
+          _id : $scope.board._id,
+          projectId : $scope.board.projectId,
+          name : $scope.board.name,
+          description : $scope.board.description,
+          deadline:$scope.board.deadline,
+          states : $scope.states
+        };
+        //boardInfo.states = $scope.states;
 
         boardRequestFactory.updateBoard({
           data : boardInfo,

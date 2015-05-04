@@ -10,6 +10,7 @@
 angular.module('stageprojectApp')
   .controller('ProjectTasksCtrl', function ($scope, projectRequestFactory, projectId, $modalInstance) {
     $scope.tasks = [];
+    $scope.selectedTask = {};
     $scope.getTasks = function(){
       var projectInfo = {
         projectId : projectId
@@ -23,6 +24,10 @@ angular.module('stageprojectApp')
           console.log(error);
         }
       })
+    };
+
+    $scope.returnTask = function () {
+      $modalInstance.close($scope.selectedTask.task)
     };
 
 

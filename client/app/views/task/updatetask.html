@@ -1,0 +1,108 @@
+<div class="modal-header">
+  <h3 class="modal-title">Update task!</h3>
+</div>
+<form class="form-horizontal" name="updateTaskForm">
+  <div class="modal-body">
+
+    <div class="form-group" show-errors="{showSuccess: true}">
+      <label class="col-md-3 control-label">Name</label>
+
+      <div class="col-md-9">
+        <input type="text" class="form-control" name="taskTitleField" placeholder="Task title"
+               ng-model="task.title" required ng-minlength="2"
+               ng-maxlength="40">
+
+        <p class="help-block" ng-if="updateTaskForm.taskTitleField.$error.required">A task needs to have a
+          name.</p>
+
+        <p class="help-block" ng-if="updateTaskForm.taskTitleField.$error.minlength">A task name needs to have at
+          least 2
+          characters.</p>
+
+        <p class="help-block" ng-if="updateTaskForm.taskTitleField.$error.maxlength">A task name can have up to 40
+          characters.</p>
+      </div>
+    </div>
+
+
+    <div class="form-group" show-errors="{showSuccess: true}">
+      <label class="col-md-3 control-label">Description</label>
+
+      <div class="col-md-9">
+        <textarea type="text" class="form-control" name="taskDescriptionField" placeholder="Task description"
+                  ng-model="task.description" required ng-minlength="5"
+                  ng-maxlength="1000" style="resize: none"></textarea>
+
+        <p class="help-block" ng-if="updateTaskForm.taskDescriptionField.$error.required">This field can't be
+          empty.</p>
+
+        <p class="help-block" ng-if="updateTaskForm.taskDescriptionField.$error.minlength">The description of a task needs to
+          have at least 5
+          characters.</p>
+
+        <p class="help-block" ng-if="updateTaskForm.taskDescriptionField.$error.maxlength">A project name can have up
+          to 1000 characters.</p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-md-3 control-label">Assignee</label>
+
+      <div class="col-md-9">
+        <ui-select tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|ENTER|TAB"
+                   ng-model="uiselect.assignee" ng-disabled="disabled" title="Choose a collaborator"
+                   search-enabled="true" >
+          <ui-select-match placeholder="Assignee">{{$select.selected.username}}</ui-select-match>
+          <ui-select-choices repeat="collab in collaborators">
+            {{collab.username}}
+          </ui-select-choices>
+        </ui-select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-md-3 control-label">State</label>
+
+      <div class="col-md-9">
+        <ui-select tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|ENTER|TAB"
+                   ng-model="task.state" ng-disabled="disabled" title="Pick a state "
+                   search-enabled="true" required>
+          <ui-select-match placeholder="State">{{$select.selected}}</ui-select-match>
+          <ui-select-choices repeat="state in boardStates">
+            {{state}}
+          </ui-select-choices>
+        </ui-select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-md-3 control-label">High Priority</label>
+      <div class="col-md-9">
+        <input type="checkbox" ng-model="task.important" style="margin-top:9px;">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-md-3 control-label">Deadline</label>
+
+      <div class="col-md-9">
+        <p class="input-group">
+          <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="task.deadline"
+                 is-open="opened" min-date="minDate"
+                 max-date="'2015-06-22'" datepicker-options="dateOptions"
+                 close-text="Close"/>
+          <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open($event)"><i
+                  class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+        </p>
+      </div>
+    </div>
+
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="updateTask(task)">Update!</button>
+    <button type="button" class="btn btn-warning" ng-click="cancel()">Cancel</button>
+  </div>
+</form>

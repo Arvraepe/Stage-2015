@@ -8,7 +8,7 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('TaskCtrl', function ($scope, $routeParams, taskRequestFactory, projectRequestFactory) {
+  .controller('TaskCtrl', function ($scope, $routeParams, taskRequestFactory, projectRequestFactory, $modal) {
     $scope.task = {};
     $scope.projectId = {
       projectId:$routeParams.pid
@@ -27,6 +27,7 @@ angular.module('stageprojectApp')
         params: taskId,
         success: function (response) {
           $scope.task = response.data.task;
+          $scope.boardStates = response.data.boardStates;
           projectRequestFactory.getCollaboratorsForProject({
             params: $scope.projectId,
             success:function(response){
@@ -57,6 +58,30 @@ angular.module('stageprojectApp')
           console.log(error);
        }
      })
+    };
+
+    $scope.openUpdateTaskModal = function(size){
+      var modalInstance = $modal.open({
+        templateUrl: 'views/task/updatetask.html',
+        controller: 'updateTaskCtrl',
+        size: size,
+        resolve:{
+          task: function(){
+            return $scope.task;
+          },
+          collaborators: function () {
+            return $scope.collaborators;
+          },
+          boardStates:function(){
+            return $scope.boardStates;
+          }
+        }
+      });
+      modalInstance.result.then(function (data) {
+
+
+      }, function () {
+      })
     };
 
     $scope.createStyle = function (sort, inputField) {

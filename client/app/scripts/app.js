@@ -94,6 +94,10 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
       templateUrl: 'views/task/task.html',
       controller: 'TaskCtrl'
     })
+    .when('/updateTask', {
+      templateUrl: 'views/updatetask.html',
+      controller: 'UpdatetaskCtrl'
+    })
     .otherwise({
       redirectTo: '/'
     });
