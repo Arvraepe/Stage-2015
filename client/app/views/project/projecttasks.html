@@ -11,7 +11,7 @@
                    ng-model="selectedTask.task" ng-disabled="disabled" title="Select a collaborator"
                    search-enabled="true" >
           <ui-select-match placeholder="Collaborator">{{$item}}</ui-select-match>
-          <ui-select-choices repeat="collab in tasks">
+          <ui-select-choices repeat="task in tasks">
             {{task.title}}
           </ui-select-choices>
         </ui-select>

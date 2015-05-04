@@ -19,7 +19,7 @@ exports.createProject = function (params, userId, callback) {
         params.startDate = new Date();
         projectRepo.create(params, function (err, project) {
             var defaultBoard = getDefaultBoard(project.standardStates, project.deadline, project._id);
-            boardService.createBoard(defaultBoard, function (err, board) {
+            boardService.createBoard(defaultBoard,userId, function (err, board) {
                 callback(err, null, project);
             });
         });

@@ -9,7 +9,7 @@
  */
 angular.module('stageprojectApp')
   .controller('ProjectTasksCtrl', function ($scope, projectRequestFactory, projectId, $modalInstance) {
-    $scope.collaborators = [];
+    $scope.tasks = [];
     $scope.getTasks = function(){
       var projectInfo = {
         projectId : projectId
@@ -17,8 +17,7 @@ angular.module('stageprojectApp')
       projectRequestFactory.getTasks({
         params: projectInfo,
         success: function(response){
-          console.log(response);
-          $scope.collaborators = response.data.members;
+          $scope.tasks = response.data.tasks;
         },
         error: function(error){
           console.log(error);
