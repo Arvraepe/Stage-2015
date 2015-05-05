@@ -128,8 +128,11 @@ angular.module('stageprojectApp')
 
     $scope.editComment = function (commentObj, commentHtml, index) {
       commentObj.comment = commentHtml;
+      var commentInfo = {
+        comment : commentObj
+      };
       taskRequestFactory.updateComment({
-        data:commentObj,
+        data:commentInfo,
         success:function(response){
           $scope.booleanArray[index] = false;
         },
