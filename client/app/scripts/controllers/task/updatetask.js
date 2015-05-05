@@ -22,8 +22,9 @@ angular.module('stageprojectApp')
       var creatorId = task.creator._id;
       task.assignee= assigneeId;
       task.creator = creatorId;
+      var taskInfo = {task:$scope.task};
       taskRequestFactory.changeState({
-        data: task,
+        data: taskInfo,
         success:function(response){
           $modalInstance.close(response.data.task);
         },
