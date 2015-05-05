@@ -98,12 +98,12 @@ angular.module('stageprojectApp')
     $scope.comment='';
 
     $scope.deleteComment = function (comment) {
+      var commentInformation = {
+        commentId: comment._id,
+        userId:comment.user._id
+      };
       var commentInfo = {
-        comment :{
-          commentId: comment._id,
-          userId:comment.user._id
-        },
-
+        comment: commentInformation,
         taskId : $scope.task._id
       };
       taskRequestFactory.deleteComment({
