@@ -107,41 +107,6 @@ angular.module('stageprojectApp')
 
 
 
-/*
-      $scope.promoteUser = function(collab){
-        notificationFactory.createConfirm({
-          title:'Promote '+collab.username+' to leader',
-          body: 'Are you sure?',
-          confirm: function(){
-            var postSettings = {
-              projectId : $routeParams.pid,
-              userId : collab._id
-            };
-            projectRequestFactory.promoteToLeader({
-              data: postSettings,
-              success:function(response){
-                $scope.leader = response.data.leader;
-                $scope.collaborators = [];
-                angular.forEach(response.data.collaborators, function (collab) {
-                  $scope.collaborators.push(collab);
-                });
-                $scope.project = response.data;
-
-                notificationFactory.createNotification(response);
-                console.log(response);
-              },
-              error : function(error){
-                console.log(error);
-              }
-            })
-          },
-          cancel:function(){
-            console.log('cancelled');
-          }
-        });
-      };
-*/
-
       $scope.deleteProject = function () {
         notificationFactory.createConfirm({
           title: 'Delete project ' + $scope.project.name,

@@ -26,13 +26,7 @@ angular.module('stageprojectApp')
       _id : $routeParams.taskId
     };
 
-    $scope.isCommentCreator = function(comment){
-      return comment.user._id === $scope.$parent.currentUser._id;
-    };
 
-    $scope.isTaskCreator = function () {
-      return $scope.task.creator._id === $scope.$parent.currentUser._id;
-    };
 
     $scope.getTaskInfo = function () {
       taskRequestFactory.getTask({
@@ -43,6 +37,13 @@ angular.module('stageprojectApp')
           angular.forEach($scope.task.comments, function (comment) {
             $scope.booleanArray.push(false);
           });
+          $scope.isCommentCreator = function(comment){
+            return comment.user._id === $scope.$parent.currentUser._id;
+          };
+
+          $scope.isTaskCreator = function () {
+            return $scope.task.creator._id === $scope.$parent.currentUser._id;
+          };
           projectRequestFactory.getFullCollaboratorsForProject({
             params: $scope.projectId,
             success:function(response){
@@ -125,18 +126,26 @@ angular.module('stageprojectApp')
 
     };
 
-    $scope.editComment = function (commentObj, commentHtml) {
+    $scope.editComment = function (commentObj, commentHtml, index) {
       commentObj.comment = commentHtml;
       taskRequestFactory.updateComment({
         data:commentObj,
         success:function(response){
-
+          $scope.booleanArray[index] = false;
         },
         error: function (error) {
+          $scope.booleanArray[index] = false;
+
           console.log(error);
         }
       })
-    }
+    };
+
+    $scope.changeAssignee=function(assignee){
+      console.log(assignee);
+      $scope.task.assignee =assignee;
+      $scope.visible = true;
+    };
 
 
   });

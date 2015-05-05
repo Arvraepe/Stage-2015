@@ -35,7 +35,7 @@
         <div  ta-bind ng-model="comment.comment" class="commentBody" ng-hide="booleanArray[$index]" >{{comment.comment}}</div>
 
         <text-angular ta-toolbar="[['h1','h2','h3'],['bold','italics','underline'],['ul','ol'],['taskFind']]" ng-model="commentEdit" ng-show="booleanArray[$index]"></text-angular>
-        <button type="button" ng-click="editComment(comment,commentEdit)" class="btn btn-success" ng-show="booleanArray[$index]">Save</button>
+        <button type="button" ng-click="editComment(comment,commentEdit, $index)" class="btn btn-success" ng-show="booleanArray[$index]">Save</button>
 
 
       </div>
@@ -75,26 +75,65 @@
     <div class="panel-body">
       <ul class="list-unstyled">
         <li>
-          <label>Title: </label>
-          <span>{{task.title}}</span>
+          <div class="row">
+            <div class="col-md-4">
+              <label>Title: </label>
+            </div>
+            <div class="col-md-8">
+              {{task.title}}
+            </div>
+          </div>
         </li>
         <li>
-          <label>State: </label>
-          <span>{{task.state}}</span>
+          <div class="row">
+            <div class="col-md-4">
+              <label>State: </label>
+            </div>
+            <div class="col-md-8">
+              {{task.state}}
+            </div>
+          </div>
         </li>
         <li>
-          <label>Deadline: </label>
-          <span>{{task.deadline|date}}</span>
-        </li>
-        <li>
-          <label>Assignee: </label>
-          <img ng-src="{{task.assignee.imageUrl}}" alt="profilepic" class="smallerAvatar">
-          <span ng-show="visible" ng-mouseover="visible = !visible">{{task.assignee.firstname}} {{task.assignee.lastname}}</span>
+          <div class="row">
+            <div class="col-md-4">
+              <label>Deadline: </label>
+            </div>
+            <div class="col-md-8">
+              <span ng-show="task.deadline"> {{task.deadline|date}} </span>
+              <span ng-show="task.deadline==null"> No deadline given </span>
 
+            </div>
+          </div>
         </li>
         <li>
-          <label>Creator: </label>
-          <img ng-src="{{task.creator.imageUrl}}" alt="profilepic" class="smallerAvatar"> <span>{{task.creator.firstname}} {{task.creator.lastname}}</span>
+          <div class="row">
+            <div class="col-md-4">
+              <label>Assignee: </label>
+            </div>
+            <div class="col-md-8">
+              <img ng-src="{{task.assignee.imageUrl}}" alt="profilepic" class="smallerAvatar" ng-show="visible">
+              <span ng-show="visible" ng-mouseenter="visible = !visible">{{task.assignee.firstname}} {{task.assignee.lastname}}</span>
+              <ui-select ng-show="!visible" ng-change="changeAssignee(task.assignee)" tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|ENTER|TAB"
+                         ng-model="task.assignee" ng-disabled="visible" title="Assignee "
+                         search-enabled="true" required>
+                <ui-select-match placeholder="State">{{$select.selected.firstname}}</ui-select-match>
+                <ui-select-choices repeat="collab in collaborators">
+                  {{collab.firstname}}
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="row">
+            <div class="col-md-4">
+              <label>Creator: </label>
+            </div>
+            <div class="col-md-8">
+              <img ng-src="{{task.creator.imageUrl}}" alt="profilepic" class="smallerAvatar"> <span>{{task.creator.firstname}} {{task.creator.lastname}}</span>
+            </div>
+          </div>
         </li>
       </ul>
     </div>
