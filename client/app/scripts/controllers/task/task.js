@@ -8,7 +8,7 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('TaskCtrl', function ($scope, $routeParams, taskRequestFactory, projectRequestFactory, $modal) {
+  .controller('TaskCtrl', function ($scope, $routeParams, taskRequestFactory, projectRequestFactory, $modal, $location, $anchorScroll) {
     $scope.task = {};
     $scope.projectId = {
       projectId:$routeParams.pid
@@ -20,6 +20,14 @@ angular.module('stageprojectApp')
     $scope.isCollapsed = true;
     var taskId = {
       _id : $routeParams.taskId
+    };
+
+    $scope.isCommentCreator = function(comment){
+      return comment.user._id === $scope.$parent.currentUser._id;
+    };
+
+    $scope.isTaskCreator = function () {
+      return $scope.task.creator._id === $scope.$parent.currentUser._id;
     };
 
     $scope.getTaskInfo = function () {
@@ -77,8 +85,8 @@ angular.module('stageprojectApp')
           }
         }
       });
-      modalInstance.result.then(function (data) {
-
+      modalInstance.result.then(function (task) {
+        $scope.task = task;
 
       }, function () {
       })
@@ -88,6 +96,31 @@ angular.module('stageprojectApp')
       editorFactory.createStyle(sort, inputField);
     };
     $scope.comment='';
+
+    $scope.deleteComment = function (comment) {
+      var commentInfo = {
+        commentId : comment._id,
+        taskId : $scope.task._id
+      };
+      taskRequestFactory.deleteComment({
+        params: commentInfo,
+        success:function(response){
+
+        },
+        error:function(error){
+
+        }
+      })
+    };
+
+    $scope.editText = function (index) {
+      $scope.comment = $scope.task.comments[index].comment;
+      //$scope.comment = comment.comment;
+      $location.hash('editor');
+      $anchorScroll();
+
+
+    }
 
 
   });

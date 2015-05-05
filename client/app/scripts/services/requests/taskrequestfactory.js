@@ -45,6 +45,15 @@ angular.module('stageprojectApp')
           success: config.success,
           error:config.error
         })
+      },
+      deleteComment: function (config) {
+        requestFactory.sendRequest({
+          path:'task/comment',
+          method:'DELETE',
+          params:config.params,
+          success: config.success,
+          error:config.error
+        })
       }
 
 
