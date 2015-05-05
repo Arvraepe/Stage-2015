@@ -50,8 +50,8 @@
 
       <div class="col-md-9">
         <ui-select tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|ENTER|TAB"
-                   ng-model="uiselect.assignee" ng-disabled="disabled" title="Choose a collaborator"
-                   search-enabled="true" >
+                   ng-model="task.assignee" ng-disabled="disabled" title="Choose a collaborator"
+                   search-enabled="true">
           <ui-select-match placeholder="Assignee">{{$select.selected.username}}</ui-select-match>
           <ui-select-choices repeat="collab in collaborators">
             {{collab.username}}

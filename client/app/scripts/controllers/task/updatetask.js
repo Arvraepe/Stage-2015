@@ -16,8 +16,13 @@ angular.module('stageprojectApp')
       $modalInstance.dismiss('cancel');
     };
 
+
     $scope.updateTask = function (task) {
-      taskRequestFactory.updateTask({
+      var assigneeId = task.assignee._id;
+      var creatorId = task.creator._id;
+      task.assignee= assigneeId;
+      task.creator = creatorId;
+      taskRequestFactory.changeState({
         data: task,
         success:function(response){
           $modalInstance.close(response.data.task);

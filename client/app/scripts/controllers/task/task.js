@@ -28,7 +28,7 @@ angular.module('stageprojectApp')
         success: function (response) {
           $scope.task = response.data.task;
           $scope.boardStates = response.data.boardStates;
-          projectRequestFactory.getCollaboratorsForProject({
+          projectRequestFactory.getFullCollaboratorsForProject({
             params: $scope.projectId,
             success:function(response){
               $scope.collaborators = response.data.members;

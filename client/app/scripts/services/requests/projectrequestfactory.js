@@ -83,6 +83,15 @@ angular.module('stageprojectApp')
           error:config.error
         })
       },
+      getFullCollaboratorsForProject: function (config) {
+        requestFactory.sendRequest({
+          path:'project/members',
+          method:'GET',
+          params:config.params,
+          success:config.success,
+          error:config.error
+        })
+      },
       getTasks : function(config){
         requestFactory.sendRequest({
           path:'tasks',
