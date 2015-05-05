@@ -13,6 +13,8 @@ exports.registerRoutes = function(app) {
     app.post('/task/comment', postComment);
     app.put('/task', updateTask);
     app.get('/tasks', getTasks);
+    app.put('/task/comment', updateComment);
+    app.del('/task/comment', deleteComment);
 };
 
 function createTask(req, res, next) {
@@ -78,5 +80,31 @@ function getTasks(req, res, next) {
         }
     ], function(err, tasks) {
         res.send(errorHandler.handleResult(err, { tasks: tasks }, tasks.length + ' tasks fetched.'));
+    })
+}
+
+function updateComment(req, res, next) {
+    async.waterfall([
+        function (callback) {
+            auth.verifyToken(req.params.token, callback);
+        },
+        function (userId, callback) {
+            taskService.updateComment(req.params.comment, req.params.taskId, userId, callback);
+        }
+    ], function(err, result) {
+        res.send(errorHandler.handleResult(err, { comment: result }, 'Comment changed'));
+    })
+}
+
+function deleteComment(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            auth.verifyToken(req.params.token, callback);
+        },
+        function(userId, callback) {
+            taskService.deleteComment(req.params.comment, req.params.taskId, userId, callback);
+        }
+    ], function(err) {
+        res.send(errorHandler.handleResult(err, null, 'Comment deleted.'));
     })
 }

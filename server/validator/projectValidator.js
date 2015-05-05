@@ -23,12 +23,6 @@ function validateProjectOrBoard(params) {
     if(!checkDesc(params.description)) {
         messages.push(makeMessage('Description', 5, 1000));
     }
-    if(params.deadline != undefined) {
-        var dateDeadline = new Date(params.deadline);
-        if (!checkDeadline(dateDeadline)) {
-            messages.push({code: 'ERROR', message: "Deadline can't already be expired."});
-        }
-    }
     if(!checkStates(params.standardStates)) {
         messages.push(makeMessage('State', 2, 20));
     }
@@ -48,10 +42,6 @@ function checkCode(code) {
 function checkDesc(desc) {
     desc = desc || '';
     return desc.length > 4 && desc.length < 1000;
-}
-
-function checkDeadline(date) {
-    return date === undefined || date > new Date();
 }
 
 function checkStates(states) {
