@@ -286,8 +286,8 @@ exports.getUsersFromProject = function (project, callback) {
     })
 };
 
-exports.findUser = function (condition, callback) {
-    userRepo.findUser(condition, function (err, user) {
+exports.findUser = function (userId, callback) {
+    userRepo.findUser({ _id: userId}, function (err, user) {
         callback(err, filterUser(user));
     });
 };

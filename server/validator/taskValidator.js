@@ -2,7 +2,7 @@
  * Created by Glenn on 24-4-2015.
  */
 
-exports.validateNewTask = function(task, boardDeadline) {
+exports.validateNewTask = function(task, states) {
     var messages = [];
     if(!validateString(task.title, 2, 40)) {
         messages.push(makeMessage('title', 2, 40));
@@ -12,9 +12,6 @@ exports.validateNewTask = function(task, boardDeadline) {
     }
     if(!task.important instanceof Boolean) {
         messages.push({code : 'ERROR', message:'Important needs to be a true or false value.'})
-    }
-    if(!validateDate(task.deadline, boardDeadline)){
-        messages.push({ code: 'ERROR', message: 'The deadline cannot be later than the board\'s deadline (' + boardDeadline + '), it also needs to be later than today.' });
     }
     return messages;
 };

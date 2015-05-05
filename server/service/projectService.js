@@ -215,7 +215,7 @@ exports.getMembers = function(projectId, userId, callback) {
             members.forEach(function(entry) {
                 tasks.push(
                     function(callback) {
-                        userService.findUser({ _id: entry}, callback);
+                        userService.findUser( entry, callback);
                     }
                 );
             });

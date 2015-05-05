@@ -42,3 +42,11 @@ exports.addComment = function(taskId, comment, callback) {
         task.save(callback);
     });
 };
+
+exports.deleteComment = function deleteComment(task, comment, callback) {
+    Task.findOneAndUpdate({ _id: task._id}, { $pull: { comments: { _id: comment._id } } }, callback)
+};
+
+exports.updateComment = function(taskId, comment, callback) {
+    Task.findOneAndUpdate({ _id: taskId, "comments._id": comment._id}, { $set: { "comments.$": comment } }, callback);
+};
