@@ -20,10 +20,10 @@
     <div ng-repeat="comment in task.comments | limitTo:5">
       <div class="comment">
         <div class="commentHeader row">
-          <div class="col-md-4">
+          <div class="col-md-4 noPaddingLeft">
             <img ng-src="{{comment.user.imageUrl}}" alt="profilepic" class="smallerAvatar"> {{comment.user.firstname}} {{comment.user.lastname}}
           </div>
-          <div class="col-md-8 text-right commentDate">
+          <div class="col-md-8 text-right commentDate noPaddingRight">
             {{comment.timeStamp|date:'dd MMM yyyy HH:mm'}}
             <button ng-if="isCommentCreator(comment)" type="button" class="btn btn-primary btn-xs" ng-click="editText($index)"><i class="fa fa-pencil"></i> Edit</button>
             <button ng-if="isCommentCreator(comment)||isTaskCreator()" type="button" class="btn btn-danger btn-xs" ng-click="deleteComment(comment)"><i class="fa fa-trash"></i> Delete</button>
@@ -32,7 +32,12 @@
           </div>
         </div>
 
-        <div ta-bind ng-model="comment.comment" class="commentBody" >{{comment.comment}}</div>
+        <div  ta-bind ng-model="comment.comment" class="commentBody" ng-hide="booleanArray[$index]" >{{comment.comment}}</div>
+
+        <text-angular ta-toolbar="[['h1','h2','h3'],['bold','italics','underline'],['ul','ol'],['taskFind']]" ng-model="commentEdit" ng-show="booleanArray[$index]"></text-angular>
+        <button type="button" ng-click="editComment(comment,commentEdit)" class="btn btn-success" ng-show="booleanArray[$index]">Save</button>
+
+
       </div>
     </div>
     <hr/>
@@ -83,7 +88,9 @@
         </li>
         <li>
           <label>Assignee: </label>
-          <img ng-src="{{task.assignee.imageUrl}}" alt="profilepic" class="smallerAvatar"> <span>{{task.assignee.firstname}} {{task.assignee.lastname}}</span>
+          <img ng-src="{{task.assignee.imageUrl}}" alt="profilepic" class="smallerAvatar">
+          <span ng-show="visible" ng-mouseover="visible = !visible">{{task.assignee.firstname}} {{task.assignee.lastname}}</span>
+
         </li>
         <li>
           <label>Creator: </label>

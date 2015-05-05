@@ -10,6 +10,10 @@
 angular.module('stageprojectApp')
   .controller('TaskCtrl', function ($scope, $routeParams, taskRequestFactory, projectRequestFactory, $modal, $location, $anchorScroll) {
     $scope.task = {};
+    $scope.visible = true;
+    $scope.isCollapsed = false;
+    $scope.editable=false;
+    $scope.booleanArray = [];
     $scope.projectId = {
       projectId:$routeParams.pid
     };
@@ -36,6 +40,9 @@ angular.module('stageprojectApp')
         success: function (response) {
           $scope.task = response.data.task;
           $scope.boardStates = response.data.boardStates;
+          angular.forEach($scope.task.comments, function (comment) {
+            $scope.booleanArray.push(false);
+          });
           projectRequestFactory.getFullCollaboratorsForProject({
             params: $scope.projectId,
             success:function(response){
@@ -112,12 +119,23 @@ angular.module('stageprojectApp')
     };
 
     $scope.editText = function (index) {
-      $scope.comment = $scope.task.comments[index].comment;
-      //$scope.comment = comment.comment;
-      $location.hash('editor');
-      $anchorScroll();
+      $scope.booleanArray[index] = true;
+      $scope.commentEdit = $scope.task.comments[index].comment;
 
 
+    };
+
+    $scope.editComment = function (commentObj, commentHtml) {
+      commentObj.comment = commentHtml;
+      taskRequestFactory.updateComment({
+        data:commentObj,
+        success:function(response){
+
+        },
+        error: function (error) {
+          console.log(error);
+        }
+      })
     }
 
 

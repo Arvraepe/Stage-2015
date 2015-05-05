@@ -54,7 +54,17 @@ angular.module('stageprojectApp')
           success: config.success,
           error:config.error
         })
+      },
+      updateComment: function (config) {
+        requestFactory.sendRequest({
+          path:'task/comment',
+          method:'PUT',
+          data:config.data,
+          success: config.success,
+          error:config.error
+        })
       }
+
 
 
 

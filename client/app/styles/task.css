@@ -29,26 +29,33 @@ h4:before {
 }
 
 .comment{
-  background-color: #f8f8f8;
   border:solid #e7e7e7 1px;
   border-radius: 5px;
-  padding-top: 20px;
-  padding-left:20px;
-  padding-right:20px;
   margin-bottom:30px;
 }
 
 .ta-toolbar{
+  margin-top:20px;
   margin-bottom:20px;
 }
 
 .commentHeader{
+  background-color: #f8f8f8;
+  padding-top: 20px;
+  padding-left:20px;
+  padding-right:20px;
   font-weight:bold;
   padding-bottom:12px;
+  margin-right:0;
+  margin-left:0;
   border-bottom: solid 1px #e5e5e5;
 }
 
 .commentBody{
+  background-color: #fff;
+  padding-top: 20px;
+  padding-left:20px;
+  padding-right:20px;
   padding-top:15px;
   padding-bottom:10px;
 }
