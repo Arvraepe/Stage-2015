@@ -16,6 +16,7 @@ angular.module('stageprojectApp')
     $scope.booleanArray = [];
     $scope.titleVisible = true;
     $scope.stateVisible = true;
+    $scope.newCommentVisibile = false;
     $scope.projectId = {
       projectId:$routeParams.pid
     };
@@ -71,6 +72,7 @@ angular.module('stageprojectApp')
          taskId = {
            _id : $routeParams.taskId
          };
+         $scope.newCommentVisible = !$scope.newCommentVisible;
        },
        error: function(error){
           console.log(error);
@@ -110,10 +112,15 @@ angular.module('stageprojectApp')
       taskRequestFactory.deleteComment({
         params: commentInformation,
         success:function(response){
-
+          angular.forEach($scope.task.comments, function (comm, index,array) {
+            if(comm._id == comment._id){
+              array.splice(index,1);
+            }
+          });
+          notificationFactory.createNotification(response);
         },
         error:function(error){
-
+          notificationFactory.createNotification(response);
         }
       })
     };
@@ -177,13 +184,19 @@ angular.module('stageprojectApp')
         data: task,
         success: function (response) {
           $scope.task = response.data.task;
-          notificationFactory.createNotification(response);
+          $scope.titleVisible = true;
+          $scope.stateVisible = true;
         },
         error: function (error) {
           notificationFactory.createNotification(response);
           console.log(error);
         }
       });
+
+    };
+
+    $scope.showCommentField = function () {
+      $scope.newCommentVisibile = true;
     }
 
 

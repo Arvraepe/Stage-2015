@@ -68,3 +68,11 @@ h4:before {
   padding: 20px 0;
   font-size: 17px;
 }
+
+.taskDescriptorPanel{
+  margin-top:10px;
+}
+
+.commentCommitButton{
+  margin: 25px 0;
+}

@@ -1,54 +1,72 @@
 <ol class="breadcrumb breadCrumb" data-ng-init="getTaskInfo()">
   <li><a ng-href="#/dashboard">Dashboard</a></li>
-  <li><a ng-href="#/project/{{projectId}}">Project</a></li>
-  <li><a ng-href="#/project/{{projectId}}/board/{{boardId}}">Board</a></li>
+  <li><a ng-href="#/project/{{task.projectId}}">Project</a></li>
+  <li><a ng-href="#/project/{{task.projectId}}/board/{{boardId}}">Board</a></li>
   <li class="active">{{task.title|capitalize}}</li>
 </ol>
 
 <div class="col-md-9 noPaddingLeft">
-  <h2>{{task.title|capitalize}} </h2>
-  <div>
-    <div class="taskDescription">
-      {{task.description}}
+  <h2>{{task.title|capitalize}}
+    <div class="pull-right">
+      <button type="button" ng-click="newCommentVisible=true" class="btn btn-primary"><i class="fa fa-comment-o"></i>
+        Comment
+      </button>
     </div>
+  </h2>
+
+  <div class="taskDescription">
+    {{task.description}}
+  </div>
+  <div ng-show="newCommentVisible">
+    <text-angular ta-toolbar="[['h1','h2','h3'],['bold','italics','underline'],['ul','ol'],['taskFind']]" ng-model="comment" id="editor"></text-angular>
+    <button type="button" class="btn btn-success commentCommitButton" ng-click="createComment(comment)"><i class="fa fa-plus-circle"></i> Comment
+    </button>
   </div>
 
   <div ng-if="task.comments.length > 0">
     <h4>
       <span>Comments</span>
     </h4>
-    <div ng-repeat="comment in task.comments | limitTo:5">
+
+    <div ng-repeat="comment in task.comments">
       <div class="comment">
         <div class="commentHeader row">
           <div class="col-md-4 noPaddingLeft">
-            <img ng-src="{{comment.user.imageUrl}}" alt="profilepic" class="smallerAvatar"> {{comment.user.firstname}} {{comment.user.lastname}}
+            <img ng-src="{{comment.user.imageUrl}}" alt="profilepic" class="smallerAvatar"> {{comment.user.firstname}}
+            {{comment.user.lastname}}
           </div>
           <div class="col-md-8 text-right commentDate noPaddingRight">
             {{comment.timeStamp|date:'dd MMM yyyy HH:mm'}}
-            <button ng-if="isCommentCreator(comment)" type="button" class="btn btn-primary btn-xs" ng-click="editText($index)"><i class="fa fa-pencil"></i> Edit</button>
-            <button ng-if="isCommentCreator(comment)||isTaskCreator()" type="button" class="btn btn-danger btn-xs" ng-click="deleteComment(comment)"><i class="fa fa-trash"></i> Delete</button>
+            <button ng-if="isCommentCreator(comment)" type="button" class="btn btn-primary btn-xs"
+                    ng-click="editText($index)"><i class="fa fa-pencil"></i> Edit
+            </button>
+            <button ng-if="isCommentCreator(comment)||isTaskCreator()" type="button" class="btn btn-danger btn-xs"
+                    ng-click="deleteComment(comment)"><i class="fa fa-trash"></i> Delete
+            </button>
 
 
           </div>
         </div>
 
-        <div  ta-bind ng-model="comment.comment" class="commentBody" ng-hide="booleanArray[$index]" >{{comment.comment}}</div>
+        <div ta-bind ng-model="comment.comment" class="commentBody" ng-hide="booleanArray[$index]">{{comment.comment}}
+        </div>
 
-        <text-angular ta-toolbar="[['h1','h2','h3'],['bold','italics','underline'],['ul','ol'],['taskFind']]" ng-model="commentEdit" ng-show="booleanArray[$index]"></text-angular>
-        <button type="button" ng-click="editComment(comment,commentEdit, $index)" class="btn btn-success" ng-show="booleanArray[$index]">Save</button>
+        <text-angular ta-toolbar="[['h1','h2','h3'],['bold','italics','underline'],['ul','ol'],['taskFind']]"
+                      ng-model="commentEdit" ng-show="booleanArray[$index]"></text-angular>
+        <button type="button" ng-click="editComment(comment,commentEdit, $index)" class="btn btn-success"
+                ng-show="booleanArray[$index]"><i class="fa fa-plus-circle"></i> Save
+        </button>
 
 
       </div>
     </div>
-    <hr/>
+
   </div>
 
-  <text-angular ta-toolbar="[['h1','h2','h3'],['bold','italics','underline'],['ul','ol'],['taskFind']]" ng-model="comment" id="editor"></text-angular>
-  <button type="button" class="btn btn-success" ng-click="createComment(comment)"><i class="fa fa-comment-o"></i> Comment
-  </button>
+
 </div>
 <div class="col-md-3 noPaddingRight">
-  <div class="panel panel-default">
+  <div class="panel panel-default taskDescriptorPanel">
     <div class="panel-heading">
       <div class="panel-title">
         <div class="row">
@@ -58,7 +76,9 @@
           </div>
           <div ng-if="isCreator()" class="col-md-6">
             <div class="pull-right">
-              <button type="button" ng-click="openUpdateTaskModal()" class="btn btn-primary"><i class="fa fa-pencil"></i> Update</button>
+              <button type="button" ng-click="openUpdateTaskModal()" class="btn btn-primary"><i
+                class="fa fa-pencil"></i> Update
+              </button>
             </div>
           </div>
         </div>
@@ -73,7 +93,8 @@
             </div>
             <div class="col-md-8">
               <span ng-show="titleVisible" ng-mouseenter="titleVisible = !titleVisible">{{task.title}}</span>
-              <input ng-show="!titleVisible" type="text" ng-model="task.title" class="form-control" ng-blur="titleVisible=!titleVisible && updateTask()" ng-keypress="saveTitle()">
+              <input ng-show="!titleVisible" type="text" ng-model="task.title" class="form-control"
+                     ng-keypress="saveTitle($event)">
             </div>
           </div>
         </li>
@@ -84,7 +105,8 @@
             </div>
             <div class="col-md-8">
               <span ng-show="stateVisible" ng-mouseenter="stateVisible = !stateVisible">{{task.state}}</span>
-              <ui-select ng-show="!stateVisible" ng-change="changeState(task.state)" tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|ENTER|TAB"
+              <ui-select ng-show="!stateVisible" ng-change="changeState(task.state)" tagging theme="bootstrap"
+                         tagging-label="false" tagging-tokens=",|ENTER|TAB"
                          ng-model="task.state" ng-disabled="stateVisible" title="Assignee "
                          search-enabled="true" required>
                 <ui-select-match placeholder="State">{{$select.selected}}</ui-select-match>
@@ -115,7 +137,8 @@
             <div class="col-md-8">
               <img ng-src="{{task.assignee.imageUrl}}" alt="profilepic" class="smallerAvatar" ng-show="visible">
               <span ng-show="visible" ng-mouseenter="visible = !visible">{{task.assignee.firstname}} {{task.assignee.lastname}}</span>
-              <ui-select ng-show="!visible" ng-change="changeAssignee(task.assignee)" tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|ENTER|TAB"
+              <ui-select ng-show="!visible" ng-change="changeAssignee(task.assignee)" tagging theme="bootstrap"
+                         tagging-label="false" tagging-tokens=",|ENTER|TAB"
                          ng-model="task.assignee" ng-disabled="visible" title="Assignee "
                          search-enabled="true" required>
                 <ui-select-match placeholder="Assignee">{{$select.selected.firstname}}</ui-select-match>
