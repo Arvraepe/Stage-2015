@@ -14,7 +14,9 @@ exports.create = function (board, callback) {
         projectId: board.projectId,
         states: board.states
     });
-    newBoard.save(callback);
+    newBoard.save(function(err, result) {
+        callback(err, result);
+    });
 };
 
 exports.findBoards = function (condition, callback) {
@@ -22,7 +24,6 @@ exports.findBoards = function (condition, callback) {
 };
 
 exports.findOneAndUpdate = function(condition, board, callback) {
-    board = filterBoard(board);
     Board.findOneAndUpdate(condition, board, {new : true}).lean().exec(callback);
 };
 
@@ -42,6 +43,4 @@ exports.selectBoard = function(condition, select, callback) {
     Board.findOne(condition).select(select).lean().exec(callback);
 };
 
-function filterBoard(board) {
-    return _.pick(board, ['name', 'description', 'states', 'deadline'])
-}
+

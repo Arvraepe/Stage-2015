@@ -17,7 +17,9 @@ exports.registerUser = function (user, callback) {
         imageUrl: config.imageUrl + config.defaultImage,
         recovery: {}
     });
-    registeredUser.save(callback);
+    registeredUser.save(function(err, user) {
+        callback(err, user);
+    });
 };
 
 exports.userExists = function (condition, cb) {

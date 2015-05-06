@@ -43,11 +43,11 @@ exports.registerUser = function (user, callback) {
                 user.salt = saltStr;
                 userRepo.registerUser(user, callback);
             }
-        ], function (err, result) {
-            callback(err, messages, result);
+        ], function(err, results){
+            callback(err, results[1].toObject())
         });
     } else {
-        callback(null, messages, null);
+        callback(messages);
     }
 };
 
@@ -336,7 +336,6 @@ exports.populateComment = function(comment, callback) {
 function populateComment(comment, callback) {
     var select = '_id username firstname lastname imageUrl';
     userRepo.selectUser({_id: comment.userId}, select, function(err, user) {
-        console.log(comment.userId);
         comment.user = user;
         callback(err, _.omit(comment, 'userId'));
     });

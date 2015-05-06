@@ -68,3 +68,7 @@ exports.deleteComment = function deleteComment(task, comment, callback) {
 exports.updateComment = function(comment, callback) {
     Task.findOneAndUpdate({"comments._id": comment._id}, { $set: { "comments.$": comment } },{ new: true }).lean().exec(callback);
 };
+
+exports.getTaskCount = function(condition, callback) {
+    Task.count(condition, callback)
+};

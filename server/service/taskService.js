@@ -55,10 +55,10 @@ exports.createTask = function (task, userId, callback) {
             function (callback) {
                 async.parallel([
                     function (callback) {
-                        boardService.checkAuthority(task, userId, callback);
+                        projectService.checkAuthority(task.projectId, userId, callback);
                     },
                     function (callback) {
-                        boardService.checkAuthority(task, task.assignee, callback);
+                        projectService.checkAuthority(task.projectId, task.assignee, callback);
                     }
                 ], callback)
             },
@@ -230,6 +230,10 @@ exports.updateComment = function (comment, userId, callback) {
         }
     ], callback);
 };
+
+exports.getTaskCount = function(boardId, state, callback) {
+    taskRepo.getTaskCount({ boardId: boardId, state: state}, callback);
+}
 
 function createComment(taskId, userId, comment, callback) {
     var comment = {

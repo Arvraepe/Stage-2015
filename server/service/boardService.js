@@ -6,26 +6,25 @@ var validator = require('./../validator/projectValidator');
 var projectService = require('./projectService');
 var taskService = require('./taskService');
 var async = require('async');
+var _ = require('underscore');
 
 exports.createBoard = function (params, userId, callback) {
     var messages = validator.validateBoard(params);
     if (messages.length > 0) {
         callback(messages);
     } else {
-        async.series([
+        async.waterfall([
             function (callback) {
                 projectService.getProjectAsLeader(params.projectId, userId, callback);
             },
-            function (callback) {
-                boardRepo.create(params, function (err, result) {
-                    result = result.toObject();
-                    result.statesMap = convertState(result);
-                    callback(err, result);
-                });
+            function (project, callback) {
+                boardRepo.create(params, callback);
+            },
+            function(board, callback) {
+                board = board.toObject();
+                convertState(board, callback);
             }
-        ], function (err, results) {
-            callback(err, results[1]);
-        });
+        ], callback);
     }
 };
 
@@ -56,17 +55,24 @@ exports.getBoard = function (boardId, userId, callback) {
     ], callback)
 };
 
-exports.convertStates = function (boards) {
+exports.convertStates = function (boards, callback) {
+    var tasks = [];
     boards.forEach(function (board, index, array) {
-        array[index].statesMap = convertState(board);
+        tasks.push(
+            function(callback) {
+                convertState(board, callback)
+            }
+        );
     });
-    return boards;
+    async.parallel(tasks, callback);
 };
 
 exports.updateBoard = function (board, userId, callback) {
+    var projectId = board.projectId;
+    board = filterBoard(board);
     async.waterfall([
         function (callback) {
-            projectService.isLeader(board.projectId, userId, callback)
+            projectService.isLeader(projectId, userId, callback)
         },
         function (isLeader, callback) {
             if (isLeader) {
@@ -122,14 +128,29 @@ function getBoard(boardId, callback) {
     boardRepo.findBoard({_id: boardId}, callback);
 }
 
-function convertState(board) {
+function convertState(board, callback) {
     var newStates = [];
+    var tasks = [];
     board.states.forEach(function (state) {
-        var obj = {};
-        obj[state] = 0; //todo count tasks
-        newStates.push(obj);
+        tasks.push(
+            function(callback) {
+                getStateNumber(board._id, state, callback);
+            }
+        );
     });
-    return newStates;
+    async.parallel(tasks, function(err, result) {
+        board.states.forEach(function(state, index, arr) {
+            var obj = {};
+            obj[state] = result[index];
+            newStates.push(obj);
+        });
+        board.statesMap = newStates;
+        callback(err, board)
+    });
+}
+
+function getStateNumber(boardId, state, callback) {
+    taskService.getTaskCount(boardId, state, callback);
 }
 
 function populateBoard(board, userId, callback) {
@@ -145,4 +166,8 @@ function populateBoard(board, userId, callback) {
         board.parentProject = results[0];
         callback(err, board);
     });
+}
+
+function filterBoard(board) {
+    return _.pick(board, ['name', 'description', 'states', 'deadline', '_id'])
 }

@@ -24,8 +24,8 @@ function register(req, res, next) {
         function(callback) {
             userService.registerUser(req.params, callback);
         },
-        function(messages, user, callback) {
-            var result = { messages : messages };
+        function(user, callback) {
+            var result = {};
             if(req.params.projectId != undefined) {
                 projectService.addRegisteredCollab(user._id, req.params.projectId, function(err) {
                     callback(err, result);
