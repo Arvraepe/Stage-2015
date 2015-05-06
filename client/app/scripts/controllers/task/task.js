@@ -19,9 +19,7 @@ angular.module('stageprojectApp')
     $scope.projectId = {
       projectId:$routeParams.pid
     };
-    $scope.isCreator = function(){
-      return $scope.task.creator._id ===$scope.$parent.currentUser._id;
-    };
+
     $scope.boardId = $routeParams.boardId;
     $scope.isCollapsed = true;
     var taskId = {
@@ -42,7 +40,9 @@ angular.module('stageprojectApp')
           $scope.isCommentCreator = function(comment){
             return comment.user._id === $scope.$parent.currentUser._id;
           };
-
+          $scope.isCreator = function(){
+            return $scope.task.creator._id ===$scope.$parent.currentUser._id;
+          };
           $scope.isTaskCreator = function () {
             return $scope.task.creator._id === $scope.$parent.currentUser._id;
           };
@@ -170,9 +170,11 @@ angular.module('stageprojectApp')
 
       taskInfo.assignee = $scope.task.assignee._id;
       taskInfo.creator = $scope.task.creator._id;
-
+      var task = {
+        task: taskInfo
+      };
       taskRequestFactory.changeState({
-        data: taskInfo,
+        data: task,
         success: function (response) {
           $scope.task = response.data.task;
           notificationFactory.createNotification(response);
