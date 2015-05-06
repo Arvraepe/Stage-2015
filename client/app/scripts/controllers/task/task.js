@@ -164,6 +164,10 @@ angular.module('stageprojectApp')
 
     $scope.updateTask = function(){
       var taskInfo = angular.copy($scope.task);
+      angular.forEach(taskInfo.comments, function (comment) {
+        delete comment.user;
+      });
+
       taskInfo.assignee = $scope.task.assignee._id;
       taskInfo.creator = $scope.task.creator._id;
 
