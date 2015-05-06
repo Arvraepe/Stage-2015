@@ -311,15 +311,14 @@ function populateProject(project, callback) {
             userService.getUsersFromProject(project, callback);
         },
         function (callback) {
-            boardService.getBoards(project._id, function (err, boards) {
-                boards = boardService.convertStates(boards);
-                callback(err, boards);
-            });
+            boardService.getBoards(project._id, callback);
         }
     ], function (err, result) {
         project = result[0];
-        project.boards = result[1];
-        callback(err, project);
+        boardService.convertStates(result[1], function(err, boards) {
+            project.boards = boards;
+            callback(err, project);
+        })
     });
 }
 
