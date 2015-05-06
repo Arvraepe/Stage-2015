@@ -2,6 +2,7 @@
  * Created by Glenn on 21-4-2015.
  */
 var mongoose = require('mongoose');
+var _ = require('underscore');
 
 Board = mongoose.model('Board');
 
@@ -21,14 +22,8 @@ exports.findBoards = function (condition, callback) {
 };
 
 exports.findOneAndUpdate = function(condition, board, callback) {
-    var newBoard = {
-        name: board.name,
-        description: board.description,
-        deadline: board.deadline,
-        projectId: board.projectId,
-        states: board.states
-    };
-    Board.findOneAndUpdate(condition, newBoard, {new : true}).lean().exec(callback);
+    board = filterBoard(board);
+    Board.findOneAndUpdate(condition, board, {new : true}).lean().exec(callback);
 };
 
 exports.findOneAndRemove = function(condition, callback) {
@@ -46,3 +41,7 @@ exports.selectBoards = function(condition, select, callback) {
 exports.selectBoard = function(condition, select, callback) {
     Board.findOne(condition).select(select).lean().exec(callback);
 };
+
+function filterBoard(board) {
+    return _.pick(board, ['name', 'description', 'states', 'deadline'])
+}

@@ -89,10 +89,10 @@ function updateComment(req, res, next) {
             auth.verifyToken(req.params.token, callback);
         },
         function (userId, callback) {
-            taskService.updateComment(req.params.comment, req.params.taskId, userId, callback);
+            taskService.updateComment(req.params.comment, userId, callback);
         }
     ], function(err, result) {
-        res.send(errorHandler.handleResult(err, { comment: result }, 'Comment changed'));
+        res.send(errorHandler.handleResult(err, { comment: result }, 'Comment changed.'));
     })
 }
 
@@ -102,7 +102,7 @@ function deleteComment(req, res, next) {
             auth.verifyToken(req.params.token, callback);
         },
         function(userId, callback) {
-            taskService.deleteComment(req.params.comment, req.params.taskId, userId, callback);
+            taskService.deleteComment(req.params.commentId, userId, callback);
         }
     ], function(err) {
         res.send(errorHandler.handleResult(err, null, 'Comment deleted.'));

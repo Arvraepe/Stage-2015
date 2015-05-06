@@ -7,6 +7,7 @@ var mailService = require('./../service/mailService');
 var config = require('./../config.json');
 var async = require('async');
 var uuid = require('node-uuid');
+var _ = require('underscore');
 var boardService = require('./boardService');
 var userService = require('./userService');
 
@@ -15,18 +16,26 @@ exports.createProject = function (params, userId, callback) {
     if (messages.length !== undefined && messages.length !== 0) {
         callback(new Error('mult'), messages);
     } else {
-        params.leader = userId;
-        params.startDate = new Date();
-        projectRepo.create(params, function (err, project) {
-            var defaultBoard = getDefaultBoard(project.standardStates, project.deadline, project._id);
-            boardService.createBoard(defaultBoard, userId, function (err, board) {
-                callback(err, null, project);
-            });
-        });
+        var code = params.code;
+        var newProject = filterProject(params);
+        newProject.leader = userId;
+        newProject.code = code;
+        newProject.startDate = new Date();
+        async.waterfall([
+            function (callback) {
+                projectRepo.create(newProject, callback)
+            },
+            function (project, callback) {
+                var defaultBoard = getDefaultBoard(project.standardStates, project.deadline, project._id);
+                boardService.createBoard(defaultBoard, userId, function(err, board) {
+                    callback(err, project);
+                });
+            }
+        ], callback);
     }
 };
 
-exports.checkAndAddCollabs = function (messages, project, usersExist, callback) {
+exports.checkAndAddCollabs = function (project, usersExist, callback) {
     var tasks = [];
     usersExist.forEach(function (entry) {
         if (!entry.exists) {
@@ -41,9 +50,9 @@ exports.checkAndAddCollabs = function (messages, project, usersExist, callback) 
                 });
             } else { //this is a string that is not a valid email address, the system will assume the user entered a username which is not in our db and will sent an appropriate WARN message.
                 tasks.push(function (cb) {
-                    messages = messages || {};
-                    messages.message = {code: 'WARN', message: entry.message};
-                    cb(null, messages);
+                    var message =  {};
+                    message.message = {code: 'WARN', message: entry.message};
+                    cb(null, message);
                 });
             }
         } else { //the user exists, callback with the required data.
@@ -119,10 +128,11 @@ exports.deleteProject = function (projectId, userId, callback) {
 
 exports.updateProject = function (userId, params, callback) {
     var messages = projectValidator.validateNewProject(params);
+    if(messages.length>0) callback(messages);
     isLeader(params._id, userId, function (err, isLeader) {
         if (isLeader) {
-            projectRepo.findOneAndUpdate(params._id, params, function (err, result) {
-                callback(err, messages, result);
+            projectRepo.findOneAndUpdate(params._id, filterProject(params), function (err, result) {
+                callback(err, result);
             });
         } else {
             err = err || new Error('You cannot update a project you do not own.');
@@ -151,8 +161,7 @@ exports.changeLeader = function (params, leaderId, callback) {
 };
 
 exports.addRegisteredCollab = function (userId, projectId, callback) {
-    projectRepo.findProjects({uniqueLinks: projectId}, function (err, projects) {
-        var project = projects[0];
+    projectRepo.findProject({uniqueLinks: projectId}, function (err, project) {
         if (project == undefined) {
             callback(new Error('project does not exist'));
         } else {
@@ -205,17 +214,17 @@ exports.getMembersDesc = function (projectId, userId, callback) {
     getMembersDesc(projectId, userId, callback);
 };
 
-exports.getMembers = function(projectId, userId, callback) {
+exports.getMembers = function (projectId, userId, callback) {
     async.waterfall([
-        function(callback) {
+        function (callback) {
             getMembersDesc(projectId, userId, callback);
         },
-        function(members, callback) {
+        function (members, callback) {
             var tasks = [];
-            members.forEach(function(entry) {
+            members.forEach(function (entry) {
                 tasks.push(
-                    function(callback) {
-                        userService.findUser( entry, callback);
+                    function (callback) {
+                        userService.findUser(entry, callback);
                     }
                 );
             });
@@ -226,7 +235,7 @@ exports.getMembers = function(projectId, userId, callback) {
 
 exports.getProjectCode = function (projectId, callback) {
     var select = 'code';
-    projectRepo.selectProject({ _id: projectId }, select, callback);
+    projectRepo.selectProject({_id: projectId}, select, callback);
 };
 
 function getMembersDesc(projectId, userId, callback) {
@@ -312,6 +321,10 @@ function populateProject(project, callback) {
         project.boards = result[1];
         callback(err, project);
     });
+}
+
+function filterProject(project) {
+    return _.pick(project, ['name', 'description', 'collaborators', 'leader', 'deadline', 'standardStates'])
 }
 
 exports.getProjectAsLeader = function (projectId, userId, callback) {

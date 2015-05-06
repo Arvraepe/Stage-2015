@@ -2,6 +2,7 @@
  * Created by Glenn on 27-4-2015.
  */
 var mongoose = require('mongoose');
+var async = require('async');
 Task = mongoose.model('Task');
 
 exports.getTaskIdentifier = function (boardId, callback) {
@@ -37,16 +38,33 @@ exports.findOneAndUpdate = function(condition, task, callback) {
 };
 
 exports.addComment = function(taskId, comment, callback) {
-    Task.findOne({ _id: taskId}, function(err, task) {
-        task.comments.push(comment);
-        task.save(callback);
+    async.waterfall([
+        function(callback) {
+            Task.findOne({_id: taskId}, callback)
+        },
+        function(task, callback) {
+            task.comments.push(comment);
+            task.save(callback);
+        }
+    ], function(err, newTask) {
+        async.detect(newTask.comments,
+            function(item, callback) {
+                callback(item.timeStamp == comment.timeStamp && item.comment == comment.comment && item.userId == comment.userId);
+            },
+            function(result) {
+                newTask = result.toObject();
+            });
+        callback(err, newTask);
     });
 };
 
 exports.deleteComment = function deleteComment(task, comment, callback) {
-    Task.findOneAndUpdate({ _id: task._id}, { $pull: { comments: { _id: comment._id } } }, callback)
+    Task.findOne({ _id: task._id}, function(err, task) {
+        task.comments.id(comment._id).remove();
+        task.save(callback);
+    });
 };
 
-exports.updateComment = function(taskId, comment, callback) {
-    Task.findOneAndUpdate({ _id: taskId, "comments._id": comment._id}, { $set: { "comments.$": comment } }, callback);
+exports.updateComment = function(comment, callback) {
+    Task.findOneAndUpdate({"comments._id": comment._id}, { $set: { "comments.$": comment } },{ new: true }).lean().exec(callback);
 };

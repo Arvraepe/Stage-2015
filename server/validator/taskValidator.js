@@ -11,20 +11,16 @@ exports.validateNewTask = function(task, states) {
         messages.push(makeMessage('description', 2, 1000));
     }
     if(!task.important instanceof Boolean) {
-        messages.push({code : 'ERROR', message:'Important needs to be a true or false value.'})
+        messages.push({code : 'ERROR', message:'Important needs to be a true or false value.'});
+    }
+    if(states != null && states.states.indexOf(task.state) == -1) {
+        messages.push({code:'ERROR', message:'State needs to be one of the task\'s board states'});
     }
     return messages;
 };
 
 function validateString(string, minLength, maxLength){
     return string.length >= minLength && string.length <= maxLength;
-}
-
-function validateDate(taskDeadline, boardDeadline) {
-    taskDeadline = new Date(taskDeadline);
-    if(taskDeadline instanceof Date) return true;
-    else if(boardDeadline == undefined) return taskDeadline > new Date();
-    else return taskDeadline <= boardDeadline && taskDeadline > new Date();
 }
 
 function makeMessage(wrong, minlength, maxlength) {

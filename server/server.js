@@ -37,7 +37,7 @@ taskRoutes.registerRoutes(app);
 
 app.on('InternalServerError', function (req, res, err, cb) {
     err = { success : false, messages : [{ code: 'ERROR', messages: 'Something went wrong. Please try again.' }] };
-    return cb();
+    return cb(err);
 });
 
 app.listen(6543, function() {

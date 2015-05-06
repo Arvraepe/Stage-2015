@@ -12,7 +12,9 @@ exports.create = function (project, cb) {
         standardStates: project.standardStates,
         code: project.code.toUpperCase()
     });
-    newProject.save(cb);
+    newProject.save(function(err, result, number) {
+        cb(err, result);
+    });
 };
 
 exports.addCollab = function(projectId, users, cb) {

@@ -7,6 +7,7 @@ var validator = require('./../validator/taskValidator');
 var userService = require('./userService');
 var boardService = require('./boardService');
 var projectService = require('./projectService');
+var _ = require('underscore');
 
 function getTaskIdentifier(boards, callback) {
     var tasks = [];
@@ -140,6 +141,7 @@ exports.getTask = function (taskId, userId, callback) {
 };
 
 exports.updateTask = function (task, userId, callback) {
+    task = filterTask(task);
     if (task.creator == userId || task.assignee == userId) {
         boardService.getStates(task.boardId, function (err, states) {
             var messages = validator.validateNewTask(task, states);
@@ -174,24 +176,59 @@ exports.getTasks = function (projectId, userId, callback) {
     ], callback)
 };
 
-exports.deleteComment = function (comment, taskId, userId, callback) {
+exports.deleteComment = function (commentId, userId, callback) {
     async.waterfall([
         function (callback) {
-            taskRepo.findTask({_id: taskId}, callback);
+            taskRepo.findTask({"comments._id": commentId}, callback);
         },
         function (task, callback) {
-            if (userId == task.creator || comment.userId == userId) {
-                taskRepo.deleteComment(task, comment, callback);
-            } else callback(new Error("You do not have the right to remove this comment."));
+            if (!task) callback(new Error('No such comment'));
+            else {
+                var comment = null;
+                async.detect(task.comments,
+                    function (item, callback) {
+                        callback(item._id == commentId);
+                    },
+                    function (result) {
+                        comment = result;
+                    });
+                if (userId == task.creator || comment.userId == userId) {
+                    taskRepo.deleteComment(task, comment, callback);
+                } else callback(new Error("You do not have the right to remove this comment."));
+            }
         }
     ], callback);
+
 };
 
-exports.updateComment = function (comment, taskId, userId, callback) {
-    comment.timeStamp = new Date();
-    if (comment.userId == userId) {
-        taskRepo.updateComment(taskId, comment, callback);
-    } else callback(new Error("You do not have the right to edit this comment."));
+exports.updateComment = function (comment, userId, callback) {
+    async.waterfall([
+        function(callback) {
+            taskRepo.findTask({"comments._id": comment._id}, callback)
+        },
+        function(task, callback) {
+            if (!task) callback(new Error('No such comment'));
+            else {
+                var newComment = {};
+                async.detect(task.comments,
+                    function (item, callback) {
+                        callback(item._id == comment._id);
+                    },
+                    function (result) {
+                        newComment = result;
+                        newComment.comment = comment.comment;
+                        newComment.timeStamp = new Date();
+                    });
+                if (newComment.userId == userId) {
+                    taskRepo.updateComment(newComment, function(err) {
+                        callback(err, newComment)
+                    });
+                } else callback(new Error("You do not have the right to edit this comment."));
+            }
+        }, function(newComment, callback) {
+            userService.populateComment(newComment, callback);
+        }
+    ], callback);
 };
 
 function createComment(taskId, userId, comment, callback) {
@@ -200,7 +237,11 @@ function createComment(taskId, userId, comment, callback) {
         comment: comment,
         timeStamp: new Date()
     };
-    taskRepo.addComment(taskId, comment, function (err) {
-        callback(err, comment);
+    taskRepo.addComment(taskId, comment, function (err, newComment) {
+        callback(err, newComment);
     });
+}
+
+function filterTask(task) {
+    return _.pick(task, ['title', 'description', 'boardId', 'creator', 'important', 'deadline', 'state', 'assignee', '_id']);
 }

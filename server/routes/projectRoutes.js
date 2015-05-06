@@ -27,13 +27,13 @@ function createProject(req, res, next) {
         function (userId, callback) {
             projectService.createProject(req.params, userId, callback);
         },
-        function(messages, project, callback) {
+        function(project, callback) {
             userService.findCollaborators(req.params.collaborators, function(err, usersExists) {
-                callback(err, messages, project, usersExists);
+                callback(err, project, usersExists);
             });
         },
-        function (messages, project, usersExist, callback) {
-            projectService.checkAndAddCollabs(messages, project, usersExist, callback)
+        function (project, usersExist, callback) {
+            projectService.checkAndAddCollabs(project, usersExist, callback)
         }
     ], function(err, result) {
         var response = errorHandler.handleProjectErrors(err, result);
@@ -65,13 +65,13 @@ function updateProject(req, res, next) {
         function (userId, callback) {
             projectService.updateProject(userId, req.params, callback)
         },
-        function (messages, project, callback) {
+        function (project, callback) {
             userService.findCollaborators(req.params.collaborators, function(err, userExists) {
-                callback(err, messages, project, userExists)
+                callback(err, project, userExists)
             });
         },
-        function(messages, project, userExists, callback) {
-            projectService.checkAndAddCollabs(messages, project, userExists, callback);
+        function(project, userExists, callback) {
+            projectService.checkAndAddCollabs(project, userExists, callback);
         },
         function(result, callback) {
             projectService.processUpdate(result, callback);
