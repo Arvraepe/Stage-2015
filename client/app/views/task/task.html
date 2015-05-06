@@ -80,7 +80,8 @@
               <label>Title: </label>
             </div>
             <div class="col-md-8">
-              {{task.title}}
+              <span ng-show="titleVisible" ng-mouseenter="titleVisible = !titleVisible">{{task.title}}</span>
+              <input ng-show="!titleVisible" type="text" ng-model="task.title" class="form-control" ng-blur="titleVisible=!titleVisible && updateTask()" ng-keypress="saveTitle()">
             </div>
           </div>
         </li>
@@ -90,7 +91,15 @@
               <label>State: </label>
             </div>
             <div class="col-md-8">
-              {{task.state}}
+              <span ng-show="stateVisible" ng-mouseenter="stateVisible = !stateVisible">{{task.state}}</span>
+              <ui-select ng-show="!stateVisible" ng-change="changeState(task.state)" tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|ENTER|TAB"
+                         ng-model="task.state" ng-disabled="stateVisible" title="Assignee "
+                         search-enabled="true" required>
+                <ui-select-match placeholder="State">{{$select.selected}}</ui-select-match>
+                <ui-select-choices repeat="state in boardStates">
+                  {{state}}
+                </ui-select-choices>
+              </ui-select>
             </div>
           </div>
         </li>
@@ -117,7 +126,7 @@
               <ui-select ng-show="!visible" ng-change="changeAssignee(task.assignee)" tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|ENTER|TAB"
                          ng-model="task.assignee" ng-disabled="visible" title="Assignee "
                          search-enabled="true" required>
-                <ui-select-match placeholder="State">{{$select.selected.firstname}}</ui-select-match>
+                <ui-select-match placeholder="Assignee">{{$select.selected.firstname}}</ui-select-match>
                 <ui-select-choices repeat="collab in collaborators">
                   {{collab.firstname}}
                 </ui-select-choices>

@@ -8,12 +8,14 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('TaskCtrl', function ($scope, $routeParams, taskRequestFactory, projectRequestFactory, $modal, $location, $anchorScroll) {
+  .controller('TaskCtrl', function ($scope, $routeParams, taskRequestFactory, projectRequestFactory, $modal, $location, $anchorScroll, notificationFactory) {
     $scope.task = {};
     $scope.visible = true;
     $scope.isCollapsed = false;
     $scope.editable=false;
     $scope.booleanArray = [];
+    $scope.titleVisible = true;
+    $scope.stateVisible = true;
     $scope.projectId = {
       projectId:$routeParams.pid
     };
@@ -100,9 +102,6 @@ angular.module('stageprojectApp')
       })
     };
 
-    $scope.createStyle = function (sort, inputField) {
-      editorFactory.createStyle(sort, inputField);
-    };
     $scope.comment='';
 
     $scope.deleteComment = function (comment) {
@@ -135,10 +134,11 @@ angular.module('stageprojectApp')
         data:commentInfo,
         success:function(response){
           $scope.booleanArray[index] = false;
+          commentObj=response.data.comment;
         },
         error: function (error) {
           $scope.booleanArray[index] = false;
-
+          notificationFactory.createNotification(error);
           console.log(error);
         }
       })
@@ -147,8 +147,38 @@ angular.module('stageprojectApp')
     $scope.changeAssignee=function(assignee){
       console.log(assignee);
       $scope.task.assignee =assignee;
+      $scope.updateTask();
       $scope.visible = true;
     };
+
+    $scope.saveTitle = function ($event) {
+      if($event.keyCode==9 || $event.keyCode==13){
+        $scope.updateTask();
+      }
+    };
+
+    $scope.changeState = function () {
+      $scope.updateTask();
+      $scope.stateVisible=true;
+    };
+
+    $scope.updateTask = function(){
+      var taskInfo = angular.copy($scope.task);
+      taskInfo.assignee = $scope.task.assignee._id;
+      taskInfo.creator = $scope.task.creator._id;
+
+      taskRequestFactory.changeState({
+        data: taskInfo,
+        success: function (response) {
+          $scope.task = response.data.task;
+          notificationFactory.createNotification(response);
+        },
+        error: function (error) {
+          notificationFactory.createNotification(response);
+          console.log(error);
+        }
+      });
+    }
 
 
   });
