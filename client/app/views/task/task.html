@@ -50,12 +50,16 @@
 
         <div ta-bind ng-model="comment.comment" class="commentBody" ng-hide="booleanArray[$index]">{{comment.comment}}
         </div>
+        <div ng-show="booleanArray[$index]" class="editComment">
+          <div class="pull-right">
+            <button type="button" ng-click="booleanArray[$index]=false" class="btn btn-default btn-sm" style="margin-top:5px;"><i class="fa fa-times"></i></button>
+          </div>
+          <text-angular ta-toolbar="[['h1','h2','h3'],['bold','italics','underline'],['ul','ol'],['taskFind']]"
+                        ng-model="commentEdit"></text-angular>
+          <button type="button" ng-click="editComment(comment,commentEdit, $index)" class="btn btn-success editCommentCommitButton"><i class="fa fa-plus-circle"></i> Save
+          </button>
+        </div>
 
-        <text-angular ta-toolbar="[['h1','h2','h3'],['bold','italics','underline'],['ul','ol'],['taskFind']]"
-                      ng-model="commentEdit" ng-show="booleanArray[$index]"></text-angular>
-        <button type="button" ng-click="editComment(comment,commentEdit, $index)" class="btn btn-success"
-                ng-show="booleanArray[$index]"><i class="fa fa-plus-circle"></i> Save
-        </button>
 
 
       </div>

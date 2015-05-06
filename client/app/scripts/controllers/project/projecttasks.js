@@ -27,7 +27,7 @@ angular.module('stageprojectApp')
     };
 
     $scope.returnTask = function () {
-      $modalInstance.close($scope.selectedTask.task)
+      $modalInstance.close($scope.selectedTask.task);
     };
 
 

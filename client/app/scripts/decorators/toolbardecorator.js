@@ -2,40 +2,44 @@
 
 /**
  * @ngdoc function
- * @name clientApp.decorator:Toolbardecorator
+ * @name stageprojectApp.decorator:Toolbardecorator
  * @description
  * # Toolbardecorator
- * Decorator of the clientApp
+ * Decorator of the stageprojectApp
  */
 angular.module('stageprojectApp')
   .config(function ($provide) {
-    $provide.decorator('taOptions', ['taRegisterTool', '$delegate','$modal','$routeParams', function(taRegisterTool, taOptions,$modal, $routeParams){
-      // $delegate is the taOptions we are decorating
+    $provide.decorator('taOptions', ['taRegisterTool', '$delegate','$modal','$routeParams','$rootScope', function(taRegisterTool, taOptions,$modal, $routeParams, $rootScope){
       // register the tool with textAngular
       taRegisterTool('taskFind', {
         iconclass: "fa fa-briefcase",
-        action: function(size){
+        tooltiptext: "Link a task",
+        //action(deffered, restoreSelection)
+        action: function(promise,restoreSelection){
           var taskObj =  {};
-          var modalInstance = $modal.open({
+          var that = this;
+          var insertLinkModalScope=$rootScope.$new();
+          insertLinkModalScope.modalInstance = $modal.open({
             templateUrl: 'views/project/projecttasks.html',
             controller: 'ProjectTasksCtrl',
-            size:size,
+            size:'',
             resolve:{
               projectId: function(){
                 return $routeParams.pid;
               }
             }
           });
-          modalInstance.result.then(function (task) {
-            //$scope.board.states[0].tasks.push(task);
+          insertLinkModalScope.modalInstance.result.then(function (task) {
+            restoreSelection();
             taskObj=task;
-          }, function () {
+            that.$editor().wrapSelection('insertHTML', "<a href='#/project/" + taskObj.projectId +"/task/"+taskObj._id+"'>"+taskObj.title +"</a>");
+            promise.resolve();
           });
-
-          this.$editor().wrapSelection('forecolor', 'red');
+          //return false so editor waits with generating the link until after the promise is resolved
+          return false;
         }
       });
-      // add the button to the default toolbar definition
+      //add button to the toolbar
       taOptions.toolbar[1].push('taskFind');
       return taOptions;
     }]);

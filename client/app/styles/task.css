@@ -31,6 +31,7 @@ h4:before {
 .comment{
   border:solid #e7e7e7 1px;
   border-radius: 5px;
+  overflow:hidden;
   margin-bottom:30px;
 }
 
@@ -73,6 +74,19 @@ h4:before {
   margin-top:10px;
 }
 
+.editComment{
+  padding:20px;
+}
+
 .commentCommitButton{
   margin: 25px 0;
+}
+
+.editCommentCommitButton{
+  margin-top:25px;
+}
+
+.editComment .ta-root .ta-toolbar{
+  margin-top:0;
+  margin-bottom:20px;
 }

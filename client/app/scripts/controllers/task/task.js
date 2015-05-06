@@ -73,6 +73,7 @@ angular.module('stageprojectApp')
            _id : $routeParams.taskId
          };
          $scope.newCommentVisible = !$scope.newCommentVisible;
+         $scope.comment='';
        },
        error: function(error){
           console.log(error);
