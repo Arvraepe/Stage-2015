@@ -238,16 +238,27 @@ exports.getTaskCount = function(boardId, state, callback) {
 exports.switchBoard = function(newTask, userId, callback) {
     async.waterfall([
         function(callback) {
-            taskRepo.findTask({ _id: newTask._id }, callback);
+            async.waterfall([
+                function(callback) {
+                    taskRepo.findTask({ _id: newTask._id }, callback);
+                },
+                function(task, callback) {
+                    boardService.getBoardById(newTask.boardId, function(err, board) {
+                        var results = [task, board];
+                        callback(err, results);
+                    });
+                }
+            ], callback)
         },
-        function(task, callback) {
-            if(task.creator == userId || task.assignee == userId) {
+        function(results, callback) {
+            var task = results[0], board = results[1];
+            if((task.creator == userId || task.assignee == userId) && task.projectId == board.projectId) {
                 task.boardId = newTask.boardId;
-                taskRepo.findOneAndUpdate({ _id: task._id }, task, callback)
+                task.state = board.states[0];
+                taskRepo.findOneAndUpdate({ _id: task._id }, task, function(err) {
+                    callback(err, board);
+                })
             } else callback(new Error('You do not have the right to change this task.'));
-        },
-        function(task, callback) {
-            boardService.getBoardsDesc(task.projectId, userId, callback);
         }
     ], callback);
 };
