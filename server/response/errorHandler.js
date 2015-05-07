@@ -39,7 +39,9 @@ exports.handleProjectErrors = function (err, results) {
 };
 
 exports.handleResult = function(err, result, message) {
-    if(err) {
+    if(err && err.code == 'WARN') {
+        resultFact.makeSuccessMMResult([err, {code: "INFO", message: message}], result)
+    } else if(err) {
         result = resultFact.makeFailureResult('ERROR', err.message);
     } else {
         result = resultFact.makeSuccessResult(message, result);
