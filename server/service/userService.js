@@ -44,7 +44,7 @@ exports.registerUser = function (user, callback) {
                 userRepo.registerUser(user, callback);
             }
         ], function(err, results){
-            callback(err, results[1].toObject())
+            callback(err, results[1])
         });
     } else {
         callback(messages);
@@ -177,11 +177,13 @@ exports.confirmReset = function (params, callback) {
     if (validator.validateChangedPassword(params.newPassword)) {
         userRepo.findUserByUuid(params.uuid, function (err, user) {
             if (err) callback(err);
-            var encryptedPW = encryptPassword(params.newPassword, user.salt);
-            userRepo.findOneAndUpdate(user._id, {password: encryptedPW}, function (err, updatedUser) {
-                if (err) callback(err);
-                callback(null, filterUser(updatedUser));
-            });
+            else {
+                var encryptedPW = encryptPassword(params.newPassword, user.salt);
+                userRepo.findOneAndUpdate(user._id, {password: encryptedPW}, function (err, updatedUser) {
+                    if (err) callback(err);
+                    callback(null, filterUser(updatedUser));
+                });
+            }
         });
     } else {
         callback(new Error('The provided password is not valid.'))
@@ -397,4 +399,8 @@ function validateUser(submittedPassword, salt, password) {
 
 function encryptPassword(password, salt) {
     return md5.md5(password + salt);
+}
+
+function filterNewUser(user) {
+    _.pick(user, ['_id', 'firstname', 'lastname', ''])
 }

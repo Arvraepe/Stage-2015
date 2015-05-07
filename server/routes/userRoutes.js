@@ -33,7 +33,7 @@ function register(req, res, next) {
             } else callback(null, result);
         }
     ], function(err, result) {
-        result = errorHandler.handleMMResult(err, null, result.messages, 'User registered successfully'); //response doesn't need a data object, so give null as param.
+        result = errorHandler.handleResult(err, result, 'User registered successfully'); //response doesn't need a data object, so give null as param.
         res.send(result);
     });
     next();
@@ -58,8 +58,7 @@ function updateUser(req, res, next) {
 
 function uploadAvatar(req, res, next) {
     userService.upload(req, function(err, user) {
-        var userResult = errorHandler.makeUserData(user);
-        var result = errorHandler.handleResult(err, userResult, 'Avatar uploaded successfully.');
+        var result = errorHandler.handleResult(err, {imageUrl: user.imageUrl}, 'Avatar uploaded successfully.');
         res.send(result);
     });
     next();
@@ -72,8 +71,7 @@ function resetPassword(req, res, next) {
             result = resultFactory.makeFailureResult('ERROR', err.message);
             res.send(result);
         } else {
-            mailService.sendRecoveryMail(email, config.domain + config.recoverPath + uuid, function(err, info) {
-                //todo use info data
+            mailService.sendRecoveryMail(email, req.params.domain + req.params.recoverPath + uuid, function(err, info) {
                 if(err) {
                     result = resultFactory.makeFailureResult('ERROR', err.message);
                 } else {
@@ -102,7 +100,7 @@ function inviteCoWorkers(req, res, next) {
         function(vEmails, number, callback) {
             var pTasks = [];
             vEmails.forEach(function (entry) {
-                var link = config.domain + config.registerPath + entry;
+                var link = req.params.domain + req.params.registerPath + entry;
                 pTasks.push(function(cb) {
                     mailService.inviteCoworkers(entry, link, cb);
                 })
@@ -112,10 +110,8 @@ function inviteCoWorkers(req, res, next) {
             });
         },
         function(number, results, callback) {
-            var result;{
-                var message = number == 1 ? '1 email has been sent.' : number + ' emails have been sent.';
-                result = resultFactory.makeSuccessResult(message);
-            }
+            var message = number == 1 ? '1 email has been sent.' : number + ' emails have been sent.';
+            var result = resultFactory.makeSuccessResult(message);
            callback(null, result);
         }
     ];
@@ -131,13 +127,7 @@ function inviteCoWorkers(req, res, next) {
 
 function userExists(req, res, next) {
     userService.userExists(req.params, function(err, exists) {
-        var result;
-        if(err) {
-            result = resultFactory.makeFailureResult('ERROR', err.message);
-        } else {
-            result = resultFactory.makeSuccessResult(null, {exists: exists});
-        }
-        res.send(result);
+        res.send(errorHandler.handleResult(err, {exists: exists}, 'Fetched users'));
     });
     next();
 }

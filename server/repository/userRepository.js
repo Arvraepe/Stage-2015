@@ -18,7 +18,7 @@ exports.registerUser = function (user, callback) {
         recovery: {}
     });
     registeredUser.save(function(err, user) {
-        callback(err, user);
+        callback(err, user.toObject());
     });
 };
 

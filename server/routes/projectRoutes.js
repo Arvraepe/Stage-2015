@@ -107,6 +107,7 @@ function deleteProject(req, res, next) {
             projectService.deleteProject(req.params.projectId, userId, callback);
         }
     ], function(err, result) {
+        if(!result) err = new Error('You have no right to delete the project');
         var response = errorHandler.handleResult(err, {}, 'Project has been deleted.');
         res.send(response);
     });
