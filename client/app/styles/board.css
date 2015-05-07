@@ -24,6 +24,7 @@
   font-size:12px;
 }
 
+
 .stateLayout{
   float:left;
   position: relative;
@@ -44,6 +45,21 @@
   margin-left:12px;
 }
 
+.dropzone{
+  min-height: 100px;
+  min-width:175px;
+  border: dashed 2px #e5e5e5;
+}
+
+.dropzone .dropitem{
+  visibility: hidden;
+}
+
+.lalala{
+  min-height:200px;
+  min-width:175px;
+}
+
 .deadlineOver{
   color: #ff6666;
 }
@@ -58,4 +74,8 @@
 
 h3, .boardTitles{
   font-size: 18px
+}
+
+.boardDescription{
+  margin-bottom:25px;
 }

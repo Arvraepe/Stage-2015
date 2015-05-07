@@ -1,7 +1,7 @@
 <ol class="breadcrumb breadCrumb" data-ng-init="getTaskInfo()">
   <li><a ng-href="#/dashboard">Dashboard</a></li>
   <li><a ng-href="#/project/{{task.projectId}}">Project</a></li>
-  <li><a ng-href="#/project/{{task.projectId}}/board/{{boardId}}">Board</a></li>
+  <li><a ng-href="#/project/{{task.projectId}}/board/{{task.boardId}}">Board</a></li>
   <li class="active">{{task.title|capitalize}}</li>
 </ol>
 
@@ -40,7 +40,7 @@
             <button ng-if="isCommentCreator(comment)" type="button" class="btn btn-primary btn-xs"
                     ng-click="editText($index)"><i class="fa fa-pencil"></i> Edit
             </button>
-            <button ng-if="isCommentCreator(comment)||isTaskCreator()" type="button" class="btn btn-danger btn-xs"
+            <button ng-if="isCommentCreator(comment)||isCreator()" type="button" class="btn btn-danger btn-xs"
                     ng-click="deleteComment(comment)"><i class="fa fa-trash"></i> Delete
             </button>
 
@@ -96,7 +96,7 @@
               <label>Title: </label>
             </div>
             <div class="col-md-8">
-              <span ng-show="titleVisible" ng-mouseenter="titleVisible = !titleVisible">{{task.title}}</span>
+              <span ng-show="titleVisible" ng-mouseenter="(isAssignee() || isCreator())? titleVisible = !titleVisible : null">{{task.title}}</span>
               <input ng-show="!titleVisible" type="text" ng-model="task.title" class="form-control"
                      ng-keypress="saveTitle($event)">
             </div>
@@ -140,8 +140,8 @@
             </div>
             <div class="col-md-8">
               <img ng-src="{{task.assignee.imageUrl}}" alt="profilepic" class="smallerAvatar" ng-show="visible">
-              <span ng-show="visible" ng-mouseenter="visible = !visible">{{task.assignee.firstname}} {{task.assignee.lastname}}</span>
-              <ui-select ng-show="!visible" ng-change="changeAssignee(task.assignee)" tagging theme="bootstrap"
+              <span ng-show="visible" ng-mouseenter="(isAssignee() || isCreator())? visible = !visible: null">{{task.assignee.firstname}} {{task.assignee.lastname}}</span>
+              <ui-select ng-if="isAssignee() || isCreator()" ng-show="!visible" ng-change="changeAssignee(task.assignee)" tagging theme="bootstrap"
                          tagging-label="false" tagging-tokens=",|ENTER|TAB"
                          ng-model="task.assignee" ng-disabled="visible" title="Assignee "
                          search-enabled="true" required>

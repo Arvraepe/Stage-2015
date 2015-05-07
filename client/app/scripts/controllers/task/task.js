@@ -21,7 +21,6 @@ angular.module('stageprojectApp')
       projectId:$routeParams.pid
     };
 
-    $scope.boardId = $routeParams.boardId;
     $scope.isCollapsed = true;
     var taskId = {
       _id : $routeParams.taskId
@@ -44,9 +43,10 @@ angular.module('stageprojectApp')
           $scope.isCreator = function(){
             return $scope.task.creator._id ===$scope.$parent.currentUser._id;
           };
-          $scope.isTaskCreator = function () {
-            return $scope.task.creator._id === $scope.$parent.currentUser._id;
+          $scope.isAssignee = function () {
+            return $scope.task.assignee._id === $scope.$parent.currentUser._id;
           };
+
           projectRequestFactory.getFullCollaboratorsForProject({
             params: $scope.projectId,
             success:function(response){

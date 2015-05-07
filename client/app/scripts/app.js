@@ -90,13 +90,19 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
         authorizedRoles: [USERROLES.user]
       }
     })
-    .when('/project/:pid/board/:boardId/task/:taskId', {
+    .when('/project/:pid/task/:taskId', {
       templateUrl: 'views/task/task.html',
-      controller: 'TaskCtrl'
+      controller: 'TaskCtrl',
+      data: {
+        authorizedRoles: [USERROLES.user]
+      }
     })
     .when('/updateTask', {
       templateUrl: 'views/updatetask.html',
-      controller: 'UpdatetaskCtrl'
+      controller: 'UpdatetaskCtrl',
+      data: {
+        authorizedRoles: [USERROLES.user]
+      }
     })
     .otherwise({
       redirectTo: '/'

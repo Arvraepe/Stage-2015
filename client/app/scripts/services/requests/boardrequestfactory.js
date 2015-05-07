@@ -47,6 +47,15 @@ angular.module('stageprojectApp')
           success: config.success,
           error: config.error
         })
+      },
+      getBoards: function (config) {
+        requestFactory.sendRequest({
+          path: 'boards/descriptor',
+          method: 'GET',
+          params: config.params,
+          success: config.success,
+          error: config.error
+        })
       }
     }
   });

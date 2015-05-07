@@ -4,12 +4,12 @@
   <li class="active">{{board.name|capitalize}}</li>
 </ol>
 <h2>{{board.name|capitalize}}
-  <span class="lazyTime">-
+  <span class="lazyTime">- due:
     <span ng-if="lazyDate >0" am-time-ago="board.deadline" ng-class="{'deadlineClose':lazyDate>0}"></span>
     <span ng-if="lazyDate <0" am-time-ago="board.deadline" ng-class="{'deadlineOver': lazyDate <0}"></span>
   </span>
 
-  <div class="  pull-right col-md-3 noPaddingRight ">
+  <div class="pull-right col-md-3 noPaddingRight ">
     <button type="button" ng-if="isLeader()" ng-click="openEditBoardModal()"
             class="btn btn-primary pull-right btnMarginLeft"><i class="fa fa-pencil"> Edit board</i></button>
     <button type="button" class="btn btn-success pull-right" ng-click="openCreateTaskModal()"><i
@@ -18,6 +18,10 @@
   </div>
 
 </h2>
+
+<div class="col-md-9 noPaddingLeft boardDescription">
+  {{board.description}}
+</div>
 
 
 <div class="col-md-12 noPaddingLeft noPaddingRight row">
@@ -31,7 +35,7 @@
         <div as-sortable-item-handle class="panel panel-warning">
           <div class="panel-heading">
             <div class="panel-title">
-              <a ng-href="#/project/{{board.projectId}}/board/{{board._id}}/task/{{task._id}}">{{task.identifier}} <span
+              <a ng-href="#/project/{{board.projectId}}/task/{{task._id}}">{{task.identifier}} <span
                 class="pull-right" ng-if="task.important"><i class="fa fa-flag"></i>
               </span></a>
             </div>
@@ -51,6 +55,14 @@
           </div>
         </div>
       </li>
+    </ul>
+  </div>
+</div>
+<div class="col-md-12 noPaddingLeft noPaddingRight row">
+  <div ng-repeat="projectBoard in projectboards" ng-style="{'width':100/projectboards.length+'%'}">
+    <h3 class="marginBotDeleteButton boardTitles">{{projectBoard.name}}</h3>
+    <ul ng-model="otherBoardsTasks" as-sortable="taskSortOptions">
+      <li ng-repeat="board in otherBoardsTasks"></li>
     </ul>
   </div>
 </div>

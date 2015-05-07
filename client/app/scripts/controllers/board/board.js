@@ -45,6 +45,18 @@ angular.module('stageprojectApp')
             $scope.board.leader = response.data.board.parentProject.leader;
             addTasksToStates();
             calculateTimeDifference();
+            var projectId = {
+              projectId : $scope.board.parentProject._id
+            };
+            boardRequestFactory.getBoards({
+              params: projectId,
+              success:function(response){
+                $scope.projectboards = response.data.boards;
+              },
+              error: function(error){
+
+              }
+            })
           },
           error: function(error){
             console.log(error);
@@ -108,7 +120,6 @@ angular.module('stageprojectApp')
         }
       });
       modalInstance.result.then(function (task) {
-        //$scope.board.states[0].tasks.push(task);
         addTaskToState(task);
       }, function () {
       })
@@ -135,15 +146,11 @@ angular.module('stageprojectApp')
             description:event.source.itemScope.modelValue.description
           }
         };
-        /*task._id =event.source.itemScope.modelValue._id;
-        task.state = event.source.itemScope.modelValue.state;
-        task.assignee = event.source.itemScope.modelValue.assignee._id;
-        task.creator = event.source.itemScope.modelValue.creator._id;*/
+
         console.log(event);
         taskRequestFactory.changeState({
           data: task,
           success:function(response){
-            //event.source.itemScope.modelValue = response.data;
             //taken opnieuw tekenen
             angular.forEach($scope.board.tasks, function (task, index, array) {
               if(task._id === response.data.task._id){
@@ -159,9 +166,36 @@ angular.module('stageprojectApp')
       orderChanged: function(event){
 
       },
+      containerPositioning:'relative',
       additionalPlaceholderClass:'dragPlaceholder'
     };
 
+    $scope.otherBoardOptions = {
+      itemMoved: function (event) {
+
+        var modalInstance = $modal.open({
+          templateUrl: 'views/board/changeboard.html',
+          controller: 'ChangeBoardCtrl',
+          size: size,
+          resolve:{
+            board: function(){
+              return $scope.board;
+            }
+          }
+        });
+        modalInstance.result.then(function (response) {
+
+        }, function () {
+        })
+      },
+      orderChanged: function(event){
+
+      },
+      containerPositioning:'relative',
+      additionalPlaceholderClass:'dragPlaceholder'
+    };
+
+    $scope.otherBoardsTasks = [{}];
 
 
 
