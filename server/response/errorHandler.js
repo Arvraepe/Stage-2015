@@ -77,6 +77,7 @@ exports.makeUserData = function (user) {
 };
 
 function makeUserData(user) {
+    user = user || {};
     var userResult = {};
     userResult.user = user;
     userResult.user.role = 'user';
