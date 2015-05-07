@@ -124,6 +124,20 @@ exports.getBoardById = function (boardId, callback) {
     boardRepo.findBoard({_id: boardId}, callback);
 };
 
+exports.getBoardsDesc = function(projectId, userId, callback) {
+    async.waterfall([
+        function(callback) {
+            projectService.checkAuthority(projectId, userId, callback);
+        },
+        function(authorized) {
+            if(authorized) {
+                var select = "name";
+                boardRepo.selectBoards({projectId: projectId}, select, callback);
+            } else callback(new Error('You have no rights to see this project'));
+        }
+    ], callback)
+};
+
 function getBoard(boardId, callback) {
     boardRepo.findBoard({_id: boardId}, callback);
 }

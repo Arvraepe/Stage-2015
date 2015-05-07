@@ -12,6 +12,7 @@ exports.registerRoutes = function (app) {
     app.get('/board', getBoard);
     app.put('/board', updateBoard);
     app.del('/board', deleteBoard);
+    app.get('/boardsdescriptors', getBoards);
 };
 
 function createBoard(req, res, next) {
@@ -68,4 +69,17 @@ function deleteBoard(req, res, next) {
         result = errorHandler.handleResult(err, null, 'Board deleted.');
         res.send(result);
     });
+}
+
+function getBoards(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            auth.verifyToken(req.params.token, callback);
+        },
+        function(userId, callback) {
+            boardService.getBoardsDesc(req.params.projectId, userId, callback);
+        }
+    ], function(err, result) {
+        res.send(errorHandler.handleResult(err, { boards: result }, 'Boards fetched'));
+    })
 }
