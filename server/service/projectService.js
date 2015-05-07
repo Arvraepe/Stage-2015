@@ -163,7 +163,9 @@ exports.changeLeader = function (params, leaderId, callback) {
 exports.addRegisteredCollab = function (userId, projectId, callback) {
     projectRepo.findProject({uniqueLinks: projectId}, function (err, project) {
         if (project == undefined) {
-            callback(new Error('project does not exist'));
+            var error = new Error('project does not exist');
+            error.code = "WARN";
+            callback(error);
         } else {
             project.collaborators.push(userId);
             projectRepo.findOneAndUpdate(project._id, project, callback);

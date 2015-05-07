@@ -15,6 +15,7 @@ exports.registerRoutes = function(app) {
     app.get('/tasks', getTasks);
     app.put('/task/comment', updateComment);
     app.del('/task/comment', deleteComment);
+    app.put('/task/switchboard', switchBoard);
 };
 
 function createTask(req, res, next) {
@@ -106,5 +107,18 @@ function deleteComment(req, res, next) {
         }
     ], function(err) {
         res.send(errorHandler.handleResult(err, null, 'Comment deleted.'));
+    })
+}
+
+function switchBoard(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            auth.verifyToken(req.params.token, callback)
+        },
+        function(userId, callnack) {
+            taskService.switchBoard(req.params.task, userId, callnack);
+        }
+    ], function(err, board) {
+        res.send(errorHandler.handleResult(err, {}, 'Task was moved to ' + board.name + ' board.' ));
     })
 }

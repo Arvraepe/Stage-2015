@@ -233,7 +233,24 @@ exports.updateComment = function (comment, userId, callback) {
 
 exports.getTaskCount = function(boardId, state, callback) {
     taskRepo.getTaskCount({ boardId: boardId, state: state}, callback);
-}
+};
+
+exports.switchBoard = function(newTask, userId, callback) {
+    async.waterfall([
+        function(callback) {
+            taskRepo.findTask({ _id: newTask._id }, callback);
+        },
+        function(task, callback) {
+            if(task.creator == userId || task.assignee == userId) {
+                task.boardId = newTask.boardId;
+                taskRepo.findOneAndUpdate({ _id: task._id }, task, callback)
+            } else callback(new Error('You do not have the right to change this task.'));
+        },
+        function(task, callback) {
+            boardService.getBoardsDesc(task.projectId, userId, callback);
+        }
+    ], callback);
+};
 
 function createComment(taskId, userId, comment, callback) {
     var comment = {
@@ -247,5 +264,5 @@ function createComment(taskId, userId, comment, callback) {
 }
 
 function filterTask(task) {
-    return _.pick(task, ['title', 'description', 'boardId', 'creator', 'important', 'deadline', 'state', 'assignee', '_id']);
+    return _.pick(task, ['title', 'description', 'creator', 'important', 'deadline', 'state', 'assignee', '_id']);
 }
