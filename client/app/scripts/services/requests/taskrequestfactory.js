@@ -63,6 +63,15 @@ angular.module('stageprojectApp')
           success: config.success,
           error:config.error
         })
+      },
+      switchBoard: function (config) {
+        requestFactory.sendRequest({
+          path:'task/switchboard',
+          method:'PUT',
+          data:config.data,
+          success: config.success,
+          error:config.error
+        })
       }
 
 

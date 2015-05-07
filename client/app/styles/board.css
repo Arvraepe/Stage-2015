@@ -33,6 +33,14 @@
   padding-left: 15px;
 }
 
+.boardsLayout{
+  float:left;
+  position: relative;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
 .boardRightBorder{
   border-right: dashed 2px #e5e5e5;
 }

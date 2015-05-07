@@ -8,7 +8,7 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('BoardCtrl', function ($scope, $routeParams, boardRequestFactory,$modal, taskRequestFactory) {
+  .controller('BoardCtrl', function ($scope, $routeParams, boardRequestFactory,$modal, taskRequestFactory, notificationFactory) {
     $scope.board = {};
     $scope.amountOfStates = 0;
     $scope.columnWidth = 0;
@@ -51,7 +51,13 @@ angular.module('stageprojectApp')
             boardRequestFactory.getBoards({
               params: projectId,
               success:function(response){
+                angular.forEach(response.data.boards, function (board, index, array) {
+                  if(board._id === $scope.board._id){
+                    array.splice(index,1);
+                  }
+                });
                 $scope.projectboards = response.data.boards;
+
               },
               error: function(error){
 
@@ -74,7 +80,6 @@ angular.module('stageprojectApp')
         states.push(stateObj);
       });
       angular.forEach($scope.board.tasks, function(task){
-
         angular.forEach(states, function(state){
           if(task.state == state.name){
             state.tasks.push(task);
@@ -135,6 +140,22 @@ angular.module('stageprojectApp')
 
     $scope.taskSortOptions = {
       itemMoved:function(event){
+        console.log(event);
+        if(event.dest.sortableScope.$parent.projectBoard){
+          var taskInfo = {task:{
+            _id : event.source.itemScope.modelValue._id,
+            boardId : event.dest.sortableScope.$parent.projectBoard._id,
+          }};
+          taskRequestFactory.switchBoard({
+            data: taskInfo,
+            success:function(response){
+              notificationFactory.createNotification(response);
+            },
+            error: function (error) {
+              notificationFactory.createNotification(error);
+            }
+          })
+        }
         event.source.itemScope.modelValue.state = event.dest.sortableScope.$parent.state.name;
         var task = {
           task:{

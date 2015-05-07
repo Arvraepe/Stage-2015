@@ -12,7 +12,7 @@ exports.registerRoutes = function (app) {
     app.get('/board', getBoard);
     app.put('/board', updateBoard);
     app.del('/board', deleteBoard);
-    app.get('/boardsdescriptors', getBoards);
+    app.get('/boardsdescriptor', getBoards);
 };
 
 function createBoard(req, res, next) {

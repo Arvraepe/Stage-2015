@@ -50,7 +50,7 @@ angular.module('stageprojectApp')
       },
       getBoards: function (config) {
         requestFactory.sendRequest({
-          path: 'boards/descriptor',
+          path: 'boardsdescriptor',
           method: 'GET',
           params: config.params,
           success: config.success,

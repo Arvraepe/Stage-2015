@@ -58,11 +58,16 @@
     </ul>
   </div>
 </div>
-<div class="col-md-12 noPaddingLeft noPaddingRight row">
-  <div ng-repeat="projectBoard in projectboards" ng-style="{'width':100/projectboards.length+'%'}">
+<div class="col-md-12 noPaddingLeft noPaddingRight row well">
+  <h3>Other Boards</h3>
+  <div ng-repeat="projectBoard in projectboards" class="boardsLayout" ng-style="{'width':100/projectboards.length+'%'}"  ng-class="{'boardRightBorder': ($index+1)!=board.states.length}">
     <h3 class="marginBotDeleteButton boardTitles">{{projectBoard.name}}</h3>
-    <ul ng-model="otherBoardsTasks" as-sortable="taskSortOptions">
-      <li ng-repeat="board in otherBoardsTasks"></li>
+    <ul ng-model="otherBoardsTasks" as-sortable="taskSortOptions" is-disabled="true" style="list-style-type: none">
+      <li ng-repeat="board in otherBoardsTasks | limitTo:1" as-sortable-item>
+        <div as-sortable-item-handle style="min-width:100%;min-height:25px; border:solid 1px">
+          DROP BELOW
+        </div>
+      </li>
     </ul>
   </div>
 </div>
