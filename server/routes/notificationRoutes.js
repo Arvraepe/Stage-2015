@@ -5,7 +5,7 @@ var auth = require('./../service/authenticationService');
 var notificationService = require('./../service/notificationService');
 var errorHandler = require('./../response/errorHandler');
 
-exports.registerRotes = function(app) {
+exports.registerRoutes = function(app) {
     app.get('/notifications/user',getUserFromToken, getNotificationsByUser);
 };
 
