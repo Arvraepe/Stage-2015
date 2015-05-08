@@ -22,6 +22,7 @@ var userRoutes = require('./routes/userRoutes');
 var projectRoutes = require('./routes/projectRoutes');
 var boardRoutes = require('./routes/boardRoutes');
 var taskRoutes = require('./routes/taskRoutes');
+var notificationRoutes = require('./routes/notificationRoutes');
 
 app.use(restify.fullResponse());
 app.use(restify.bodyParser());
@@ -36,6 +37,7 @@ userRoutes.registerRoutes(app);
 projectRoutes.registerRoutes(app);
 boardRoutes.registerRoutes(app);
 taskRoutes.registerRoutes(app);
+notificationRoutes.registerRoutes(app);
 
 app.on('InternalServerError', function (req, res, err, cb) {
     err = { success : false, messages : [{ code: 'ERROR', messages: 'Something went wrong. Please try again.' }] };
