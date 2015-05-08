@@ -18,5 +18,5 @@ exports.create = function(notification, callback) {
 };
 
 exports.find = function(condition, callback) {
-    Notification.find(condition, callback);
+    Notification.find(condition).lean().exec(callback);
 };
