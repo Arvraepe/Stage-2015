@@ -141,5 +141,5 @@ function makeSubjectDescriptor(userId, projectId, boardId, taskId) {
 }
 
 function makeUpdateProjectNotification(subjectDescriptor, description) {
-    makeNotification(subjectDescriptor, description, "UPDATE", "PROJECT");
+     return makeNotification(subjectDescriptor, description, "UPDATE", "PROJECT");
 }
