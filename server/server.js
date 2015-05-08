@@ -7,13 +7,15 @@ var restify = require('restify');
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/AgCollab');
 userSchema = require('./models/user').User;
+projectSchema = require('./models/project').Project;
 boardSchema = require('./models/board').Board;
 taskSchema = require('./models/task').Task;
-projectSchema = require('./models/project').Project;
-mongoose.model('Board', boardSchema);
+notificationSchema = require('./models/notification').Notification;
 mongoose.model('User', userSchema);
 mongoose.model('Project', projectSchema);
+mongoose.model('Board', boardSchema);
 mongoose.model('Task', taskSchema);
+mongoose.model('Notification', notificationSchema);
 
 var app = restify.createServer();
 var userRoutes = require('./routes/userRoutes');
@@ -37,7 +39,7 @@ taskRoutes.registerRoutes(app);
 
 app.on('InternalServerError', function (req, res, err, cb) {
     err = { success : false, messages : [{ code: 'ERROR', messages: 'Something went wrong. Please try again.' }] };
-    return cb(err);
+    res.send(err);
 });
 
 app.listen(6543, function() {
