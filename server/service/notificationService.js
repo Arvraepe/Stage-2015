@@ -104,7 +104,7 @@ function getNotificationsByProjectIds(projectIds, callback) {
     });
     async.parallel(tasks, function(err, results) {
         var allNotifications = [];
-        if(!results) {
+        if(results != undefined && results.length > 0) {
             allNotifications = allNotifications.concat.apply(allNotifications, results);
         }
         callback(err, allNotifications);
