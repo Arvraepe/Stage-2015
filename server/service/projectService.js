@@ -131,6 +131,7 @@ exports.updateProject = function (userId, params, callback) {
     if(messages.length>0) callback(messages);
     isLeader(params._id, userId, function (err, isLeader) {
         if (isLeader) {
+            params = _.omit(params, 'collaborators'); // collaborators will be added later
             projectRepo.findOneAndUpdate(params._id, filterProject(params), function (err, result) {
                 callback(err, result);
             });

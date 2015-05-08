@@ -7,13 +7,14 @@ var projectService = require('./../service/projectService');
 var errorHandler = require('./../response/errorHandler');
 var userService = require('./../service/userService');
 var auth = require('./../service/authenticationService');
+var notifications = require('./../service/notificationService');
 
 exports.registerRoutes = function(app) {
     app.post('/project/create', createProject);
     app.get('/project/getprojects', getProjects);
     app.get('/project/getproject', getProject);
     app.del('/project/delete', deleteProject);
-    app.put('/project/update', updateProject);
+    app.put('/project/update', updateProject, makeNotification);
     app.put('/project/changeleader', changeLeader);
     app.get('/project/membersDesc', getMembersDesc);
     app.get('/project/members', getMembers)
@@ -39,7 +40,6 @@ function createProject(req, res, next) {
         var response = errorHandler.handleProjectErrors(err, result);
         res.send(response);
     });
-    next();
 }
 
 function getProjects(req, res, next) {
@@ -66,6 +66,7 @@ function updateProject(req, res, next) {
             projectService.updateProject(userId, req.params, callback)
         },
         function (project, callback) {
+            req.oldCollaborators = project.collaborators;
             userService.findCollaborators(req.params.collaborators, function(err, userExists) {
                 callback(err, project, userExists)
             });
@@ -79,8 +80,9 @@ function updateProject(req, res, next) {
     ], function(err, result) {
         var response = errorHandler.handleProjectErrors(err, result, 'Projects updated successfully.');
         res.send(response);
+        req.project = result[result.length - 1];
+        return next();
     });
-    next();
 }
 
 function getProject(req, res, next) {
@@ -152,4 +154,10 @@ function getMembers(req, res, next) {
         }
     ], function(err, members) {
         res.send(errorHandler.handleResult(err, { members : members }, 'members fetched.'));
-    })}
+    })
+}
+
+function makeNotification(req, res, next) {
+    var oldCollabs = req.oldCollaborators, project = req.project;
+    notifications.addUserNotification(oldCollabs, project);
+}
