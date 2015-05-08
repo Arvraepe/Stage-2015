@@ -52,7 +52,7 @@
       <div class="navbar-right">
         <div class="welcomeUser normalFontColor" ng-if="isAuthorized(userRoles.user)">
           <span ng-show="requestsBusy>0"><i class="fa fa-spinner fa-pulse"></i></span>
-          Hi, {{currentUser.username}}
+          Hi, {{currentUser.firstname}} {{currentUser.lastname}}
           <img ng-if="currentUser && currentUser.imageUrl" ng-src="{{currentUser.imageUrl}}" alt="ProfilePic" class="smallAvatar">
           <div class="btn-group" dropdown>
             <button class="btn btn-default dropdown-toggle normalFontColor" dropdown-toggle>

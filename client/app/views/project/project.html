@@ -90,12 +90,12 @@
             <li>
               <i class="icon-f-crown"></i>
               <img ng-src="{{leader.imageUrl}}" alt="Profile Picture" class="smallerAvatar"/>
-              <span>{{leader.username}} <i class="icon-crown pull-right crownIcon"></i>
+              <span>{{leader.name}} <i class="icon-crown pull-right crownIcon"></i>
               </span>
             </li>
             <li ng-repeat="collab in collaborators" style="margin-top: 3px;margin-bottom:3px;">
               <img ng-src="{{collab.imageUrl}}" alt="Profile Picture" class="smallerAvatar"/>
-              <span>{{collab.username}}</span>
+              <span>{{collab.name}} {{collab.lastname}}</span>
               <button ng-if="isLeader()" class="pull-right btn btn-default btn-xs" ng-click="openPromoteModal(collab)">
                 <i class="fa fa-arrow-up"></i></button>
             </li>

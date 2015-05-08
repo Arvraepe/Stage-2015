@@ -14,8 +14,13 @@ angular.module('stageprojectApp')
     }];
 
     $scope.invite = function (coworkersToInvite) {
+      var inviteCoworkersInfo = {
+        emails : $scope.coworkersToInvite,
+        domain:'http://localhost:9000',
+        registerPath:'/#/register/'
+      };
       userRequestHandler.inviteCoworkers({
-        data:coworkersToInvite,
+        data:inviteCoworkersInfo,
         success:function(response){
           notificationFactory.createNotification(response);
         },

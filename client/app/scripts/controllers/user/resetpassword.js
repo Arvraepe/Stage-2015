@@ -10,7 +10,9 @@
 angular.module('stageprojectApp')
   .controller('ResetpasswordCtrl', ['$scope', 'userRequestHandler', '$window','notificationFactory', function ($scope, userRequestHandler, $window, notificationFactory) {
     $scope.user = {
-      email: ''
+      email: '',
+      domain:'http://localhost:9000',
+      recoverPath:'/#/user/recover/'
     };
 
     $scope.resetPassword = function (user) {

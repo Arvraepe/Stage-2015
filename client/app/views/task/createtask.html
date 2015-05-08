@@ -54,7 +54,7 @@
                    search-enabled="true" >
           <ui-select-match placeholder="Assignee">{{$select.selected.username}}</ui-select-match>
           <ui-select-choices repeat="collab in board.collaborators">
-            {{collab.username}}
+            {{collab.name}}
           </ui-select-choices>
         </ui-select>
       </div>

@@ -95,7 +95,7 @@ function confirmReset(req, res, next) {
 function inviteCoWorkers(req, res, next) {
     var tasks = [
         function(callback) {
-            userService.confirmEmails(req.params, callback);
+            userService.confirmEmails(req.params.emails, callback);
         },
         function(vEmails, number, callback) {
             var pTasks = [];

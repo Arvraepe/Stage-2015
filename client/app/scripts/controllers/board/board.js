@@ -212,6 +212,9 @@ angular.module('stageprojectApp')
       orderChanged: function(event){
 
       },
+      dragStart: function (object) {
+
+      },
       containerPositioning:'relative',
       additionalPlaceholderClass:'dragPlaceholder'
     };
