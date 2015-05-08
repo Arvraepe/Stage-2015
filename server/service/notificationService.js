@@ -13,6 +13,9 @@ exports.addUserNotification = function(oldProject, oldCollaborators, project) {
     if(project.description != oldProject.description) {
         createUpdateDescriptionProjectNotification(project);
     }
+    if(project.deadline != oldProject.deadline) {
+        createUpdateDeadlineProjectNotification(oldProject.deadline, project);
+    }
     project.collaborators.forEach(function (collab, index, arr) {
         oldCollaborators.forEach(function (oldId, sIndex, sArr) {
             if(oldId == collab._id) {
@@ -118,6 +121,12 @@ function createUpdateNameProjectNotification(oldName, project) {
 
 function createUpdateDescriptionProjectNotification(project) {
     var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader, project._id), " has changed the description of the " + project.name + " project");
+    notificationRepo.create(notification);
+}
+
+function createUpdateDeadlineProjectNotification(oldDeadline, project) {
+    var description = " has moved the deadline from " + oldDeadline.toISOString().slice(0,10) + " to " + project.deadline.toISOString.slice(0,10) + " on the " + project.name;
+    var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader, project._id), description);
     notificationRepo.create(notification);
 }
 
