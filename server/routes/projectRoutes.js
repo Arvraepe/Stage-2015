@@ -62,10 +62,19 @@ function updateProject(req, res, next) {
         function(callback) {
             auth.verifyToken(req.params.token, callback)
         },
-        function (userId, callback) {
-            projectService.updateProject(userId, req.params, callback)
+        function(userId, callback) {
+            async.series([
+                function(callback) {
+                    projectService.getProjectDesc(req.params._id, userId, callback);
+                },
+                function(callback) {
+                    projectService.updateProject(userId, req.params, callback)
+                }
+            ], callback)
         },
-        function (project, callback) {
+        function (results, callback) {
+            req.oldProject = results[0];
+            var project = results[1];
             req.oldCollaborators = project.collaborators;
             userService.findCollaborators(req.params.collaborators, function(err, userExists) {
                 callback(err, project, userExists)
@@ -159,5 +168,5 @@ function getMembers(req, res, next) {
 
 function makeNotification(req, res, next) {
     var oldCollabs = req.oldCollaborators, project = req.project;
-    notifications.addUserNotification(oldCollabs, project);
+    notifications.addUserNotification(req.oldProject, oldCollabs, project);
 }
