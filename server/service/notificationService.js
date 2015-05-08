@@ -115,18 +115,18 @@ function addNotifications(notifications) {
 }
 
 function createUpdateNameProjectNotification(oldName, project) {
-    var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader, project._id), " has changed the name of the  " + oldName + " project to " + project.name);
+    var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader._id, project._id), " has changed the name of the  " + oldName + " project to " + project.name);
     notificationRepo.create(notification);
 }
 
 function createUpdateDescriptionProjectNotification(project) {
-    var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader, project._id), " has changed the description of the " + project.name + " project");
+    var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader._id, project._id), " has changed the description of the " + project.name + " project");
     notificationRepo.create(notification);
 }
 
 function createUpdateDeadlineProjectNotification(oldDeadline, project) {
-    var description = " has moved the deadline from " + oldDeadline.toISOString().slice(0,10) + " to " + project.deadline.toISOString.slice(0,10) + " on the " + project.name;
-    var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader, project._id), description);
+    var description = oldDeadline ? " has moved the deadline from " + oldDeadline.toISOString().slice(0,10) + " to " + project.deadline.toISOString.slice(0,10) + " on the " + project.name : " has set a deadline on the " + project.name + " project to " + project.deadline.toISOString().slice(0, 10);
+    var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader._id, project._id), description);
     notificationRepo.create(notification);
 }
 
