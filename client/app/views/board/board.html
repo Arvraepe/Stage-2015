@@ -22,7 +22,7 @@
 <div class="col-md-9 noPaddingLeft boardDescription">
   {{board.description}}
 </div>
-<div class="col-md-12 row">
+<div class="col-md-12 row" ng-if="board.tasks.length>0">
   <h3>Other Boards</h3>
   <div ng-repeat="projectBoard in projectboards" class="boardsLayout row" ng-style="{'width':100/projectboards.length+'%'}"  >
     <ul ng-model="otherBoardsTasks" as-sortable="taskSortOptions" is-disabled="true" style="list-style-type: none" class="noPaddingLeft">

@@ -8,7 +8,7 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('DashboardCtrl', ['$scope', '$window', '$modal', 'projectRequestFactory', function ($scope, $window, $modal, projectRequestFactory) {
+  .controller('DashboardCtrl', ['$scope', '$window', '$modal', 'projectRequestFactory','notificationRequestFactory', function ($scope, $window, $modal, projectRequestFactory, notificationRequestFactory) {
     $scope.userLeaderProjects = [];
     $scope.userCollaboratorProjects = [];
 
@@ -40,8 +40,22 @@ angular.module('stageprojectApp')
           $scope.userLeaderProjects = response.data.myProjects;
           $scope.userCollaboratorProjects = response.data.otherProjects;
           $scope.showAllProjects();
+          $scope.getNotifications();
         },
         error: function (error) {
+        }
+      })
+    };
+
+    $scope.getNotifications = function () {
+      console.log('lel');
+      notificationRequestFactory.getNotificationsForUser({
+        params: {},
+        success: function (response) {
+          $scope.notifications = response.data.notifications;
+        },
+        error: function (error) {
+          console.log(error);
         }
       })
     };
