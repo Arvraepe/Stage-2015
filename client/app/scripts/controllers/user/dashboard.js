@@ -8,7 +8,7 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('DashboardCtrl', ['$scope', '$window', '$modal', 'projectRequestFactory','notificationRequestFactory', function ($scope, $window, $modal, projectRequestFactory, notificationRequestFactory) {
+  .controller('DashboardCtrl', ['$scope', '$modal', 'projectRequestFactory','notificationRequestFactory', '$location',function ($scope, $modal, projectRequestFactory, notificationRequestFactory, $location) {
     $scope.userLeaderProjects = [];
     $scope.userCollaboratorProjects = [];
 
@@ -53,6 +53,7 @@ angular.module('stageprojectApp')
         params: {},
         success: function (response) {
           $scope.notifications = response.data.notifications;
+          makeNotificationLink($scope.notifications);
         },
         error: function (error) {
           console.log(error);
@@ -99,6 +100,18 @@ angular.module('stageprojectApp')
       $scope.currentPage = pageNo;
     };
 
+    function makeNotificationLink(notifications){
+      angular.forEach(notifications, function (notification) {
+        switch(notification.subjectType.toUpperCase()){
+          case 'PROJECT': notification.link = '/project/'+notification.subjectDescriptor.projectId;
+                break;
+        }
+      })
+    }
+
+    $scope.notificationRead=function(notificationLink){
+      $location.path(notificationLink);
+    }
 
 
   }]);

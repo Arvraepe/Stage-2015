@@ -1,3 +1,22 @@
 .dashboardBadge {
   font-size:14px;
 }
+
+.dashboardHeader{
+  margin-bot:25px;
+}
+
+.notificationUser{
+  font-weight:bold;
+}
+
+.notificationLayout{
+  border: #e7e7e7 solid 2px;
+  padding:10px;
+  margin-bottom: 15px;
+}
+
+.notificationLayout:hover{
+  cursor: pointer;
+  background-color: #f8f8f8;
+}

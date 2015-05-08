@@ -1,5 +1,5 @@
 <div ng-init="getProjectsForUser() "></div>
-<div class="col-md-9 noPaddingLeft">
+<div class="col-md-9 noPaddingLeft dashboardHeader">
   <div class="dashboard-panel-left">
     <button type="button" ng-click="openModal()" class="btn btn-success"><i
       class="fa fa-plus-circle " style="vertical-align: middle;"></i> <span>New project</span></button>
@@ -8,6 +8,13 @@
   </div>
 </div>
 
+<div class="col-md-9 noPaddingLeft">
+  <div ng-repeat="notification in notifications" class="notificationLayout" ng-click="notificationRead(notification.link)">
+    <img ng-src="{{notification.subjectDescriptor.user.imageUrl}}" alt="profilepic" class="smallerAvatar">
+
+    <span class="notificationUser">{{notification.subjectDescriptor.user.firstname}} {{notification.subjectDescriptor.user.lastname}}</span> {{notification.description}} (<span am-time-ago="notification.timeStamp"></span>)
+  </div>
+</div>
 
 <div class="col-md-3 noPaddingRight pull-right">
 
