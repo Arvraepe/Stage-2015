@@ -6,7 +6,13 @@ var async = require('async');
 var userService = require('./userService');
 var projectService = require('./projectService');
 
-exports.addUserNotification = function(oldCollaborators, project) {
+exports.addUserNotification = function(oldProject, oldCollaborators, project) {
+    if(project.name != oldProject.name) {
+        createUpdateNameProjectNotification(oldProject.name, project)
+    }
+    if(project.description != oldProject.description) {
+        createUpdateDescriptionProjectNotification(project);
+    }
     project.collaborators.forEach(function (collab, index, arr) {
         oldCollaborators.forEach(function (oldId, sIndex, sArr) {
             if(oldId == collab._id) {
@@ -17,16 +23,7 @@ exports.addUserNotification = function(oldCollaborators, project) {
     });
     var notifications = [];
     project.collaborators.forEach(function (collab) {
-        var notification = {
-            subjectDescriptor: {
-                projectId: project._id,
-                userId: collab._id
-            },
-            description: collab.name + " has been added to the " + project.name + " project",
-            timeStamp: new Date(),
-            type: 'UPDATE',
-            subjectType: 'PROJECT'
-        };
+        var notification = makeUpdateProjectNotification(makeSubjectDescriptor(collab._id, project._id), " has been added to the " + project.name + " project");
         notifications.push(notification);
     });
     addNotifications(notifications);
@@ -41,16 +38,7 @@ exports.addUserNotification = function(oldCollaborators, project) {
     async.parallel(tasks, function(err, results){
         var removeNotifications = [];
         results.forEach(function (user) {
-            var notification = {
-                subjectDescriptor: {
-                    projectId: project._id,
-                    userId: user._id
-                },
-                description: user.firstname + " " + user.lastname + " has been removed from the " + project.name + " project",
-                timeStamp: new Date(),
-                type: 'UPDATE',
-                subjectType: 'PROJECT'
-            };
+            var notification = makeUpdateProjectNotification(makeSubjectDescriptor(user._id, project._id), " has been removed from the " + project.name + " project");
             removeNotifications.push(notification)
         });
         addNotifications(removeNotifications);
@@ -121,4 +109,37 @@ function addNotifications(notifications) {
         );
     });
     async.parallel(tasks);
+}
+
+function createUpdateNameProjectNotification(oldName, project) {
+    var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader, project._id), " has changed the name of the  " + oldName + " project to " + project.name);
+    notificationRepo.create(notification);
+}
+
+function createUpdateDescriptionProjectNotification(project) {
+    var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader, project._id), " has changed the description of the " + project.name + " project");
+    notificationRepo.create(notification);
+}
+
+function makeNotification(subjectDescriptor, description, type, subjectType) {
+    return {
+        subjectDescriptor: subjectDescriptor,
+        description: description,
+        timeStamp: new Date(),
+        type: type,
+        subjectType: subjectType
+    };
+}
+
+function makeSubjectDescriptor(userId, projectId, boardId, taskId) {
+    return{
+        userId: userId,
+        projectId: projectId,
+        boardId: boardId,
+        taskId: taskId
+    };
+}
+
+function makeUpdateProjectNotification(subjectDescriptor, description) {
+    makeNotification(subjectDescriptor, description, "UPDATE", "PROJECT");
 }
