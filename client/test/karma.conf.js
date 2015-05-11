@@ -36,6 +36,7 @@ module.exports = function(config) {
       'app/bower_components/textAngular/src/textAngular.js',
       'app/bower_components/textAngular/src/textAngular-sanitize.js',
       'app/bower_components/textAngular/src/textAngularSetup.js',
+      'app/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

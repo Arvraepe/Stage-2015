@@ -159,11 +159,14 @@ exports.makeUpdateTaskNotification = function (oldTask, newTask, userId) {
         if(oldTask.important != newTask.important) {
             createTaskImportantNotification(newTask, project.name, board.name, userId)
         }
-        if(oldTask.deadline.getTime() != newTask.deadline.getTime()) {
+        if(oldTask.deadline != undefined && newTask.deadline != undefined && oldTask.deadline.getTime() != newTask.deadline.getTime()) {
             createTaskDeadlineNotification(oldTask.deadline, task, project.name, board.name, userId);
         }
-        if(oldTask.assignee != newTask.assignee) {
+        if(oldTask.assignee != newTask.assignee._id) {
             createTaskAssigneeNotification(newTask, project.name, board.name);
+        }
+        if(oldTask.state != newTask.state) {
+            createTaskStateNotification(oldTask.state, newTask, project.name, board.name, userId);
         }
     });
 };
@@ -296,7 +299,13 @@ function createTaskDeadlineNotification(oldDeadline, task, projectName, boardNam
 
 function createTaskAssigneeNotification(task, projectName, boardName) {
     var description = " has been assigned to the " + task.identifier + " task on the " + boardName + " board in the " + projectName + " project.";
-    var notification = makeUpdateTaskNotification(task.assignee, task.projectId, task.boardId, task._id, description);
+    var notification = makeUpdateTaskNotification(task.assignee._id, task.projectId, task.boardId, task._id, description);
+    create(notification);
+}
+
+function createTaskStateNotification(oldState, task, projectName, boardName, userId) {
+    var description = " has changed the state of the " + task.identifier + " task from " + oldState + " to " + task.state + " on the " + boardName + " board in the " + projectName + " project."
+    var notification = makeUpdateTaskNotification(userId, task.projectId, task.boardId, task._id, description);
     create(notification);
 }
 
