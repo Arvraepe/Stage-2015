@@ -5,6 +5,7 @@ var notificationRepo = require('./../repository/notificationRepository');
 var async = require('async');
 var userService = require('./userService');
 var projectService = require('./projectService');
+var boardService = require('./boardService');
 var _ = require('underscore');
 
 exports.makeUpdateProjectNotifications = function (oldProject, oldCollaborators, project) {
@@ -121,6 +122,68 @@ exports.makeUpdateBoardNotification = function(oldBoard, newBoard, userId) {
     })
 };
 
+exports.makeCreateTaskNotification = function(task, userId) {
+    async.parallel([
+        function(callback) {
+            projectService.getProjectDesc(task.projectId, userId, callback);
+        },
+        function(callback) {
+            boardService.getBoardById(task.boardId, callback);
+        }
+    ], function(err, results) {
+        var project = results[0], board = results[1];
+        var notifications = [];
+        var description = " has created a new task on the " + board.name + " board in the " + project.name + " project.";
+        notifications.push(makeCreateTaskNotification(userId, project._id, board._id, task._id, description));
+        notifications.push(makeCreateTaskNotification(task.assignee._id, project._id, board._id, task._id, " has been assigned to the " + task.identifier + " task"));
+        addNotifications(notifications);
+    });
+};
+
+exports.makeUpdateTaskNotification = function (oldTask, newTask, userId) {
+    async.parallel([
+        function(callback) {
+            projectService.getProjectDesc(newTask.projectId, userId, callback);
+        },
+        function(callback) {
+            boardService.getBoardById(newTask.boardId, callback);
+        }
+    ], function(err, results) {
+        var project = results[0], board = results[1];
+        if(oldTask.title != newTask.title) {
+            createTaskTitleNotification(oldTask.title, newTask, project.name, board.name, userId);
+        }
+        if(oldTask.description != newTask.description) {
+            createTaskDescriptionNotification(task, project.name, board.name, userId);
+        }
+        if(oldTask.important != newTask.important) {
+            createTaskImportantNotification(newTask, project.name, board.name, userId)
+        }
+        if(oldTask.deadline.getTime() != newTask.deadline.getTime()) {
+            createTaskDeadlineNotification(oldTask.deadline, task, project.name, board.name, userId);
+        }
+        if(oldTask.assignee != newTask.assignee) {
+            createTaskAssigneeNotification(newTask, project.name, board.name);
+        }
+    });
+};
+
+exports.makeSwitchBoardNotification = function(task, newId, userId) {
+    async.parallel([
+        function(callback) {
+            boardService.getBoardById(task.boardId, callback);
+        },
+        function(callback) {
+            boardService.getBoardById(newId, callback);
+        },
+        function(callback) {
+            projectService.getProjectDesc(task.projectId, userId, callback);
+        }
+    ], function(err, results) {
+        createTaskChangeBoardNotification(task, results[0], results[1], results[3].name, userId);
+    });
+};
+
 function makeJoinNotification(project, userId) {
     return makeCreateProjectNotification(userId, project._id, " has been added to the " + project.name + " project.");
 }
@@ -206,6 +269,45 @@ function createBoardDeadlineNotification(oldDeadline, board, projectName, userId
     create(notification);
 }
 
+function createTaskTitleNotification(oldname, task, projectName, boardName, userId) {
+    var description = " has changed the name of the " + oldname + " task to " + task.title + " on the " + boardName + " board in the " + projectName + " project.";
+    var notification = makeUpdateTaskNotification(userId, task.projectId, task.boardId, task._id, description);
+    create(notification);
+}
+
+function createTaskDescriptionNotification(task, projectName, boardName, userId) {
+    var description = " has changed the description of the " + task.identifier + " task on the " + boardName + " board in the " + projectName + " project.";
+    var notification = makeUpdateTaskNotification(userId, task.projectId, task.boardId, task._id, description);
+    create(notification);
+}
+
+function createTaskImportantNotification(task, projectName, boardName, userid) {
+    var description = task.important ? " has flagged the " + task.identifier + " task as important" : " has flagged the " + task.identifier + " task as unimportant";
+    description += " on the " + boardName + " board in the " + projectName + " project.";
+    var notification = makeUpdateTaskNotification(userid, task.projectId, task.boardId, task._id, description);
+    create(notification);
+}
+
+function createTaskDeadlineNotification(oldDeadline, task, projectName, boardName, userId) {
+    var description = oldDeadline != undefined ? " has moved the deadline from " + oldDeadline.toISOString().slice(0, 10) + " to " + task.deadline.toISOString().slice(0, 10) + " on the " + boardName + " board in the " + projectName + " project. " : " has set a deadline on the " + boardName + " board in the " + projectName + " project to " + task.deadline.toISOString().slice(0, 10);
+    var notification = makeUpdateTaskNotification(userId, task.projectId, task.boardId, task._id, description);
+    create(notification);
+}
+
+function createTaskAssigneeNotification(task, projectName, boardName) {
+    var description = " has been assigned to the " + task.identifier + " task on the " + boardName + " board in the " + projectName + " project.";
+    var notification = makeUpdateTaskNotification(task.assignee, task.projectId, task.boardId, task._id, description);
+    create(notification);
+}
+
+function createTaskChangeBoardNotification(task, oldBoard, newBoard, projectName, userId) {
+    var description = " has moved the " + task.identifier + " task from the " + oldBoard.name + " board to the " + newBoard.name + "board in the " + projectName + " project.";
+    var notifications = [];
+    notifications.push(makeUpdateTaskNotification(userId, task.projectId, oldBoard._id, task._id, description));
+    notifications.push(makeUpdateTaskNotification(userId, task.projectId, newBoard._id, task._id, description));
+    addNotifications(notifications);
+}
+
 function makeNotification(subjectDescriptor, description, type, subjectType) {
     return {
         subjectDescriptor: subjectDescriptor,
@@ -239,6 +341,14 @@ function makeCreateBoardNotification(userId, projectId, boardId, description) {
 
 function makeUpdateBoardNotification(userId, projectId, boardId, description) {
     return makeNotification(makeSubjectDescriptor(userId, projectId, boardId), description, "UPDATE", "BOARD");
+}
+
+function makeCreateTaskNotification(userId, projectId, boardId, taskId, description) {
+    return makeNotification(makeSubjectDescriptor(userId, projectId, boardId, taskId), description, "CREATE", "TASK");
+}
+
+function makeUpdateTaskNotification(userId, projectId, boardId, taskId, desciption) {
+    return makeNotification(makeSubjectDescriptor(userId, projectId, boardId, taskId), desciption, "UPDATE", "TASK");
 }
 
 function create(notification) {
