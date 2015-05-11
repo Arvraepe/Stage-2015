@@ -10,12 +10,12 @@ var auth = require('./../service/authenticationService');
 var notifications = require('./../service/notificationService');
 
 exports.registerRoutes = function(app) {
-    app.post('/project/create', createProject);
+    app.post('/project/create', createProject, makeNewNotifications);
     app.get('/project/getprojects', getProjects);
     app.get('/project/getproject', getProject);
     app.del('/project/delete', deleteProject);
-    app.put('/project/update', updateProject, makeNotification);
-    app.put('/project/changeleader', changeLeader);
+    app.put('/project/update', updateProject, makeUpdateNotification);
+    app.put('/project/changeleader', changeLeader, makeChangeLeaderNotification);
     app.get('/project/membersDesc', getMembersDesc);
     app.get('/project/members', getMembers)
 };
@@ -39,6 +39,8 @@ function createProject(req, res, next) {
     ], function(err, result) {
         var response = errorHandler.handleProjectErrors(err, result);
         res.send(response);
+        req.project = result[result.length - 1];
+        return next();
     });
 }
 
@@ -136,8 +138,9 @@ function changeLeader(req, res, next) {
     ], function(err, result) {
         var response = errorHandler.handleResult(err, result, 'You are no longer leader of this project.');
         res.send(response);
+        req.project = result;
+        return next();
     });
-    next();
 }
 
 function getMembersDesc(req, res, next) {
@@ -166,7 +169,15 @@ function getMembers(req, res, next) {
     })
 }
 
-function makeNotification(req, res, next) {
+function makeUpdateNotification(req, res, next) {
     var oldCollabs = req.oldCollaborators, project = req.project;
-    notifications.addUserNotification(req.oldProject, oldCollabs, project);
+    notifications.makeUpdateProjectNotifications(req.oldProject, oldCollabs, project);
+}
+
+function makeNewNotifications(req, res, next) {
+    notifications.makeNewProjectNotifications(req.project);
+}
+
+function makeChangeLeaderNotification(req, res, next) {
+    notifications.makeChangeLeaderNotification(req.project);
 }

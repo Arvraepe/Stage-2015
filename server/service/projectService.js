@@ -10,6 +10,7 @@ var uuid = require('node-uuid');
 var _ = require('underscore');
 var boardService = require('./boardService');
 var userService = require('./userService');
+var notifications = require('./notificationService');
 
 exports.createProject = function (params, userId, callback) {
     var messages = projectValidator.validateNewProject(params);
@@ -170,6 +171,7 @@ exports.addRegisteredCollab = function (userId, projectId, callback) {
         } else {
             project.collaborators.push(userId);
             projectRepo.findOneAndUpdate(project._id, project, callback);
+            notifications.makeJoinNotification(project, userId);
         }
     });
 };

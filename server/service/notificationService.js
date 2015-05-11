@@ -7,7 +7,7 @@ var userService = require('./userService');
 var projectService = require('./projectService');
 var _ = require('underscore');
 
-exports.addUserNotification = function (oldProject, oldCollaborators, project) {
+exports.makeUpdateProjectNotifications = function (oldProject, oldCollaborators, project) {
     if (project.name != oldProject.name) {
         createUpdateNameProjectNotification(oldProject.name, project)
     }
@@ -17,7 +17,7 @@ exports.addUserNotification = function (oldProject, oldCollaborators, project) {
     if (project.deadline.getTime() != oldProject.deadline.getTime()) {
         createUpdateDeadlineProjectNotification(oldProject.deadline, project);
     }
-    var temp;
+    var temp = [];
     async.filter(project.collaborators, function (user, callback) {
         var result = null;
         oldCollaborators.forEach(function (oldId) {
@@ -44,7 +44,7 @@ exports.addUserNotification = function (oldProject, oldCollaborators, project) {
     project.collaborators = temp;
     var notifications = [];
     project.collaborators.forEach(function (collab) {
-        var notification = makeUpdateProjectNotification(makeSubjectDescriptor(collab._id, project._id), " has been added to the " + project.name + " project");
+        var notification = makeJoinNotification(project, collab._id);
         notifications.push(notification);
     });
     addNotifications(notifications);
@@ -66,6 +66,22 @@ exports.addUserNotification = function (oldProject, oldCollaborators, project) {
     });
 };
 
+exports.makeNewProjectNotifications = function(project) {
+    var createNotifications = [makeCreateProjectNotification(project.creator, project._id, " has created the " + project.name + " project.")];
+    project.collaborators.forEach(function (collab) {
+        createNotifications.push(makeJoinNotification(project, collab));
+    });
+    addNotifications(createNotifications);
+};
+
+exports.makeJoinNotification = function(project, userId) {
+    create(makeJoinNotification(project, userId));
+};
+
+exports.makeChangeLeaderNotification = function(project) {
+    create(makeUpdateProjectNotification(makeSubjectDescriptor(project.leader, project._id), " has been promoted to leader of the " + project.name + " project."));
+};
+
 exports.getNotificationsByUserId = function (userId, callback) {
     async.waterfall([
         function (callback) {
@@ -84,6 +100,10 @@ exports.getNotificationsByUserId = function (userId, callback) {
         }
     ], callback);
 };
+
+function makeJoinNotification(project, userId) {
+    return makeCreateProjectNotification(userId, project._id, " has been added to the " + project.name + " project.");
+}
 
 function populateNotifications(notifications, callback) {
     var tasks = [];
@@ -134,18 +154,18 @@ function addNotifications(notifications) {
 
 function createUpdateNameProjectNotification(oldName, project) {
     var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader._id, project._id), " has changed the name of the  " + oldName + " project to " + project.name);
-    notificationRepo.create(notification);
+    create(notification);
 }
 
 function createUpdateDescriptionProjectNotification(project) {
     var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader._id, project._id), " has changed the description of the " + project.name + " project");
-    notificationRepo.create(notification);
+    create(notification);
 }
 
 function createUpdateDeadlineProjectNotification(oldDeadline, project) {
     var description = oldDeadline != undefined ? " has moved the deadline from " + oldDeadline.toISOString().slice(0, 10) + " to " + project.deadline.toISOString().slice(0, 10) + " on the " + project.name : " has set a deadline on the " + project.name + " project to " + project.deadline.toISOString().slice(0, 10);
     var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader._id, project._id), description);
-    notificationRepo.create(notification);
+    create(notification);
 }
 
 function makeNotification(subjectDescriptor, description, type, subjectType) {
@@ -169,4 +189,12 @@ function makeSubjectDescriptor(userId, projectId, boardId, taskId) {
 
 function makeUpdateProjectNotification(subjectDescriptor, description) {
     return makeNotification(subjectDescriptor, description, "UPDATE", "PROJECT");
+}
+
+function makeCreateProjectNotification(userId, projectId, description) {
+    return makeNotification(makeSubjectDescriptor(userId, projectId), description, "CREATE", "PROJECT");
+}
+
+function create(notification) {
+    notificationRepo.create(notification)
 }
