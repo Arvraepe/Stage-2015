@@ -3,14 +3,14 @@
  */
 var async = require('async');
 var auth = require('./../service/authenticationService');
-var projectService = require('./../service/projectService');
 var errorHandler = require('./../response/errorHandler');
 var boardService = require('./../service/boardService');
+var notifications = require('./../service/notificationService');
 
 exports.registerRoutes = function (app) {
-    app.post('/board/create', createBoard);
+    app.post('/board/create', createBoard, makeCreateBoardNotification);
     app.get('/board', getBoard);
-    app.put('/board', updateBoard);
+    app.put('/board', updateBoard, makeUpdateBoardNotification);
     app.del('/board', deleteBoard);
     app.get('/boardsdescriptor', getBoards);
 };
@@ -21,11 +21,14 @@ function createBoard(req, res, next) {
             auth.verifyToken(req.params.token, callback)
         },
         function(userId, callback) {
+            req.userId = userId;
             boardService.createBoard(req.params, userId, callback);
         }
     ], function (err, result) {
+        req.board = result;
         result = errorHandler.handleMMResult(err, {board: result}, result.messages, 'The ' + result.name + ' board was created for your project.');
         res.send(result);
+        return next();
     });
 }
 
@@ -46,14 +49,25 @@ function getBoard(req, res, next) {
 function updateBoard(req, res, next) {
     async.waterfall([
         function (callback) {
-            auth.verifyToken(req.params.token, callback)
+            async.parallel([
+                function(callback) {
+                    auth.verifyToken(req.params.token, callback)
+                },
+                function(callback) {
+                    boardService.getBoardById(req.params._id, callback);
+                }
+            ], callback)
         },
-        function (userId, callback) {
-           boardService.updateBoard(req.params, userId, callback);
+        function (results, callback) {
+            req.userId = results[0];
+            req.oldBoard = results[1];
+            boardService.updateBoard(req.params, results[0], callback);
         }
     ], function (err, board) {
+        req.newBoard = board;
         var result = errorHandler.handleResult(err, {board: board}, 'Board updated.');
         res.send(result);
+        return next();
     });
 }
 
@@ -82,4 +96,12 @@ function getBoards(req, res, next) {
     ], function(err, result) {
         res.send(errorHandler.handleResult(err, { boards: result }, 'Boards fetched'));
     })
+}
+
+function makeCreateBoardNotification(req, res, next) {
+    notifications.makeCreateBoardNotification(req.board, req.userId);
+}
+
+function makeUpdateBoardNotification(req, res, next) {
+    notifications.makeUpdateBoardNotification(req.oldBoard, req.newBoard, req.userId);
 }

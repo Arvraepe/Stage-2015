@@ -6,12 +6,13 @@ var auth = require('./../service/authenticationService');
 var validator = require('./../validator/taskValidator');
 var taskService = require('./../service/taskService');
 var errorHandler = require('./../response/errorHandler');
+var notifications = require('./../service/notificationService');
 
 exports.registerRoutes = function(app) {
-    app.post('/task/create', createTask);
+    app.post('/task/create', createTask, makeCreateTaskNotification);
     app.get('/task', getTask);
     app.post('/task/comment', postComment);
-    app.put('/task', updateTask);
+    app.put('/task', updateTask, makeUpdateTaskNotification);
     app.get('/tasks', getTasks);
     app.put('/task/comment', updateComment);
     app.del('/task/comment', deleteComment);
@@ -25,10 +26,13 @@ function createTask(req, res, next) {
             auth.verifyToken(req.params.token, callback);
         },
         function(userId, callback) {
+            req.userId = userId;
             taskService.createTask(task, userId, callback);
         }
     ], function(err, task) {
+        req.task = task;
         res.send(errorHandler.handleResult(err, { task: task }, 'A new task was created.'));
+        return next();
     });
 }
 
@@ -61,13 +65,23 @@ function postComment(req, res, next) {
 function updateTask(req, res, next) {
     async.waterfall([
         function(callback) {
-            auth.verifyToken(req.params.token, callback)
+            async.parallel([
+                function(callback) {
+                    auth.verifyToken(req.params.token, callback)
+                },
+                function(callback) {
+                    taskService.getTaskById(req.params.task._id, callback)
+                }
+            ], callback)
         },
-        function(userId, callback) {
-            taskService.updateTask(req.params.task, userId, callback);
+        function(results, callback) {
+            req.userId = results[0]; req.oldTask = results[1];
+            taskService.updateTask(req.params.task, results[0], callback);
         }
     ], function(err, task) {
+        req.newTask = task;
         res.send(errorHandler.handleResult(err, { task: task }, 'Task updated.'));
+        return next();
     });
 }
 
@@ -121,4 +135,12 @@ function switchBoard(req, res, next) {
     ], function(err, board) {
         res.send(errorHandler.handleResult(err, {}, 'Task was moved to ' + board.name + ' board.' ));
     })
+}
+
+function makeCreateTaskNotification(req, res, next) {
+    notifications.makeCreateTaskNotification(req.task, req.userId);
+}
+
+function makeUpdateTaskNotification(req, res, next) {
+    notifications.makeUpdateTaskNotifications(req.oldTask, req.newTask, req.userId);
 }

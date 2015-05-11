@@ -8,6 +8,7 @@ var userService = require('./userService');
 var boardService = require('./boardService');
 var projectService = require('./projectService');
 var _ = require('underscore');
+var notifications = require('./notificationService');
 
 function getTaskIdentifier(boards, callback) {
     var tasks = [];
@@ -252,6 +253,7 @@ exports.switchBoard = function(newTask, userId, callback) {
         },
         function(results, callback) {
             var task = results[0], board = results[1];
+            notifications.makeSwitchBoardNotification(task, newTask.boardId, userId);
             if((task.creator == userId || task.assignee == userId) && task.projectId == board.projectId) {
                 task.boardId = newTask.boardId;
                 task.state = board.states[0];
@@ -261,6 +263,10 @@ exports.switchBoard = function(newTask, userId, callback) {
             } else callback(new Error('You do not have the right to change this task.'));
         }
     ], callback);
+};
+
+exports.getTaskById = function(id, callback) {
+    taskRepo.findTask({ _id: id}, callback);
 };
 
 function createComment(taskId, userId, comment, callback) {
