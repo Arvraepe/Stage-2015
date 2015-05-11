@@ -67,7 +67,7 @@ exports.makeUpdateProjectNotifications = function (oldProject, oldCollaborators,
 };
 
 exports.makeNewProjectNotifications = function(project) {
-    var createNotifications = [makeCreateProjectNotification(project.creator, project._id, " has created the " + project.name + " project.")];
+    var createNotifications = [makeCreateProjectNotification(project.leader, project._id, " has created the " + project.name + " project.")];
     project.collaborators.forEach(function (collab) {
         createNotifications.push(makeJoinNotification(project, collab));
     });
@@ -79,7 +79,7 @@ exports.makeJoinNotification = function(project, userId) {
 };
 
 exports.makeChangeLeaderNotification = function(project) {
-    create(makeUpdateProjectNotification(makeSubjectDescriptor(project.leader, project._id), " has been promoted to leader of the " + project.name + " project."));
+    create(makeUpdateProjectNotification(makeSubjectDescriptor(project.leader._id, project._id), " has been promoted to leader of the " + project.name + " project."));
 };
 
 exports.getNotificationsByUserId = function (userId, callback) {
@@ -99,6 +99,26 @@ exports.getNotificationsByUserId = function (userId, callback) {
             populateNotifications(notifications, callback)
         }
     ], callback);
+};
+
+exports.makeCreateBoardNotification = function(board, userId) {
+    projectService.getProjectDesc(board.projectId, userId, function(err, project) {
+        create(makeCreateBoardNotification(userId, board.projectId, board._id, " has created the " + board.name + " board in the " + project.name + " project"));
+    });
+};
+
+exports.makeUpdateBoardNotification = function(oldBoard, newBoard, userId) {
+    projectService.getProjectDesc(newBoard.projectId, userId, function(err, project) {
+        if(oldBoard.name != newBoard.name) {
+            createBoardNameNotification(oldBoard.name, newBoard, project.name, userId);
+        }
+        if(oldBoard.description != newBoard.description) {
+            createBoardDescriptionNotification(project.name, newBoard, userId);
+        }
+        if(oldBoard.deadline.getTime() != newBoard.deadline.getTime()) {
+            createBoardDeadlineNotification(oldBoard.deadline, newBoard, project.name, userId);
+        }
+    })
 };
 
 function makeJoinNotification(project, userId) {
@@ -163,8 +183,26 @@ function createUpdateDescriptionProjectNotification(project) {
 }
 
 function createUpdateDeadlineProjectNotification(oldDeadline, project) {
-    var description = oldDeadline != undefined ? " has moved the deadline from " + oldDeadline.toISOString().slice(0, 10) + " to " + project.deadline.toISOString().slice(0, 10) + " on the " + project.name : " has set a deadline on the " + project.name + " project to " + project.deadline.toISOString().slice(0, 10);
+    var description = oldDeadline != undefined ? " has moved the deadline from " + oldDeadline.toISOString().slice(0, 10) + " to " + project.deadline.toISOString().slice(0, 10) + " on the " + project.name + " project" : " has set a deadline on the " + project.name + " project to " + project.deadline.toISOString().slice(0, 10);
     var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader._id, project._id), description);
+    create(notification);
+}
+
+function createBoardNameNotification(oldname, board, projectName, userId) {
+    var description = " has changed the name of the " + oldname + " board to " + board.name + " in the " + projectName + " project";
+    var notification = makeUpdateBoardNotification(userId, board.projectId, board._id, description);
+    create(notification);
+}
+
+function createBoardDescriptionNotification(projectName, board, userId) {
+    var description = " has changed the description of the " + board.name + " board in the " + projectName + " project.";
+    var notification = makeUpdateBoardNotification(userId, board.projectId, board._id, description);
+    create(notification);
+}
+
+function createBoardDeadlineNotification(oldDeadline, board, projectName, userId) {
+    var description = oldDeadline != undefined ? " has moved the deadline from " + oldDeadline.toISOString().slice(0, 10) + " to " + board.deadline.toISOString().slice(0, 10) + " on the " + board.name + " board in the " + projectName + "project" : " has set a deadline on the " + board.name + " board to " + project.deadline.toISOString().slice(0, 10) + " in the " + projectName + " project";
+    var notification = makeUpdateBoardNotification(userId, board.projectId, board._id, description);
     create(notification);
 }
 
@@ -193,6 +231,14 @@ function makeUpdateProjectNotification(subjectDescriptor, description) {
 
 function makeCreateProjectNotification(userId, projectId, description) {
     return makeNotification(makeSubjectDescriptor(userId, projectId), description, "CREATE", "PROJECT");
+}
+
+function makeCreateBoardNotification(userId, projectId, boardId, description) {
+    return makeNotification(makeSubjectDescriptor(userId, projectId, boardId), description, "CREATE", "BOARD");
+}
+
+function makeUpdateBoardNotification(userId, projectId, boardId, description) {
+    return makeNotification(makeSubjectDescriptor(userId, projectId, boardId), description, "UPDATE", "BOARD");
 }
 
 function create(notification) {
