@@ -5,6 +5,7 @@ var notificationRepo = require('./../repository/notificationRepository');
 var async = require('async');
 var userService = require('./userService');
 var projectService = require('./projectService');
+var _ = require('underscore');
 
 exports.addUserNotification = function(oldProject, oldCollaborators, project) {
     if(project.name != oldProject.name) {
@@ -16,14 +17,24 @@ exports.addUserNotification = function(oldProject, oldCollaborators, project) {
     if(project.deadline != oldProject.deadline) {
         createUpdateDeadlineProjectNotification(oldProject.deadline, project);
     }
-    project.collaborators.forEach(function (collab, index, arr) {
-        oldCollaborators.forEach(function (oldId, sIndex, sArr) {
-            if(oldId == collab._id) {
-                arr.splice(index, 1);
-                sArr.splice(sIndex, 1);
-            }
+    var temp = [];
+    oldCollaborators.forEach(function (oldId) {
+        async.filter(project.collaborators, function(user, callback) {
+            callback(user._id != oldId)
+        }, function(results) {
+            temp = results;
         });
     });
+    project.collaborators.forEach(function (user) {
+        async.filter(oldCollaborators, function(oldId, callback) {
+            callback(oldId != user._id)
+        },
+        function(results) {
+            console.log(results);
+            oldCollaborators = results;
+        });
+    });
+    project.collaborators = temp;
     var notifications = [];
     project.collaborators.forEach(function (collab) {
         var notification = makeUpdateProjectNotification(makeSubjectDescriptor(collab._id, project._id), " has been added to the " + project.name + " project");
@@ -125,7 +136,7 @@ function createUpdateDescriptionProjectNotification(project) {
 }
 
 function createUpdateDeadlineProjectNotification(oldDeadline, project) {
-    var description = oldDeadline ? " has moved the deadline from " + oldDeadline.toISOString().slice(0,10) + " to " + project.deadline.toISOString.slice(0,10) + " on the " + project.name : " has set a deadline on the " + project.name + " project to " + project.deadline.toISOString().slice(0, 10);
+    var description = oldDeadline!= undefined ? " has moved the deadline from " + oldDeadline.toISOString().slice(0,10) + " to " + project.deadline.toISOString().slice(0,10) + " on the " + project.name : " has set a deadline on the " + project.name + " project to " + project.deadline.toISOString().slice(0, 10);
     var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader._id, project._id), description);
     notificationRepo.create(notification);
 }
