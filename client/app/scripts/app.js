@@ -22,7 +22,8 @@ var app = angular.module('stageprojectApp', [
   'ngSanitize',
   'ui.sortable',
   'angularMoment',
-  'textAngular'
+  'textAngular',
+  'infinite-scroll'
 ]);
 
 app.config(function ($routeProvider, $locationProvider, USERROLES) {

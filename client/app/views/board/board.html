@@ -16,16 +16,23 @@
       class="fa fa-plus-circle"></i> Task
     </button>
   </div>
-
 </h2>
 
 <div class="col-md-9 noPaddingLeft boardDescription">
   {{board.description}}
 </div>
-<div class="col-md-12 row" ng-if="board.tasks.length>0">
+
+
+
+<div class="col-md-12 row" ng-hide="arrowIsHidden[0]">
   <h3>Other Boards</h3>
+
   <div ng-repeat="projectBoard in projectboards" class="boardsLayout row" ng-style="{'width':100/projectboards.length+'%'}"  >
+    <div class="arrow_box my-animation" ng-hide="arrowIsHidden[$index]">
+      <h1 class="logo">You can also drop into another board</h1>
+    </div>
     <ul ng-model="otherBoardsTasks" as-sortable="taskSortOptions" is-disabled="true" style="list-style-type: none" class="noPaddingLeft">
+
       <li ng-repeat="board in otherBoardsTasks | limitTo:1" as-sortable-item>
         <div as-sortable-item-handle class="otherBoardsLayout">
           {{projectBoard.name}}
@@ -38,7 +45,7 @@
 
 <div class="col-md-12 noPaddingLeft noPaddingRight row">
   <div ng-repeat="state in board.states" class="stateLayout"
-       ng-class="{'boardRightBorder': ($index+1)!=board.states.length}" ng-style="{'width':columnWidth}">
+       ng-class="{'boardRightBorder': ($index+1)!=board.states.length}"  column-height ng-style="{'width':columnWidth, 'min-height':height}">
     <h3 class="marginBotDeleteButton boardTitles">{{state.name}}</h3>
 
     <ul class="col-md-12 noPaddingLeft noPaddingRight" style="list-style-type:none" as-sortable="taskSortOptions"

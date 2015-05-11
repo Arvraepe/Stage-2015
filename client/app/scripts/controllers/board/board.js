@@ -8,10 +8,11 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('BoardCtrl', function ($scope, $routeParams, boardRequestFactory,$modal, taskRequestFactory, notificationFactory) {
+  .controller('BoardCtrl', function ($scope, $routeParams, boardRequestFactory,$modal, taskRequestFactory, notificationFactory, columnHeightFactory, $interval) {
     $scope.board = {};
     $scope.amountOfStates = 0;
     $scope.columnWidth = 0;
+    $scope.arrowIsHidden=[];
 
     function calculateTimeDifference() {
       var now = moment();
@@ -57,7 +58,11 @@ angular.module('stageprojectApp')
                   }
                 });
                 $scope.projectboards = response.data.boards;
-
+                angular.forEach($scope.projectboards, function (board, index, array) {
+                  $scope.arrowIsHidden.push(true);
+                });
+                $scope.height = columnHeightFactory.resetHeight();
+                $scope.determineColumnHeight();
               },
               error: function(error){
 
@@ -187,33 +192,14 @@ angular.module('stageprojectApp')
       orderChanged: function(event){
 
       },
-      containerPositioning:'relative',
-      additionalPlaceholderClass:'dragPlaceholder'
-    };
-
-    $scope.otherBoardOptions = {
-      itemMoved: function (event) {
-
-        var modalInstance = $modal.open({
-          templateUrl: 'views/board/changeboard.html',
-          controller: 'ChangeBoardCtrl',
-          size: size,
-          resolve:{
-            board: function(){
-              return $scope.board;
-            }
-          }
-        });
-        modalInstance.result.then(function (response) {
-
-        }, function () {
-        })
-      },
-      orderChanged: function(event){
-
-      },
       dragStart: function (object) {
+        $scope.arrowIsHidden[0]=false;
 
+      },
+      dragEnd: function (object) {
+        $scope.arrowIsHidden[0]=true;
+        columnHeightFactory.resetHeight();
+        $scope.height = columnHeightFactory.getMaxHeight();
       },
       containerPositioning:'relative',
       additionalPlaceholderClass:'dragPlaceholder'
@@ -221,6 +207,12 @@ angular.module('stageprojectApp')
 
     $scope.otherBoardsTasks = [{}];
 
+    $scope.determineColumnHeight = function () {
+      $interval(function () {
+        $scope.height = columnHeightFactory.getMaxHeight();
+        console.log(columnHeightFactory.getMaxHeight());
+      },1000);
+    };
 
 
 

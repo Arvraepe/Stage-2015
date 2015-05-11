@@ -34,7 +34,8 @@ angular.module('stageprojectApp')
           $scope.collaborators = [];
           angular.forEach(project.collaborators, function(collab){
             $scope.collaborators.push(collab);
-          })
+          });
+          calculateTimeDifference();
         }, function () {
         })
       };
@@ -97,7 +98,7 @@ angular.module('stageprojectApp')
             });
             $scope.leader = response.data.project.leader;
             $scope.project = response.data.project;
-
+            calculateTimeDifference();
           },
           error: function (error) {
             console.log(error);
@@ -149,6 +150,14 @@ angular.module('stageprojectApp')
         })
 
       };
+
+      function calculateTimeDifference() {
+        var now = moment();
+        var deadline = moment($scope.project.deadline);
+        var duration = moment.duration(deadline.diff(now));
+        var days = duration.asDays();
+        $scope.lazyDate = days;
+      }
 
       $scope.createNewBoard = function (board) {
         //naam & deadline nodig

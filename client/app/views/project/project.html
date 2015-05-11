@@ -4,7 +4,12 @@
     <li class="active">Project</li>
   </ol>
   <div class="col-md-9 noPaddingLeft">
-    <h2>{{project.name}}</h2>
+    <h2>{{project.name}}
+     <span class="lazyTime">- due:
+    <span ng-if="lazyDate >0" am-time-ago="project.deadline" ng-class="{'deadlineClose':lazyDate>0}"></span>
+    <span ng-if="lazyDate <0" am-time-ago="project.deadline" ng-class="{'deadlineOver': lazyDate <0}"></span>
+  </span>
+    </h2>
     <button ng-if="isLeader()" type="button" ng-click="openBoardModal()" class="btn btn-success btn-block"><i
       class="fa fa-plus-circle" style="vertical-align: middle"> Board</i></button>
     <div ng-repeat="board in project.boards" class="well projectBoardLayout">

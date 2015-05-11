@@ -8,10 +8,10 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('DashboardCtrl', ['$scope', '$modal', 'projectRequestFactory','notificationRequestFactory', '$location',function ($scope, $modal, projectRequestFactory, notificationRequestFactory, $location) {
+  .controller('DashboardCtrl', ['$scope', '$modal', 'projectRequestFactory', 'notificationRequestFactory', '$location', function ($scope, $modal, projectRequestFactory, notificationRequestFactory, $location) {
     $scope.userLeaderProjects = [];
     $scope.userCollaboratorProjects = [];
-
+    $scope.notificationsToShow = [];
 
     $scope.title = 'All My Projects';
 
@@ -54,6 +54,7 @@ angular.module('stageprojectApp')
         success: function (response) {
           $scope.notifications = response.data.notifications;
           makeNotificationLink($scope.notifications);
+
         },
         error: function (error) {
           console.log(error);
@@ -92,7 +93,7 @@ angular.module('stageprojectApp')
       return Math.ceil($scope.projectsToShow.length / $scope.pageSize);
     };
 
-    $scope.pageChanged = function(){
+    $scope.pageChanged = function () {
       console.log('Page changed to: ' + $scope.currentPage);
     };
 
@@ -100,18 +101,43 @@ angular.module('stageprojectApp')
       $scope.currentPage = pageNo;
     };
 
-    function makeNotificationLink(notifications){
+    function makeNotificationLink(notifications) {
       angular.forEach(notifications, function (notification) {
-        switch(notification.subjectType.toUpperCase()){
-          case 'PROJECT': notification.link = '/project/'+notification.subjectDescriptor.projectId;
-                break;
+        switch (notification.subjectType.toUpperCase()) {
+          case 'PROJECT':
+            notification.link = '/project/' + notification.subjectDescriptor.projectId;
+            break;
         }
       })
     }
 
-    $scope.notificationRead=function(notificationLink){
+    $scope.notificationRead = function (notificationLink) {
       $location.path(notificationLink);
-    }
+    };
+
+    $scope.loadMoreNotifications = function () {
+      if($scope.notifications.length>1){
+        var timeStampLastNotification = $scope.notifications[$scope.notifications.length - 1].timeStamp;
+        var notificationInfo = {
+          limit: $scope.notifications.length,
+          timeStamp: timeStampLastNotification
+        };
+        notificationRequestFactory.getNotificationsForUser({
+          params: notificationInfo,
+          success: function (response) {
+            angular.forEach(response.data.notifications, function (not) {
+              $scope.notifications.push(not);
+            });
+            makeNotificationLink($scope.notifications);
+
+          },
+          error: function (error) {
+            console.log(error);
+          }
+        })
+      }
+
+    };
 
 
   }]);
