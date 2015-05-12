@@ -44,10 +44,8 @@ exports.handleResult = function(err, result, message) {
     } else if(err) {
         result = resultFact.makeFailureResult('ERROR', err.message);
     } else {
-        console.log('jeuj');
         result = resultFact.makeSuccessResult(message, result);
     }
-    console.log(result);
     return result;
 };
 

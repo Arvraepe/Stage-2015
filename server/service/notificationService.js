@@ -109,6 +109,9 @@ exports.getNotificationsByBoard = function(boardId, limit, userId, callback) {
         },
         function(board, callback){
             notificationRepo.findLimit({ "subjectDescriptor.boardId": board._id }, limit, callback)
+        },
+        function(notifications, callback) {
+            populateNotifications(notifications, callback);
         }
     ], callback)
 };
