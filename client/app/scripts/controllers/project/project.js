@@ -116,7 +116,7 @@ angular.module('stageprojectApp')
           notificationRequestFactory.getBoardNotifications({
             params: boardInfo,
             success: function (response) {
-
+              board.notifications = response.data.notifications;
             },
             error: function (error) {
               console.log(error);

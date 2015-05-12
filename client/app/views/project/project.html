@@ -40,7 +40,11 @@
           <div class="pull-right" ng-if="isLeader()">
             <button type="button" class="btn btn-xs btn-danger" ng-click="openDeleteBoardModal(board)"> Delete</button>
           </div>
-          MOSTRECENTTASKSCHANGEDPERBOARDPLACEHOLDER
+          <div ng-repeat="notification in board.notifications|orderBy:'notification.timeStamp':true|limitTo:5" class="notificationLayout">
+            <img ng-src="{{notification.subjectDescriptor.user.imageUrl}}" alt="profilepic" class="smallerAvatar">
+
+            <span class="notificationUser">{{notification.subjectDescriptor.user.firstname}} {{notification.subjectDescriptor.user.lastname}}</span> {{notification.description}} (<span am-time-ago="notification.timeStamp"></span>)
+          </div>
         </div>
       </div>
     </div>

@@ -54,7 +54,6 @@ angular.module('stageprojectApp')
         success: function (response) {
           $scope.notifications = response.data.notifications;
           makeNotificationLink($scope.notifications);
-
         },
         error: function (error) {
           console.log(error);
