@@ -102,6 +102,17 @@ exports.getNotificationsByUserId = function (userId, limit, timeStamp, callback)
     ], callback);
 };
 
+exports.getNotificationsByBoard = function(boardId, limit, userId, callback) {
+    async.waterfall([
+        function(callback) {
+            boardService.getBoard(boardId, userId, callback)
+        },
+        function(board, callback){
+            notificationRepo.findLimit({ "subjectDescriptor.boardId": board._id }, limit, callback)
+        }
+    ], callback)
+};
+
 exports.makeCreateBoardNotification = function(board, userId) {
     projectService.getProjectDesc(board.projectId, userId, function(err, project) {
         create(makeCreateBoardNotification(userId, board.projectId, board._id, " has created the " + board.name + " board in the " + project.name + " project"));

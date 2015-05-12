@@ -253,7 +253,7 @@ exports.switchBoard = function(newTask, userId, callback) {
         },
         function(results, callback) {
             var task = results[0], board = results[1];
-            notifications.makeSwitchBoardNotification(task, newTask.boardId, userId);
+            notifications.makeSwitchBoardNotification(task, newTask.boardId, userId)
             if((task.creator == userId || task.assignee == userId) && task.projectId == board.projectId) {
                 task.boardId = newTask.boardId;
                 task.state = board.states[0];
