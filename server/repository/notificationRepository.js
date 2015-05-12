@@ -20,3 +20,7 @@ exports.create = function(notification, callback) {
 exports.find = function(condition, callback) {
     Notification.find(condition).lean().exec(callback);
 };
+
+exports.findLimit = function(condition, limit, callback) {
+    Notification.find(condition).limit(limit).lean().exec(callback);
+};

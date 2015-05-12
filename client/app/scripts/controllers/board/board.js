@@ -209,7 +209,6 @@ angular.module('stageprojectApp')
     $scope.determineColumnHeight = function () {
       $interval(function () {
         $scope.height = columnHeightFactory.getMaxHeight();
-        console.log(columnHeightFactory.getMaxHeight());
       },1000);
     };
 
