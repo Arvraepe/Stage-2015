@@ -146,7 +146,7 @@ exports.resetPassword = function (params, callback) {
     userRepo.findUserByEmail(params.email, function (err, user) {
         if (err) callback(err);
         if (user == null) {
-            callback(new Error('There is no user registered with that email'));
+            callback(new Error('There is no user registered with that email.'));
         } else {
             var tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);

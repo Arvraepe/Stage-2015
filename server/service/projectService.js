@@ -124,7 +124,15 @@ exports.getProject = function (projectId, userId, callback) {
 };
 
 exports.deleteProject = function (projectId, userId, callback) {
-    projectRepo.deleteProject({_id: projectId, leader: userId}, callback);
+    async.series([
+        function(callback) {
+            projectRepo.deleteProject({_id: projectId, leader: userId}, callback);
+        },
+        function(callback) {
+            boardService.deleteByProjectId(projectId, callback)
+        }
+    ])
+
 };
 
 exports.updateProject = function (userId, params, callback) {

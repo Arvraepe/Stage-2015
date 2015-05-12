@@ -21,7 +21,7 @@ exports.createFile = function(file, name, callback) {
                     callback(null, '.' + ext);
                 });
             } else {
-                callback(new Error('file type was not supported'));
+                callback(new Error('File type was not supported.'));
             }
         }
     });

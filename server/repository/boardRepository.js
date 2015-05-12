@@ -43,4 +43,6 @@ exports.selectBoard = function(condition, select, callback) {
     Board.findOne(condition).select(select).lean().exec(callback);
 };
 
-
+exports.deleteMany = function(condition, callback) {
+    Board.find(condition).remove().exec(callback);
+};
