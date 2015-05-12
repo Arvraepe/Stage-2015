@@ -31,7 +31,7 @@
     <div class="arrow_box my-animation" ng-hide="arrowIsHidden[$index]">
       <h1 class="logo">You can also drop into another board</h1>
     </div>
-    <ul ng-model="otherBoardsTasks" as-sortable="taskSortOptions" is-disabled="true" style="list-style-type: none" class="noPaddingLeft">
+    <ul ng-model="otherBoardsTasks" as-sortable="taskSortOptions" is-disabled="true" class="noPaddingLeft noListStyleType">
 
       <li ng-repeat="board in otherBoardsTasks | limitTo:1" as-sortable-item>
         <div as-sortable-item-handle class="otherBoardsLayout">
@@ -48,7 +48,7 @@
        ng-class="{'boardRightBorder': ($index+1)!=board.states.length}"  column-height ng-style="{'width':columnWidth, 'min-height':height}">
     <h3 class="marginBotDeleteButton boardTitles">{{state.name}}</h3>
 
-    <ul class="col-md-12 noPaddingLeft noPaddingRight" style="list-style-type:none" as-sortable="taskSortOptions"
+    <ul class="col-md-12 noPaddingLeft noPaddingRight noListStyleType" as-sortable="taskSortOptions"
         ng-model="state.tasks">
       <li ng-repeat="task in state.tasks" as-sortable-item>
         <div as-sortable-item-handle class="panel panel-warning">

@@ -201,7 +201,6 @@ angular.module('stageprojectApp')
         columnHeightFactory.resetHeight();
         $scope.height = columnHeightFactory.getMaxHeight();
       },
-      containerPositioning:'relative',
       additionalPlaceholderClass:'dragPlaceholder'
     };
 

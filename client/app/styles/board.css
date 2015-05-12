@@ -95,6 +95,7 @@ h3, .boardTitles{
   font-weight: bold;
   display:block;
   text-align: center;
+  margin:10px;
 }
 
 .arrow_box {
@@ -157,4 +158,8 @@ h3, .boardTitles{
 }
 .my-animation.ng-hide-add.ng-hide-add-active {
   opacity:0;
+}
+
+.noListStyleType{
+  list-style-type: none;
 }
