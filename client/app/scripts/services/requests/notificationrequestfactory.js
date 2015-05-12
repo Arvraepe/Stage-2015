@@ -18,6 +18,15 @@ angular.module('stageprojectApp')
           success: config.success,
           error: config.error
         })
+      },
+      getBoardNotifications: function (config) {
+        requestFactory.sendRequest({
+          path:'notifications/board',
+          method:'GET',
+          params:config.params,
+          success:config.success,
+          error:config.error
+        })
       }
     };
   });

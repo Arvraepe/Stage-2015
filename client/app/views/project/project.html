@@ -10,6 +10,11 @@
     <span ng-if="lazyDate <0" am-time-ago="project.deadline" ng-class="{'deadlineOver': lazyDate <0}"></span>
   </span>
     </h2>
+    <div style="margin-bottom:35px;">
+      {{project.description}}
+
+    </div>
+
     <button ng-if="isLeader()" type="button" ng-click="openBoardModal()" class="btn btn-success btn-block"><i
       class="fa fa-plus-circle" style="vertical-align: middle"> Board</i></button>
     <div ng-repeat="board in project.boards" class="well projectBoardLayout">
@@ -69,10 +74,7 @@
           <label>Name: </label>
           <span> {{project.name}}</span>
         </div>
-        <div>
-          <label>Description: </label>
-          <span> {{project.description}}</span>
-        </div>
+
       </div>
     </div>
 

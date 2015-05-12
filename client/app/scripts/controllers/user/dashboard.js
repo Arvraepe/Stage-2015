@@ -107,6 +107,12 @@ angular.module('stageprojectApp')
           case 'PROJECT':
             notification.link = '/project/' + notification.subjectDescriptor.projectId;
             break;
+          case 'TASK':
+            notification.link = '/project/' + notification.subjectDescriptor.projectId + '/task/' + notification.subjectDescriptor.taskId;
+            break;
+          case 'BOARD':
+            notification.link = '/project/' + notification.subjectDescriptor.projectId + '/board/' + notification.subjectDescriptor.boardId;
+            break;
         }
       })
     }
@@ -116,7 +122,7 @@ angular.module('stageprojectApp')
     };
 
     $scope.loadMoreNotifications = function () {
-      if($scope.notifications.length>1){
+      if ($scope.notifications.length > 1) {
         var timeStampLastNotification = $scope.notifications[$scope.notifications.length - 1].timeStamp;
         var notificationInfo = {
           limit: $scope.notifications.length,
@@ -136,7 +142,6 @@ angular.module('stageprojectApp')
           }
         })
       }
-
     };
 
 

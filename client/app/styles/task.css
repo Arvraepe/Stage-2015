@@ -90,3 +90,7 @@ h4:before {
   margin-top:0;
   margin-bottom:20px;
 }
+
+.commentTimestamp{
+  margin-right:5px;
+}

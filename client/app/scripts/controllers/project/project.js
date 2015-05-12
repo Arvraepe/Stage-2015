@@ -8,8 +8,8 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('ProjectCtrl', ['$scope', '$routeParams', 'projectRequestFactory', '$modal', 'notificationFactory', '$location', 'boardRequestFactory', '$filter',
-    function ($scope, $routeParams, projectRequestFactory, $modal, notificationFactory, $location, boardRequestFactory, $filter) {
+  .controller('ProjectCtrl', ['$scope', '$routeParams', 'projectRequestFactory', '$modal', 'notificationFactory', '$location', 'boardRequestFactory', '$filter', 'notificationRequestFactory',
+    function ($scope, $routeParams, projectRequestFactory, $modal, notificationFactory, $location, boardRequestFactory, $filter, notificationRequestFactory) {
       $scope.project = {};
       $scope.collaborators = [];
       $scope.leader = {};
@@ -99,11 +99,31 @@ angular.module('stageprojectApp')
             $scope.leader = response.data.project.leader;
             $scope.project = response.data.project;
             calculateTimeDifference();
+            $scope.getBoardNotifications();
           },
           error: function (error) {
             console.log(error);
           }
         })
+      };
+
+      $scope.getBoardNotifications = function () {
+        angular.forEach($scope.project.boards, function (board) {
+          var boardInfo={
+            boardId : board._id,
+            limit:5
+          };
+          notificationRequestFactory.getBoardNotifications({
+            params: boardInfo,
+            success: function (response) {
+
+            },
+            error: function (error) {
+              console.log(error);
+            }
+          })
+        });
+
       };
 
 
