@@ -17,7 +17,7 @@ function getUserFromToken(req, res, next) {
 }
 
 function getNotificationsByUser(req, res, next) {
-    notificationService.getNotificationsByUserId(req.userId, function(err, result) {
+    notificationService.getNotificationsByUserId(req.userId, req.params.limit, req.params.timeStamp, function(err, result) {
         res.send(errorHandler.handleResult(err, {notifications: result}, 'notifications fetched'));
     });
 }

@@ -83,7 +83,7 @@ exports.makeChangeLeaderNotification = function(project) {
     create(makeUpdateProjectNotification(makeSubjectDescriptor(project.leader._id, project._id), " has been promoted to leader of the " + project.name + " project."));
 };
 
-exports.getNotificationsByUserId = function (userId, callback) {
+exports.getNotificationsByUserId = function (userId, limit, timeStamp, callback) {
     async.waterfall([
         function (callback) {
             projectService.getProjects(userId, callback);
@@ -94,7 +94,7 @@ exports.getNotificationsByUserId = function (userId, callback) {
             projects.forEach(function (project) {
                 projectIds.push(project._id)
             });
-            getNotificationsByProjectIds(projectIds, callback);
+            getNotificationsByProjectIds(projectIds, limit, timeStamp, callback);
         },
         function (notifications, callback) {
             populateNotifications(notifications, callback)
@@ -208,12 +208,13 @@ function populateNotifications(notifications, callback) {
     });
 }
 
-function getNotificationsByProjectIds(projectIds, callback) {
+function getNotificationsByProjectIds(projectIds, limit, timeStamp, callback) {
     var tasks = [];
+    timeStamp = timeStamp || new Date();
     projectIds.forEach(function (id) {
         tasks.push(
             function (callback) {
-                notificationRepo.find({"subjectDescriptor.projectId": id}, callback);
+                notificationRepo.findLimit({"subjectDescriptor.projectId": id, timeStamp: {"$lt" : timeStamp}}, limit, callback);
             }
         )
     });
