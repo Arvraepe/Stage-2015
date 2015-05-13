@@ -39,7 +39,7 @@ boardRoutes.registerRoutes(app);
 taskRoutes.registerRoutes(app);
 notificationRoutes.registerRoutes(app);
 
-app.on('InternalServerError', function (req, res, err, cb) {
+app.on('InternalError', function (req, res, err, cb) {
     err = { success : false, messages : [{ code: 'ERROR', messages: 'Something went wrong. Please try again.' }] };
     res.send(err);
 });

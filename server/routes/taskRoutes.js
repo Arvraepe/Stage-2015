@@ -142,6 +142,5 @@ function makeCreateTaskNotification(req, res, next) {
 }
 
 function makeUpdateTaskNotification(req, res, next) {
-    console.log("update task notification");
     notifications.makeUpdateTaskNotification(req.oldTask, req.newTask, req.userId);
 }

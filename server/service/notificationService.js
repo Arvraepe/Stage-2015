@@ -198,7 +198,7 @@ exports.makeSwitchBoardNotification = function(task, newId, userId) {
             projectService.getProjectDesc(task.projectId, userId, callback);
         }
     ], function(err, results) {
-        createTaskChangeBoardNotification(task, results[0], results[1], results[3].name, userId);
+        createTaskChangeBoardNotification(task, results[0], results[1], results[2].name, userId);
     });
 };
 

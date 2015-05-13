@@ -34,7 +34,7 @@ exports.findTask = function(condition, callback) {
 };
 
 exports.findOneAndUpdate = function(condition, task, callback) {
-    Task.findOneAndUpdate(condition, task, { new : true }).lean().exec(callback);
+    Task.findOneAndUpdate(condition, task, {new: true}).lean().exec(callback);
 };
 
 exports.addComment = function(taskId, comment, callback) {
