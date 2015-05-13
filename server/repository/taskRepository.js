@@ -72,3 +72,11 @@ exports.updateComment = function(comment, callback) {
 exports.getTaskCount = function(condition, callback) {
     Task.count(condition, callback)
 };
+
+exports.deleteMany = function(condition, callback) {
+    Task.find(condition).remove().exec(callback)
+};
+
+exports.updateMany = function(condition, update, callback) {
+    Task.update(condition, update, { multi: true }, callback);
+};

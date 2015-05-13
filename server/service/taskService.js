@@ -269,6 +269,18 @@ exports.getTaskById = function(id, callback) {
     taskRepo.findTask({ _id: id}, callback);
 };
 
+exports.deleteByProjectId = function(projectId, callback) {
+    taskRepo.deleteMany({ projectId: projectId}, callback)
+};
+
+exports.deleteByBoardId = function(boardId, callback) {
+    taskRepo.deleteMany({ boardId: boardId }, callback);
+};
+
+exports.updateTaskStates = function(boardId, oldState, newState, callback) {
+    taskRepo.updateMany({ boardId: boardId, state: oldState}, { state: newState }, callback)
+};
+
 function createComment(taskId, userId, comment, callback) {
     var comment = {
         userId: userId,

@@ -78,8 +78,14 @@ exports.updateBoard = function (board, userId, callback) {
             if (isLeader) {
                 var messages = validator.validateBoard(board);
                 if (messages.length > 0) callback(messages);
-                else boardRepo.findOneAndUpdate({_id: board._id}, board, callback);
+                else boardRepo.findBoard({_id: board._id}, callback);
             } else callback(new Error('You are not leader of this project, you cannot update a board.'));
+        },
+        function(oldBoard, callback) {
+            processStatesUpdate(oldBoard, board, callback);
+        },
+        function(board, callback) {
+            boardRepo.findOneAndUpdate({ _id: board._id}, board, callback);
         },
         function (board, callback) {
             populateBoard(board, userId, callback);
@@ -98,6 +104,8 @@ exports.delete = function (boardId, projectId, userId, callback) {
             } else {
                 callback(new Error('You are not leader of this project, you cannot update a board.'));
             }
+        }, function (board, callback) {
+            taskService.deleteByBoardId(board._id, callback)
         }
     ], callback);
 };
@@ -134,6 +142,17 @@ exports.getBoardsDesc = function(projectId, userId, callback) {
                 var select = "name";
                 boardRepo.selectBoards({projectId: projectId}, select, callback);
             } else callback(new Error('You have no rights to see this project'));
+        }
+    ], callback)
+};
+
+exports.deleteByProjectId = function(projectId, callback) {
+    async.parallel([
+        function(callback) {
+            taskService.deleteByProjectId(projectId, callback)
+        },
+        function(callback) {
+            boardRepo.deleteMany({ projectId: projectId }, callback)
         }
     ], callback)
 };
@@ -184,4 +203,37 @@ function populateBoard(board, userId, callback) {
 
 function filterBoard(board) {
     return _.pick(board, ['name', 'description', 'states', 'deadline', '_id'])
+}
+
+function processStatesUpdate(oldBoard, board, callback) {
+    if(oldBoard.states != board.states) {
+        async.filter(oldBoard.states,
+            function(item, callback) {
+                var result = null;
+                board.states.forEach(function(state) {
+                    if(item == state) {
+                        result = item;
+                    }
+                });
+                callback(result == null);
+            },
+            function(results) {
+                oldBoard.states = results;
+            });
+        if(oldBoard.states.length > 0) {
+            var tasks = [];
+            oldBoard.states.forEach(function(entry) {
+                tasks.push(
+                    function(callback) {
+                        taskService.updateTaskStates(oldBoard._id, entry, board.states[0], callback)
+                    }
+                )
+            });
+            async.parallel(tasks, function(err) {
+                callback(err, board);
+            });
+        } else callback(null, board);
+    } else {
+        callback(null, board);
+    }
 }
