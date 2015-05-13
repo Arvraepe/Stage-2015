@@ -22,5 +22,5 @@ exports.find = function(condition, callback) {
 };
 
 exports.findLimit = function(condition, limit, callback) {
-    Notification.find(condition).limit(limit).lean().exec(callback);
+    Notification.find(condition).sort({timeStamp:-1}).limit(limit).lean().exec(callback);
 };

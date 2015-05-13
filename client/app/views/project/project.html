@@ -19,33 +19,47 @@
       class="fa fa-plus-circle" style="vertical-align: middle"> Board</i></button>
     <div ng-repeat="board in project.boards" class="well projectBoardLayout">
       <div class="row">
-        <div class="col-md-4 rightBorder">
-          <a ng-href="#/project/{{project._id}}/board/{{board._id}}" class="boardTitle">{{board.name|capitalize}}</a>
-          <hr>
-          <div>
-            <div ng-repeat="state in board.statesMap">
-              <div ng-repeat="(key, value) in state">
-                <div class="col-md-7 noPaddingLeft">
-                  {{key}}
-                </div>
-                <div class="col-md-5 noPaddingLeft">
-                  <span class="badge">{{value}}</span>
+        <div class="row-same-height">
+          <div class="col-md-4 col-md-height col-top rightBorder">
+            <a ng-href="#/project/{{project._id}}/board/{{board._id}}" class="boardTitle">{{board.name|capitalize}}</a>
+            <hr>
+            <div>
+              <div ng-repeat="state in board.statesMap">
+                <div ng-repeat="(key, value) in state">
+                  <div class="col-md-7 noPaddingLeft">
+                    {{key}}
+                  </div>
+                  <div class="col-md-5 noPaddingLeft">
+                    <span class="badge">{{value}}</span>
+                  </div>
                 </div>
               </div>
+
+            </div>
+          </div>
+          <div class="col-md-7 col-md-height notificationsDiv">
+
+            <div ng-repeat="notification in board.notifications|orderBy:'notification.timeStamp':true|limitTo:3" class="recentNotification col-md-12 row ">
+              <div class="row-same-height">
+                <div class="col-md-1 blockNoPadding col-md-height col-middle" style="height:100%">
+                  <img ng-src="{{notification.subjectDescriptor.user.imageUrl}}" alt="profilepic" class="smallAvatar avatarPlacement">
+                </div>
+                <div class="col-md-11 col-md-height col-middle noPaddingLeft">
+                  <span class="notificationUser">{{notification.subjectDescriptor.user.firstname}} {{notification.subjectDescriptor.user.lastname}}</span> {{notification.description}}
+                  <div>
+                    <span style="font-style: italic" am-time-ago="notification.timeStamp"></span>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
           </div>
-        </div>
-        <div class="col-md-8">
-          <div class="pull-right" ng-if="isLeader()">
-            <button type="button" class="btn btn-xs btn-danger" ng-click="openDeleteBoardModal(board)"> Delete</button>
+          <div class="col-md-1 col-md-height col-top pull-right " ng-if="isLeader()">
+            <button type="button" class="btn btn-xs btn-danger deleteButton" ng-click="openDeleteBoardModal(board)"> Delete</button>
           </div>
-          <div ng-repeat="notification in board.notifications|orderBy:'notification.timeStamp':true|limitTo:5" class="notificationLayout">
-            <img ng-src="{{notification.subjectDescriptor.user.imageUrl}}" alt="profilepic" class="smallerAvatar">
+        </div>
 
-            <span class="notificationUser">{{notification.subjectDescriptor.user.firstname}} {{notification.subjectDescriptor.user.lastname}}</span> {{notification.description}} (<span am-time-ago="notification.timeStamp"></span>)
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -63,7 +77,7 @@
             </div>
             <div ng-if="isLeader()" class="col-md-6">
               <div class="pull-right">
-                <button type="button" ng-click="openDetailsModal()" class="btn btn-primary">Update</button>
+                <button type="button" ng-click="openDetailsModal()" class="btn btn-primary"><i class="fa fa-pencil"></i> Update</button>
               </div>
             </div>
           </div>
@@ -116,7 +130,7 @@
       </div>
     </div>
     <button type="button" ng-if="isLeader()" ng-click="openDeleteProjectModal()"
-            class="btn btn-danger btn-block marginBotDeleteButton">Delete project
+            class="btn btn-danger btn-block marginBotDeleteButton"><i class="fa fa-trash"></i> Delete project
     </button>
   </div>
 

@@ -11,9 +11,18 @@
 <div class="col-md-9 noPaddingLeft">
   <div infinite-scroll="loadMoreNotifications()">
     <div ng-repeat="notification in notifications|orderBy:'timeStamp':true" class="notificationLayout" ng-click="notificationRead(notification.link)">
-      <img ng-src="{{notification.subjectDescriptor.user.imageUrl}}" alt="profilepic" class="smallerAvatar">
+      <div class="row-same-height">
+        <div class="col-md-1 col-md-height col-middle">
+          <img ng-src="{{notification.subjectDescriptor.user.imageUrl}}" alt="profilepic" class="smallAvatar notificationAvatar">
+        </div>
+        <div class="col-md-11 col-md-height col-middle">
+        <span class="notificationUser">{{notification.subjectDescriptor.user.firstname}} {{notification.subjectDescriptor.user.lastname}}</span> {{notification.description}}
+          <div>
+            <span style="font-style:italic;" am-time-ago="notification.timeStamp"></span>
+          </div>
+        </div>
+      </div>
 
-      <span class="notificationUser">{{notification.subjectDescriptor.user.firstname}} {{notification.subjectDescriptor.user.lastname}}</span> {{notification.description}} (<span am-time-ago="notification.timeStamp"></span>)
     </div>
   </div>
 

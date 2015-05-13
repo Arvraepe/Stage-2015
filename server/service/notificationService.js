@@ -84,6 +84,7 @@ exports.makeChangeLeaderNotification = function(project) {
 };
 
 exports.getNotificationsByUserId = function (userId, limit, timeStamp, callback) {
+    timeStamp = timeStamp || new Date();
     async.waterfall([
         function (callback) {
             projectService.getProjects(userId, callback);
@@ -224,7 +225,6 @@ function populateNotifications(notifications, callback) {
 
 function getNotificationsByProjectIds(projectIds, limit, timeStamp, callback) {
     var tasks = [];
-    timeStamp = timeStamp || new Date();
     projectIds.forEach(function (id) {
         tasks.push(
             function (callback) {

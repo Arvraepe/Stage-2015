@@ -27,6 +27,12 @@ angular.module('stageprojectApp')
         Session.setId(token);
       };
 
+      $scope.setImageUrl = function (imageUrl) {
+        loginFactory.setUserImage(imageUrl);
+        $scope.currentUser.imageUrl = imageUrl;
+        localStorageService.set('userInfo', $scope.currentUser);
+      };
+
 
       $scope.logout = function () {
         AuthService.logout();

@@ -29,7 +29,7 @@ angular.module('stageprojectApp')
             var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
             console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
           }).success(function (data, status, headers, config) {
-            $scope.setCurrentUser(data.data.user);
+            $scope.setImageUrl(data.data.imageUrl);
             notificationFactory.createNotification(data);
           });
         }

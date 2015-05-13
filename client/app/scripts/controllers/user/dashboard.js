@@ -12,7 +12,7 @@ angular.module('stageprojectApp')
     $scope.userLeaderProjects = [];
     $scope.userCollaboratorProjects = [];
     $scope.notificationsToShow = [];
-
+    $scope.loadMoreNotifications = null;
     $scope.title = 'All My Projects';
 
 
@@ -48,12 +48,36 @@ angular.module('stageprojectApp')
     };
 
     $scope.getNotifications = function () {
-      console.log('lel');
+      var notificationInfo = {
+        limit: 10
+      };
       notificationRequestFactory.getNotificationsForUser({
-        params: {},
+        params: notificationInfo,
         success: function (response) {
           $scope.notifications = response.data.notifications;
           makeNotificationLink($scope.notifications);
+          $scope.loadMoreNotifications = function () {
+            if ($scope.notifications.length > 1) {
+              var timeStampLastNotification = $scope.notifications[$scope.notifications.length - 1].timeStamp;
+              var notificationInfo = {
+                limit: 10,
+                timeStamp: timeStampLastNotification
+              };
+              notificationRequestFactory.getNotificationsForUser({
+                params: notificationInfo,
+                success: function (response) {
+                  angular.forEach(response.data.notifications, function (not) {
+                    $scope.notifications.push(not);
+                  });
+                  makeNotificationLink($scope.notifications);
+                },
+                error: function (error) {
+                  console.log(error);
+                }
+              })
+            }
+          };
+
         },
         error: function (error) {
           console.log(error);
@@ -120,28 +144,7 @@ angular.module('stageprojectApp')
       $location.path(notificationLink);
     };
 
-    $scope.loadMoreNotifications = function () {
-      if ($scope.notifications.length > 1) {
-        var timeStampLastNotification = $scope.notifications[$scope.notifications.length - 1].timeStamp;
-        var notificationInfo = {
-          limit: $scope.notifications.length,
-          timeStamp: timeStampLastNotification
-        };
-        notificationRequestFactory.getNotificationsForUser({
-          params: notificationInfo,
-          success: function (response) {
-            angular.forEach(response.data.notifications, function (not) {
-              $scope.notifications.push(not);
-            });
-            makeNotificationLink($scope.notifications);
 
-          },
-          error: function (error) {
-            console.log(error);
-          }
-        })
-      }
-    };
 
 
   }]);

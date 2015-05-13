@@ -28,8 +28,9 @@ angular.module('stageprojectApp')
         localStorageService.remove('userInfo');
         localStorageService.remove('tokenInfo');
       },
-      setUserImage: function (file) {
-        loggedInUser.avatar = file;
+      setUserImage: function (imageUrl) {
+        loggedInUser.imageUrl = imageUrl;
+        localStorageService.set('userInfo', loggedInUser);
       }
     };
   }]);

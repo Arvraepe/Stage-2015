@@ -1,0 +1,19 @@
+.recentNotification{
+  margin:10px 5px;
+  border: #e7e7e7 solid 2px;
+  border-radius:4px;
+  padding:10px;
+}
+
+.avatarPlacement{
+  vertical-align: middle;
+}
+
+
+.deleteButton{
+  margin-top:10px;
+}
+
+.notificationsDiv{
+  padding-right:4px;
+}
