@@ -282,6 +282,20 @@ exports.updateTaskStates = function (boardId, oldState, newState, callback) {
     taskRepo.updateMany({boardId: boardId, state: oldState}, {state: newState}, callback)
 };
 
+exports.changeState = function(userId, oldTask, task, callback) {
+    async.waterfall([
+        function(callback) {
+            projectService.checkAuthority(oldTask.projectId, userId, callback);
+        },
+        function(authorized, callback) {
+            if(authorized) {
+                oldTask.state = task.state;
+                taskRepo.findOneAndUpdate({ _id: oldTask._id }, oldTask, callback);
+            } else  callback(new Error('You have no rights within this project.'));
+        }
+    ], callback)
+};
+
 function createComment(taskId, userId, comment, callback) {
     var comment = {
         userId: userId,

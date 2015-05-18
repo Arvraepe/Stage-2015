@@ -131,8 +131,7 @@ exports.deleteProject = function (projectId, userId, callback) {
         function(callback) {
             boardService.deleteByProjectId(projectId, callback)
         }
-    ])
-
+    ], callback)
 };
 
 exports.updateProject = function (userId, params, callback) {

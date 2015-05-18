@@ -259,42 +259,37 @@ exports.findALike = function (username, callback) {
     if (username.length >= 2) {
         var temp = username.split(' ');
         var firstname, lastname;
-        if (temp.length == 2) {
-            firstname = temp[0]; lastname = temp[1];
-            userRepo.findUsers({firstname: new RegExp(firstname, 'i'), lastname: new RegExp(lastname, 'i')}, function (err, users) {
-                callback(err, filterUsers(users));
-            });
-        } else if (temp.length > 2) {
-            firstname = temp.shift();
-            lastname = temp.toString().replace(/,/g, ' ');
-            userRepo.findUsers({firstname: new RegExp(firstname, 'i'), lastname: new RegExp(lastname, 'i')}, function (err, users) {
-                callback(err, filterUsers(users));
+        if (temp.length > 1) {
+            async.parallel([
+                function(callback) {
+                    var tempCopy = temp;
+                    firstname = tempCopy.shift(); lastname = tempCopy.toString().replace(/,/g, ' ');
+                    findUsers({firstname: firstname, lastname: lastname}, callback);
+                },
+                function(callback) {
+                    firstname = temp.pop(); lastname = temp.toString.replace(/,/g, ' ');
+                    findUsers({firstname: firstname, lastname: lastname}, callback)
+                }
+            ], function(err, results) {
+                var arr = results[0].concat(results[1]);
+                var uniqueArr = uniqueUserArray(arr);
+                callback(err, uniqueArr)
             });
         } else {
             async.parallel([
                 function(callback) {
-                    userRepo.findUsers({username: new RegExp(username, 'i')}, callback);
+                    findUsers({username: new RegExp(username, 'i')}, callback);
                 },
                 function(callback) {
-                    userRepo.findUsers({firstname: new RegExp(username, 'i')}, callback);
+                    findUsers({firstname: new RegExp(username, 'i')}, callback);
                 },
                 function(callback) {
-                    userRepo.findUsers({lastname: new RegExp(username, 'i')}, callback);
+                    findUsers({lastname: new RegExp(username, 'i')}, callback);
                 }
             ], function(err, results) {
                 var arr = results[0].concat(results[1]).concat(results[2]);
-                var uniqueArr =[];
-                console.log(arr[0] == arr[1]);
-                arr.forEach(function(user) {
-                    var temp = null;
-                    uniqueArr.forEach(function(uniqueUser) {
-                        if(uniqueUser.email == user.email) {
-                            temp = uniqueUser;
-                        }
-                    });
-                    if (temp == null)uniqueArr.push(user);
-                });
-                callback(err, filterUsers(uniqueArr));
+                var uniqueArr = uniqueUserArray(arr);
+                callback(err, uniqueArr);
             })
         }
     } else {
@@ -440,4 +435,24 @@ function encryptPassword(password, salt) {
 
 function filterNewUser(user) {
     _.pick(user, ['_id', 'firstname', 'lastname', ''])
+}
+
+function findUsers(condition, callback) {
+    userRepo.findUsers(condition, function(err, users) {
+        callback(err, filterUsers(users));
+    });
+}
+
+function uniqueUserArray(arr) {
+    var uniqueArr =[];
+    arr.forEach(function(user) {
+        var temp = null;
+        uniqueArr.forEach(function(uniqueUser) {
+            if(uniqueUser.email == user.email) {
+                temp = uniqueUser;
+            }
+        });
+        if (temp == null)uniqueArr.push(user);
+    });
+    return uniqueArr;
 }

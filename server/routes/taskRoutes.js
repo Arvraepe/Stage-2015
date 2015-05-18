@@ -17,6 +17,7 @@ exports.registerRoutes = function(app) {
     app.put('/task/comment', updateComment);
     app.del('/task/comment', deleteComment);
     app.put('/task/switchboard', switchBoard);
+    app.put('task/changestate', changeState, makeUpdateTaskNotification)
 };
 
 function createTask(req, res, next) {
@@ -143,4 +144,30 @@ function makeCreateTaskNotification(req, res, next) {
 
 function makeUpdateTaskNotification(req, res, next) {
     notifications.makeUpdateTaskNotification(req.oldTask, req.newTask, req.userId);
+}
+
+function changeState(req, res, next) {
+    async.waterfall([
+        function(callback) {
+            async.parallel([
+                function(callback) {
+                    auth.verifyToken(req.params.token, callback);
+                },
+                function(callback) {
+                    taskService.getTaskById(req.params.task._id, callback)
+                }
+            ], function(err, result) {
+                req.userId = result[0];
+                req.oldTask = result[1];
+                callback(err, result);
+            })
+        },
+        function(results, callback) {
+            taskService.changeState(results[0], results[1], req.params.task, callback)
+        }
+    ],function(err, task) {
+        req.newTask = task;
+        res.send(errorHandler.handleResult(err, { task: task }, 'Task updated.'));
+        return next();
+    })
 }
