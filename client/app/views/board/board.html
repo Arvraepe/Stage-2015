@@ -39,11 +39,11 @@
       {{state.name}}
     </div>
   </div>
-  <div class="stateLayout boardView" ng-repeat="state in board.states" ui-sortable="taskSortOptions" ng-model="state.tasks"
+  <div class="stateLayout boardView" ng-repeat="state in board.states" ui-sortable="taskSortOptions" ng-model="state.tasks" title="{{state.name}}"
        ng-class="{'boardRightBorder': ($index+1)!=board.states.length}" column-height
        ng-style="{'width':columnWidth, 'min-height':height}">
 
-    <div ng-model="task" ng-repeat="task in state.tasks">
+    <div ng-repeat="task in state.tasks">
       <div class="panel panel-warning">
         <div class="panel-heading">
           <div class="panel-title">

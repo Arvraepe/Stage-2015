@@ -6,8 +6,8 @@
   <li class="active">{{task.title|capitalize}}</li>
 </ol>
 
-<div class="col-md-9 noPaddingLeft">
-  <h2>{{task.title|capitalize}}
+<div class="col-md-12 noPaddingLeft noPaddingRight">
+  <h2 class="taskTitle" >{{task.title|capitalize}}
 
     <span ng-if="task.deadline" class="lazyTime">- due:
       <span ng-if="lazyDate >0" am-time-ago="task.deadline" ng-class="{'deadlineClose':lazyDate>0}"></span>
@@ -15,8 +15,12 @@
     </span>
 
     <div class="pull-right">
-      <button type="button" ng-click="newCommentVisible=true" class="btn btn-primary"><i class="fa fa-comment-o"></i>
+      <button type="button" ng-click="newCommentVisible=true" class="btn btn-success"><i class="fa fa-comment-o"></i>
         Comment
+      </button>
+
+      <button type="button" ng-click="openUpdateTaskModal()" class="btn btn-primary"><i
+        class="fa fa-pencil"></i> Update
       </button>
     </div>
   </h2>
@@ -95,6 +99,7 @@
 
 
 </div>
+<!--
 <div class="col-md-3 noPaddingRight">
   <div class="panel panel-default taskDescriptorPanel">
     <div class="panel-heading">
@@ -195,5 +200,6 @@
     </div>
   </div>
 </div>
+-->
 
 

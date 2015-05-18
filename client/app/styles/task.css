@@ -66,12 +66,17 @@ h4:before {
 }
 
 .taskDescription{
-  padding: 20px 0;
+  padding: 10px 0;
   font-size: 17px;
 }
 
 .taskDescriptorPanel{
   margin-top:10px;
+}
+
+.taskTitle{
+  margin-bottom:25px;
+  font-size: 30px;
 }
 
 .editComment{

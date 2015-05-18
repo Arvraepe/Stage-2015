@@ -92,6 +92,7 @@ angular.module('stageprojectApp')
           }
         });
       });
+      $scope.board.states = [];
       $scope.board.states = states;
     }
 
@@ -196,7 +197,7 @@ angular.module('stageprojectApp')
       },
       update: function (e, ui) {
         var uiStuff = ui;
-        var taskModel = ui.item.sortable.sourceModel;
+        var taskModel = ui.item.sortable.model;
         if (ui.item.sortable.droptarget[0].classList[2] === "dropzone"){
           var cancelMethod = ui.item.sortable.cancel;
           var size={};
@@ -236,7 +237,7 @@ angular.module('stageprojectApp')
           })
         }
         else if(ui.item.sortable.droptarget[0].classList[1] === "boardView"){
-          taskModel.state = ui.item.sortable.droptargetModel.name;
+          taskModel.state = ui.item.sortable.droptarget[0].title;
           var taskInformation = {
             task: {
               _id : taskModel._id,
