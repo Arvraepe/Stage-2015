@@ -7,7 +7,14 @@
 </ol>
 
 <div class="col-md-12 noPaddingLeft noPaddingRight">
-  <h2 class="taskTitle" >{{task.title|capitalize}}
+  <h2 class="taskTitle" >
+
+    <span ng-show="titleVisible">{{task.title|capitalize}}</span>
+    <form class="form-inline" ng-submit="changeTitle(task.title)" ng-show="!titleVisible">
+      <input  type="text" ng-model="task.title" class="form-control">
+      <button type="submit" class="btn btn-success"><i class="fa fa-floppy-o"></i> Save</button>
+    </form>
+    <button ng-show="titleVisible" class="btn btn-primary marginEditButtonTask" ng-show="(isAssignee() || isCreator())" ng-click="titleVisible=!titleVisible"><i class="fa fa-pencil"></i> Edit</button>
 
     <span ng-if="task.deadline" class="lazyTime">- due:
       <span ng-if="lazyDate >0" am-time-ago="task.deadline" ng-class="{'deadlineClose':lazyDate>0}"></span>
@@ -18,7 +25,6 @@
       <button type="button" ng-click="newCommentVisible=true" class="btn btn-success"><i class="fa fa-comment-o"></i>
         Comment
       </button>
-
       <button type="button" ng-click="openUpdateTaskModal()" class="btn btn-primary"><i
         class="fa fa-pencil"></i> Update
       </button>

@@ -34,6 +34,27 @@ angular.module('stageprojectApp')
       $scope.lazyDate = days;
     }
 
+    $scope.changeTitle = function ( title) {
+      $scope.task.title = title;
+      var taskInformation = {
+        task: {
+          _id : $scope.task._id,
+          title : $scope.task.title
+        }
+      };
+      taskRequestFactory.updateTask({
+        data: taskInformation,
+        success: function (response) {
+          console.log(response);
+          $scope.titleVisible = !$scope.titleVisible;
+        },
+        error: function (err) {
+          console.log(err);
+          $scope.titleVisible = !$scope.titleVisible;
+
+        }
+      })
+    };
 
 
     $scope.getTaskInfo = function () {

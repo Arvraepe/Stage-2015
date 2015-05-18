@@ -247,7 +247,7 @@ angular.module('stageprojectApp')
           taskRequestFactory.changeState({
             data:taskInformation,
             success:function(response){
-
+              notificationFactory.createNotification(response);
             },
             error: function (error) {
               console.log(error);
