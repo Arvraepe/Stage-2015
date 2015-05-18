@@ -1,0 +1,26 @@
+<div class="modal-header" data-ng-init="getBoards()">
+  <h3 class="modal-title">Link a task</h3>
+</div>
+<form class="form-horizontal" name="selectBoardForm">
+  <div class="modal-body">
+    <div class="form-group">
+      <label class="col-md-3 control-label">Board</label>
+
+      <div class="col-md-9">
+        <ui-select tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|ENTER|TAB"
+                   ng-model="selectedBoard.board" ng-disabled="disabled" title="Select a board"
+                   search-enabled="true" >
+          <ui-select-match placeholder="Select a board">{{$select.selected.name}}</ui-select-match>
+          <ui-select-choices repeat="board in boards">
+            {{board.name}}
+          </ui-select-choices>
+        </ui-select>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="returnBoard()">Choose</button>
+    <button type="button" class="btn btn-warning" ng-click="cancel()">Cancel</button>
+  </div>
+</form>

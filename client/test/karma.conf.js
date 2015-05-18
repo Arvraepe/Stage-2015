@@ -26,7 +26,6 @@ module.exports = function(config) {
       'app/bower_components/angular-cookies/angular-cookies.js',
       'app/bower_components/angular-route/angular-route.js',
       'app/bower_components/angular-touch/angular-touch.js',
-      'app/bower_components/ng-sortable/dist/ng-sortable.js',
       'app/bower_components/moment/moment.js',
       'app/bower_components/angular-moment/angular-moment.js',
       'app/bower_components/rangy/rangy-core.min.js',
@@ -37,6 +36,8 @@ module.exports = function(config) {
       'app/bower_components/textAngular/src/textAngular-sanitize.js',
       'app/bower_components/textAngular/src/textAngularSetup.js',
       'app/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
+      'app/bower_components/jquery-ui/jquery-ui.js',
+      'app/bower_components/angular-ui-sortable/sortable.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

@@ -8,11 +8,13 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('BoardCtrl', function ($scope, $routeParams, boardRequestFactory,$modal, taskRequestFactory, notificationFactory, columnHeightFactory, $interval) {
+  .controller('BoardCtrl', function ($scope, $routeParams, boardRequestFactory, $modal, taskRequestFactory, notificationFactory, columnHeightFactory, $interval,$q) {
     $scope.board = {};
     $scope.amountOfStates = 0;
     $scope.columnWidth = 0;
-    $scope.arrowIsHidden=[];
+    $scope.arrowIsHidden = [];
+    $scope.dragging=false;
+    $scope.dropzoneFields =[];
 
     function calculateTimeDifference() {
       var now = moment();
@@ -30,63 +32,62 @@ angular.module('stageprojectApp')
     };
 
 
+    $scope.getBoardInfo = function () {
+      var boardName = {
+        boardId: $routeParams.boardId
+      };
+      boardRequestFactory.getBoardInfo({
+        params: boardName,
+        success: function (response) {
+          $scope.board = response.data.board;
+          $scope.amountOfStates = $scope.board.states.length;
+          $scope.columnWidth = Math.floor(100 / $scope.amountOfStates) + '%';
+          $scope.board.collaborators = response.data.board.parentProject.collaborators;
+          $scope.board.collaborators.push(angular.copy(response.data.board.parentProject.leader));
+          $scope.board.leader = response.data.board.parentProject.leader;
+          addTasksToStates();
+          calculateTimeDifference();
+          var projectId = {
+            projectId: $scope.board.parentProject._id
+          };
+          boardRequestFactory.getBoards({
+            params: projectId,
+            success: function (response) {
+              angular.forEach(response.data.boards, function (board, index, array) {
+                if (board._id === $scope.board._id) {
+                  array.splice(index, 1);
+                }
+              });
+              $scope.projectboards = response.data.boards;
+              angular.forEach($scope.projectboards, function (board, index, array) {
+                $scope.arrowIsHidden.push(true);
+              });
+              $scope.height = columnHeightFactory.resetHeight();
+              $scope.determineColumnHeight();
+            },
+            error: function (error) {
 
-    $scope.getBoardInfo = function(){
-        var boardName = {
-          boardId:$routeParams.boardId
-        };
-        boardRequestFactory.getBoardInfo({
-          params: boardName,
-          success:function(response){
-            $scope.board = response.data.board;
-            $scope.amountOfStates = $scope.board.states.length;
-            $scope.columnWidth= Math.floor(100/$scope.amountOfStates) + '%';
-            $scope.board.collaborators = response.data.board.parentProject.collaborators;
-            $scope.board.collaborators.push(angular.copy(response.data.board.parentProject.leader));
-            $scope.board.leader = response.data.board.parentProject.leader;
-            addTasksToStates();
-            calculateTimeDifference();
-            var projectId = {
-              projectId : $scope.board.parentProject._id
-            };
-            boardRequestFactory.getBoards({
-              params: projectId,
-              success:function(response){
-                angular.forEach(response.data.boards, function (board, index, array) {
-                  if(board._id === $scope.board._id){
-                    array.splice(index,1);
-                  }
-                });
-                $scope.projectboards = response.data.boards;
-                angular.forEach($scope.projectboards, function (board, index, array) {
-                  $scope.arrowIsHidden.push(true);
-                });
-                $scope.height = columnHeightFactory.resetHeight();
-                $scope.determineColumnHeight();
-              },
-              error: function(error){
-
-              }
-            })
-          },
-          error: function(error){
-            console.log(error);
-          }
-        })
+            }
+          })
+        },
+        error: function (error) {
+          console.log(error);
+        }
+      })
     };
 
-    function addTasksToStates(){
+    function addTasksToStates() {
       var states = [];
-      angular.forEach($scope.board.states, function(state){
+      angular.forEach($scope.board.states, function (state) {
         var stateObj = {
           name: state,
-          tasks : []
+          tasks: []
         };
         states.push(stateObj);
       });
-      angular.forEach($scope.board.tasks, function(task){
-        angular.forEach(states, function(state){
-          if(task.state == state.name){
+      angular.forEach($scope.board.tasks, function (task) {
+        angular.forEach(states, function (state) {
+          if (task.state == state.name) {
             state.tasks.push(task);
           }
         });
@@ -94,13 +95,13 @@ angular.module('stageprojectApp')
       $scope.board.states = states;
     }
 
-    $scope.openEditBoardModal = function(size){
+    $scope.openEditBoardModal = function (size) {
       var modalInstance = $modal.open({
         templateUrl: 'views/board/editboard.html',
         controller: 'EditBoardCtrl',
         size: size,
-        resolve:{
-          board: function(){
+        resolve: {
+          board: function () {
             return $scope.board;
           }
         }
@@ -108,7 +109,7 @@ angular.module('stageprojectApp')
       modalInstance.result.then(function (data) {
         $scope.board = data;
         $scope.amountOfStates = $scope.board.states.length;
-        $scope.columnWidth= Math.floor(100/$scope.amountOfStates)+'%';
+        $scope.columnWidth = Math.floor(100 / $scope.amountOfStates) + '%';
         $scope.board.collaborators = data.parentProject.collaborators;
         $scope.board.collaborators.push(angular.copy(data.parentProject.leader));
         $scope.board.leader = data.parentProject.leader;
@@ -118,13 +119,13 @@ angular.module('stageprojectApp')
       })
     };
 
-    $scope.openCreateTaskModal = function(size){
+    $scope.openCreateTaskModal = function (size) {
       var modalInstance = $modal.open({
         templateUrl: 'views/task/createtask.html',
         controller: 'CreateTaskCtrl',
         size: size,
-        resolve:{
-          board: function(){
+        resolve: {
+          board: function () {
             return $scope.board;
           }
         }
@@ -135,73 +136,186 @@ angular.module('stageprojectApp')
       })
     };
 
-    function addTaskToState(task){
-      angular.forEach($scope.board.states, function(state){
-        if(state.name===task.state){
+    function addTaskToState(task) {
+      angular.forEach($scope.board.states, function (state) {
+        if (state.name === task.state) {
           state.tasks.push(task);
         }
       })
     }
 
-    $scope.taskSortOptions = {
-      itemMoved:function(event){
-        console.log(event);
-        if(event.dest.sortableScope.$parent.projectBoard){
-          var taskInfo = {task:{
-            _id : event.source.itemScope.modelValue._id,
-            boardId : event.dest.sortableScope.$parent.projectBoard._id,
-          }};
-          taskRequestFactory.switchBoard({
-            data: taskInfo,
-            success:function(response){
-              notificationFactory.createNotification(response);
-            },
-            error: function (error) {
-              notificationFactory.createNotification(error);
-            }
-          })
-        }
-        event.source.itemScope.modelValue.state = event.dest.sortableScope.$parent.state.name;
-        var task = {
-          task:{
-            _id : event.source.itemScope.modelValue._id,
-            state : event.source.itemScope.modelValue.state,
-            assignee : event.source.itemScope.modelValue.assignee._id,
-            creator : event.source.itemScope.modelValue.creator._id,
-            title : event.source.itemScope.modelValue.title,
-            description:event.source.itemScope.modelValue.description
-          }
-        };
 
-        console.log(event);
-        taskRequestFactory.changeState({
-          data: task,
-          success:function(response){
-            //taken opnieuw tekenen
-            angular.forEach($scope.board.tasks, function (task, index, array) {
-              if(task._id === response.data.task._id){
-                array[index] = response.data.task;
+    function updateTaskStatus(task) {
+      angular.forEach($scope.board.states, function (state) {
+        angular.forEach(state.tasks, function (stateTask, index, array) {
+            if (stateTask._id === task._id) {
+              array.splice(index,1);
+            }
+          }
+        );
+        if(task.state == state.name){
+          state.tasks.push(task);
+        }
+      })
+    }
+
+    $scope.stateSortOptions={
+      start: function (e, ui) {
+
+      },
+      stop: function (e, ui) {
+
+      },
+      update: function (e, ui) {
+
+      }
+    };
+
+    $scope.taskSortOptions = {
+      placeholder: 'app',
+      connectWith: '.stateLayout',
+      start: function (e,ui) {
+        $scope.$apply(function () {
+          $scope.dragging=true;
+        });
+        $('.dropzone').sortable('refresh');
+
+      },
+      stop: function (e,ui) {
+        if(ui.item.sortable.droptarget == undefined ){
+          $scope.$apply($scope.dragging = false);
+          return;
+        }
+        else if (ui.item.sortable.droptarget[0].classList[2] == "dropzone") {
+          // run code when item is dropped in the dropzone
+          $scope.$apply($scope.dragging = false);
+        }
+        else{
+          $scope.$apply($scope.dragging = false);
+        }
+      },
+      update: function (e, ui) {
+        var uiStuff = ui;
+        var taskModel = ui.item.sortable.sourceModel;
+        if (ui.item.sortable.droptarget[0].classList[2] === "dropzone"){
+          var cancelMethod = ui.item.sortable.cancel;
+          var size={};
+          var modalInstance = $modal.open({
+            templateUrl: 'views/board/changeboard.html',
+            controller: 'ChangeBoardCtrl',
+            size: size,
+            resolve: {
+              board: function () {
+                return $scope.board;
+              },
+              ui: function () {
+                return uiStuff
+              }
+            }
+          });
+          modalInstance.result.then(function (board) {
+            taskModel.boardId = board._id;
+            var taskInformation = {
+              task: {
+                _id : taskModel._id,
+                boardId : taskModel.boardId
+              }
+            };
+            taskRequestFactory.changeState({
+              data:taskInformation,
+              success:function(response){
+                notificationFactory.createNotification(response);
+              },
+              error: function (error) {
+                console.log(error);
               }
             })
-          },
-          error: function(error){
-            console.log(error);
-          }
-        })
-      },
-      orderChanged: function(event){
 
-      },
-      dragStart: function (object) {
-        $scope.arrowIsHidden[0]=false;
+          }, function (lala) {
+            console.log(lala);
+          })
+        }
+        else if(ui.item.sortable.droptarget[0].classList[1] === "boardView"){
+          taskModel.state = ui.item.sortable.droptargetModel.name;
+          var taskInformation = {
+            task: {
+              _id : taskModel._id,
+              state : taskModel.state
+            }
+          };
+          taskRequestFactory.changeState({
+            data:taskInformation,
+            success:function(response){
 
-      },
-      dragEnd: function (object) {
-        $scope.arrowIsHidden[0]=true;
-        columnHeightFactory.resetHeight();
-        $scope.height = columnHeightFactory.getMaxHeight();
-      },
-      additionalPlaceholderClass:'dragPlaceholder'
+            },
+            error: function (error) {
+              console.log(error);
+            }
+          });
+        }
+
+
+       // updateTaskStatus(task);
+      }
+
+      /*itemMoved:function(event){
+       console.log(event);
+       if(event.dest.sortableScope.$parent.projectBoard){
+       var taskInfo = {task:{
+       _id : event.source.itemScope.modelValue._id,
+       boardId : event.dest.sortableScope.$parent.projectBoard._id,
+       }};
+       taskRequestFactory.switchBoard({
+       data: taskInfo,
+       success:function(response){
+       notificationFactory.createNotification(response);
+       },
+       error: function (error) {
+       notificationFactory.createNotification(error);
+       }
+       })
+       }
+       event.source.itemScope.modelValue.state = event.dest.sortableScope.$parent.state.name;
+       var task = {
+       task:{
+       _id : event.source.itemScope.modelValue._id,
+       state : event.source.itemScope.modelValue.state,
+       assignee : event.source.itemScope.modelValue.assignee._id,
+       creator : event.source.itemScope.modelValue.creator._id,
+       title : event.source.itemScope.modelValue.title,
+       description:event.source.itemScope.modelValue.description
+       }
+       };
+
+       console.log(event);
+       taskRequestFactory.changeState({
+       data: task,
+       success:function(response){
+       //taken opnieuw tekenen
+       angular.forEach($scope.board.tasks, function (task, index, array) {
+       if(task._id === response.data.task._id){
+       array[index] = response.data.task;
+       }
+       })
+       },
+       error: function(error){
+       console.log(error);
+       }
+       })
+       },
+       orderChanged: function(event){
+
+       },
+       dragStart: function (object) {
+       $scope.arrowIsHidden[0]=false;
+
+       },
+       dragEnd: function (object) {
+       $scope.arrowIsHidden[0]=true;
+       columnHeightFactory.resetHeight();
+       $scope.height = columnHeightFactory.getMaxHeight();
+       },
+       additionalPlaceholderClass:'dragPlaceholder'*/
     };
 
     $scope.otherBoardsTasks = [{}];
@@ -209,10 +323,10 @@ angular.module('stageprojectApp')
     $scope.determineColumnHeight = function () {
       $interval(function () {
         $scope.height = columnHeightFactory.getMaxHeight();
-      },1000);
+      }, 1000);
     };
 
 
-
-
-  });
+  }
+)
+;

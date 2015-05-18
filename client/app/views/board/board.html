@@ -4,7 +4,7 @@
   <li class="active">{{board.name|capitalize}}</li>
 </ol>
 <h2>{{board.name|capitalize}}
-  <span class="lazyTime">- due:
+  <span ng-if="board.deadline" class="lazyTime">- due:
     <span ng-if="lazyDate >0" am-time-ago="board.deadline" ng-class="{'deadlineClose':lazyDate>0}"></span>
     <span ng-if="lazyDate <0" am-time-ago="board.deadline" ng-class="{'deadlineOver': lazyDate <0}"></span>
   </span>
@@ -21,37 +21,67 @@
 <div class="col-md-9 noPaddingLeft boardDescription">
   {{board.description}}
 </div>
-
-
-
-<div class="col-md-12 row" ng-hide="arrowIsHidden[0]">
-  <h3>Other Boards</h3>
-
-  <div ng-repeat="projectBoard in projectboards" class="boardsLayout row" ng-style="{'width':100/projectboards.length+'%'}"  >
-    <div class="arrow_box my-animation" ng-hide="arrowIsHidden[$index]">
-      <h1 class="logo">You can also drop into another board</h1>
-    </div>
-    <ul ng-model="otherBoardsTasks" as-sortable="taskSortOptions" is-disabled="true" class="noPaddingLeft noListStyleType">
-
-      <li ng-repeat="board in otherBoardsTasks | limitTo:1" as-sortable-item>
-        <div as-sortable-item-handle class="otherBoardsLayout">
-          {{projectBoard.name}}
-        </div>
-      </li>
-    </ul>
+<div class="col-md-12" ng-show="dragging">
+  <div class="col-md-4 noPaddingLeft dropzone stateLayout" ui-sortable="dropzoneFields" ng-model="dropzoneFields">
+    <div ng-repeat="item in dropzoneFields track by $index"></div>
   </div>
 </div>
 
 
+
+
+
+<div class="col-md-12 noPaddingLeft noPaddingRight row boardMargin well wellPaddingVertical">
+  <div class="stateLayout" ng-repeat="state in board.states" ng-model="state"
+       ng-class="{'boardRightBorder': ($index+1)!=board.states.length}"
+       ng-style="{'width':columnWidth}">
+    <div style="margin-bottom:20px" class="stateHeader">
+      {{state.name}}
+    </div>
+  </div>
+  <div class="stateLayout boardView" ng-repeat="state in board.states" ui-sortable="taskSortOptions" ng-model="state.tasks"
+       ng-class="{'boardRightBorder': ($index+1)!=board.states.length}" column-height
+       ng-style="{'width':columnWidth, 'min-height':height}">
+
+    <div ng-model="task" ng-repeat="task in state.tasks">
+      <div class="panel panel-warning">
+        <div class="panel-heading">
+          <div class="panel-title">
+            <a ng-href="#/project/{{board.projectId}}/task/{{task._id}}">{{task.identifier}} <span
+              class="pull-right" ng-if="task.important"><i class="fa fa-flag"></i>
+              </span></a>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-2">
+              <img ng-src="{{task.assignee.imageUrl}}" alt="afbeelding" class="smallAvatar">
+            </div>
+            <div class="col-md-10">
+              <span class="taskTitle">{{task.title}}</span>
+            </div>
+            <div class="col-md-10">
+              <span class="assignedTo">Assigned to: {{task.assignee.firstname}} {{task.assignee.lastname}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!--
 <div class="col-md-12 noPaddingLeft noPaddingRight row">
   <div ng-repeat="state in board.states" class="stateLayout"
-       ng-class="{'boardRightBorder': ($index+1)!=board.states.length}"  column-height ng-style="{'width':columnWidth, 'min-height':height}">
+       ng-class="{'boardRightBorder': ($index+1)!=board.states.length}" column-height
+       ng-style="{'width':columnWidth, 'min-height':height}">
     <h3 class="marginBotDeleteButton boardTitles">{{state.name}}</h3>
 
-    <ul class="col-md-12 noPaddingLeft noPaddingRight noListStyleType" as-sortable="taskSortOptions"
+    <ul class="col-md-12 noPaddingLeft noPaddingRight noListStyleType" ui-sortable="taskSortOptions"
         ng-model="state.tasks">
-      <li ng-repeat="task in state.tasks" as-sortable-item>
-        <div as-sortable-item-handle class="panel panel-warning">
+      <li ng-repeat="task in state.tasks">
+        <div class="panel panel-warning">
           <div class="panel-heading">
             <div class="panel-title">
               <a ng-href="#/project/{{board.projectId}}/task/{{task._id}}">{{task.identifier}} <span
@@ -77,3 +107,4 @@
     </ul>
   </div>
 </div>
+-->

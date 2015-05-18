@@ -26,6 +26,14 @@ angular.module('stageprojectApp')
       _id : $routeParams.taskId
     };
 
+    function calculateTimeDifference() {
+      var now = moment();
+      var deadline = moment($scope.task.deadline);
+      var duration = moment.duration(deadline.diff(now));
+      var days = duration.asDays();
+      $scope.lazyDate = days;
+    }
+
 
 
     $scope.getTaskInfo = function () {
@@ -46,6 +54,7 @@ angular.module('stageprojectApp')
           $scope.isAssignee = function () {
             return $scope.task.assignee._id === $scope.$parent.currentUser._id;
           };
+          calculateTimeDifference();
 
           projectRequestFactory.getFullCollaboratorsForProject({
             params: $scope.projectId,

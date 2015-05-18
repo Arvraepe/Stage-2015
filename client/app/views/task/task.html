@@ -8,6 +8,12 @@
 
 <div class="col-md-9 noPaddingLeft">
   <h2>{{task.title|capitalize}}
+
+    <span ng-if="task.deadline" class="lazyTime">- due:
+      <span ng-if="lazyDate >0" am-time-ago="task.deadline" ng-class="{'deadlineClose':lazyDate>0}"></span>
+      <span ng-if="lazyDate <0" am-time-ago="task.deadline" ng-class="{'deadlineOver': lazyDate <0}"></span>
+    </span>
+
     <div class="pull-right">
       <button type="button" ng-click="newCommentVisible=true" class="btn btn-primary"><i class="fa fa-comment-o"></i>
         Comment
@@ -18,14 +24,32 @@
   <div class="taskDescription">
     {{task.description}}
   </div>
+
+  <div>
+    <label>Status: </label>
+    {{task.state}}
+  </div>
+  <div>
+    <label>Assignee: </label>
+    {{task.assignee.firstname}} {{task.assignee.lastname}} <img ng-src="{{task.assignee.imageUrl}}" alt="profilepic" class="smallerAvatar">
+  </div>
+  <div>
+    <label>Creator: </label>
+    {{task.creator.firstname}} {{task.creator.lastname}} <img ng-src="{{task.creator.imageUrl}}" alt="profilepic" class="smallerAvatar">
+  </div>
+
   <div ng-show="newCommentVisible">
-    <text-angular ta-toolbar="[['h1','h2','h3'],['bold','italics','underline'],['ul','ol'],['taskFind']]" ng-model="comment" id="editor"></text-angular>
-    <button type="button" class="btn btn-success commentCommitButton" ng-click="createComment(comment)"><i class="fa fa-plus-circle"></i> Comment
+    <text-angular ta-toolbar="[['h1','h2','h3'],['bold','italics','underline'],['ul','ol'],['taskFind']]"
+                  ng-model="comment" id="editor"></text-angular>
+    <button type="button" class="btn btn-success commentCommitButton" ng-click="createComment(comment)"><i
+      class="fa fa-plus-circle"></i> Comment
     </button>
   </div>
 
+
+
   <div ng-if="task.comments.length > 0">
-    <h4>
+    <h4 style="margin-bottom:20px;">
       <span>Comments</span>
     </h4>
 
@@ -53,14 +77,15 @@
         </div>
         <div ng-show="booleanArray[$index]" class="editComment">
           <div class="pull-right">
-            <button type="button" ng-click="booleanArray[$index]=false" class="btn btn-default btn-sm" style="margin-top:5px;"><i class="fa fa-times"></i></button>
+            <button type="button" ng-click="booleanArray[$index]=false" class="btn btn-default btn-sm"
+                    style="margin-top:5px;"><i class="fa fa-times"></i></button>
           </div>
           <text-angular ta-toolbar="[['h1','h2','h3'],['bold','italics','underline'],['ul','ol'],['taskFind']]"
                         ng-model="commentEdit"></text-angular>
-          <button type="button" ng-click="editComment(comment,commentEdit, $index)" class="btn btn-success editCommentCommitButton"><i class="fa fa-plus-circle"></i> Save
+          <button type="button" ng-click="editComment(comment,commentEdit, $index)"
+                  class="btn btn-success editCommentCommitButton"><i class="fa fa-plus-circle"></i> Save
           </button>
         </div>
-
 
 
       </div>
@@ -97,7 +122,8 @@
               <label>Title: </label>
             </div>
             <div class="col-md-8">
-              <span ng-show="titleVisible" ng-mouseenter="(isAssignee() || isCreator())? titleVisible = !titleVisible : null">{{task.title}}</span>
+              <span ng-show="titleVisible"
+                    ng-mouseenter="(isAssignee() || isCreator())? titleVisible = !titleVisible : null">{{task.title}}</span>
               <input ng-show="!titleVisible" type="text" ng-model="task.title" class="form-control"
                      ng-keypress="saveTitle($event)">
             </div>
@@ -142,7 +168,8 @@
             <div class="col-md-8">
               <img ng-src="{{task.assignee.imageUrl}}" alt="profilepic" class="smallerAvatar" ng-show="visible">
               <span ng-show="visible" ng-mouseenter="(isAssignee() || isCreator())? visible = !visible: null">{{task.assignee.firstname}} {{task.assignee.lastname}}</span>
-              <ui-select ng-if="isAssignee() || isCreator()" ng-show="!visible" ng-change="changeAssignee(task.assignee)" tagging theme="bootstrap"
+              <ui-select ng-if="isAssignee() || isCreator()" ng-show="!visible"
+                         ng-change="changeAssignee(task.assignee)" tagging theme="bootstrap"
                          tagging-label="false" tagging-tokens=",|ENTER|TAB"
                          ng-model="task.assignee" ng-disabled="visible" title="Assignee "
                          search-enabled="true" required>
