@@ -204,10 +204,10 @@ exports.deleteComment = function (commentId, userId, callback) {
 
 exports.updateComment = function (comment, userId, callback) {
     async.waterfall([
-        function(callback) {
+        function (callback) {
             taskRepo.findTask({"comments._id": comment._id}, callback)
         },
-        function(task, callback) {
+        function (task, callback) {
             if (!task) callback(new Error('No such comment'));
             else {
                 var newComment = {};
@@ -221,64 +221,79 @@ exports.updateComment = function (comment, userId, callback) {
                         newComment.timeStamp = new Date();
                     });
                 if (newComment.userId == userId) {
-                    taskRepo.updateComment(newComment, function(err) {
+                    taskRepo.updateComment(newComment, function (err) {
                         callback(err, newComment)
                     });
                 } else callback(new Error("You do not have the right to edit this comment."));
             }
-        }, function(newComment, callback) {
+        }, function (newComment, callback) {
             userService.populateComment(newComment, callback);
         }
     ], callback);
 };
 
-exports.getTaskCount = function(boardId, state, callback) {
-    taskRepo.getTaskCount({ boardId: boardId, state: state}, callback);
+exports.getTaskCount = function (boardId, state, callback) {
+    taskRepo.getTaskCount({boardId: boardId, state: state}, callback);
 };
 
-exports.switchBoard = function(newTask, userId, callback) {
+exports.switchBoard = function (newTask, userId, callback) {
     async.waterfall([
-        function(callback) {
+        function (callback) {
             async.waterfall([
-                function(callback) {
-                    taskRepo.findTask({ _id: newTask._id }, callback);
+                function (callback) {
+                    taskRepo.findTask({_id: newTask._id}, callback);
                 },
-                function(task, callback) {
-                    boardService.getBoardById(newTask.boardId, function(err, board) {
+                function (task, callback) {
+                    boardService.getBoardById(newTask.boardId, function (err, board) {
                         var results = [task, board];
                         callback(err, results);
                     });
                 }
             ], callback)
         },
-        function(results, callback) {
+        function (results, callback) {
             var task = results[0], board = results[1];
-            notifications.makeSwitchBoardNotification(task, newTask.boardId, userId)
-            if((task.creator == userId || task.assignee == userId) && task.projectId == board.projectId) {
-                task.boardId = newTask.boardId;
-                task.state = board.states[0];
-                taskRepo.findOneAndUpdate({ _id: task._id }, task, function(err) {
+            notifications.makeSwitchBoardNotification(task, newTask.boardId, userId);
+            var update = {};
+            if ((task.creator == userId || task.assignee == userId) && task.projectId == board.projectId) {
+                update.boardId = newTask.boardId;
+                update.state = board.states[0];
+                taskRepo.findOneAndUpdate({_id: newTask._id}, update, function (err, task) {
                     callback(err, board);
-                })
+                });
             } else callback(new Error('You do not have the right to change this task.'));
         }
     ], callback);
 };
 
-exports.getTaskById = function(id, callback) {
-    taskRepo.findTask({ _id: id}, callback);
+exports.getTaskById = function (id, callback) {
+    taskRepo.findTask({_id: id}, callback);
 };
 
-exports.deleteByProjectId = function(projectId, callback) {
-    taskRepo.deleteMany({ projectId: projectId}, callback)
+exports.deleteByProjectId = function (projectId, callback) {
+    taskRepo.deleteMany({projectId: projectId}, callback)
 };
 
-exports.deleteByBoardId = function(boardId, callback) {
-    taskRepo.deleteMany({ boardId: boardId }, callback);
+exports.deleteByBoardId = function (boardId, callback) {
+    taskRepo.deleteMany({boardId: boardId}, callback);
 };
 
-exports.updateTaskStates = function(boardId, oldState, newState, callback) {
-    taskRepo.updateMany({ boardId: boardId, state: oldState}, { state: newState }, callback)
+exports.updateTaskStates = function (boardId, oldState, newState, callback) {
+    taskRepo.updateMany({boardId: boardId, state: oldState}, {state: newState}, callback)
+};
+
+exports.changeState = function(userId, oldTask, task, callback) {
+    async.waterfall([
+        function(callback) {
+            projectService.checkAuthority(oldTask.projectId, userId, callback);
+        },
+        function(authorized, callback) {
+            if(authorized) {
+                oldTask.state = task.state;
+                taskRepo.findOneAndUpdate({ _id: oldTask._id }, oldTask, callback);
+            } else  callback(new Error('You have no rights within this project.'));
+        }
+    ], callback)
 };
 
 function createComment(taskId, userId, comment, callback) {

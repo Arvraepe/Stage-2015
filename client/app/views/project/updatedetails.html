@@ -49,7 +49,7 @@
       <label class="col-md-3 control-label">Collaborators</label>
 
       <div class="col-md-9">
-        <ui-select multiple tagging theme="bootstrap" tagging-label="false" tagging-tokens="@|SPACE|ENTER"
+        <ui-select multiple tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|TAB|ENTER"
                    ng-model="project.collaborators" ng-disabled="disabled"
                    search-enabled="true" theme="bootstrap">
           <ui-select-match placeholder="Invite collaborators" style="padding-left:9px;">{{$item}}</ui-select-match>

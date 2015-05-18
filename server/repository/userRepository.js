@@ -82,6 +82,6 @@ exports.selectUser = function(condition, select, callback) {
     User.findOne(condition).select(select).lean().exec(callback);
 };
 
-exports.findLike = function (username, cb) {
-    User.find({username : new RegExp(username, 'i')}).limit(10).lean().exec(cb);
+exports.findUsers = function (condition, cb) {
+    User.find(condition).limit(10).lean().exec(cb);
 };

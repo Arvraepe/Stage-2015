@@ -53,7 +53,7 @@ function getProjects(req, res, next) {
             projectService.getProjects(userId, callback);
         }
     ], function(err, result) {
-        var response = errorHandler.handleResult(err, result);
+        var response = errorHandler.handleResult(err, result, 'Projects fetched.');
         res.send(response);
     });
     next();
