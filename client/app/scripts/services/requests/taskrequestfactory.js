@@ -39,10 +39,19 @@ angular.module('stageprojectApp')
       },
       changeState: function(config){
         requestFactory.sendRequest({
-          path:'task',
+          path:'task/changestate',
           method:'PUT',
           data:config.data,
           success: config.success,
+          error:config.error
+        })
+      },
+      updateTask: function (config) {
+        requestFactory.sendRequest({
+          path:'task',
+          method:'PUT',
+          data:config.data,
+          success:config.success,
           error:config.error
         })
       },

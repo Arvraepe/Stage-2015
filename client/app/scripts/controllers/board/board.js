@@ -221,7 +221,7 @@ angular.module('stageprojectApp')
                 boardId : taskModel.boardId
               }
             };
-            taskRequestFactory.changeState({
+            taskRequestFactory.updateTask({
               data:taskInformation,
               success:function(response){
                 notificationFactory.createNotification(response);
@@ -253,69 +253,7 @@ angular.module('stageprojectApp')
             }
           });
         }
-
-
-       // updateTaskStatus(task);
       }
-
-      /*itemMoved:function(event){
-       console.log(event);
-       if(event.dest.sortableScope.$parent.projectBoard){
-       var taskInfo = {task:{
-       _id : event.source.itemScope.modelValue._id,
-       boardId : event.dest.sortableScope.$parent.projectBoard._id,
-       }};
-       taskRequestFactory.switchBoard({
-       data: taskInfo,
-       success:function(response){
-       notificationFactory.createNotification(response);
-       },
-       error: function (error) {
-       notificationFactory.createNotification(error);
-       }
-       })
-       }
-       event.source.itemScope.modelValue.state = event.dest.sortableScope.$parent.state.name;
-       var task = {
-       task:{
-       _id : event.source.itemScope.modelValue._id,
-       state : event.source.itemScope.modelValue.state,
-       assignee : event.source.itemScope.modelValue.assignee._id,
-       creator : event.source.itemScope.modelValue.creator._id,
-       title : event.source.itemScope.modelValue.title,
-       description:event.source.itemScope.modelValue.description
-       }
-       };
-
-       console.log(event);
-       taskRequestFactory.changeState({
-       data: task,
-       success:function(response){
-       //taken opnieuw tekenen
-       angular.forEach($scope.board.tasks, function (task, index, array) {
-       if(task._id === response.data.task._id){
-       array[index] = response.data.task;
-       }
-       })
-       },
-       error: function(error){
-       console.log(error);
-       }
-       })
-       },
-       orderChanged: function(event){
-
-       },
-       dragStart: function (object) {
-       $scope.arrowIsHidden[0]=false;
-
-       },
-       dragEnd: function (object) {
-       $scope.arrowIsHidden[0]=true;
-       columnHeightFactory.resetHeight();
-       $scope.height = columnHeightFactory.getMaxHeight();
-       },
-       additionalPlaceholderClass:'dragPlaceholder'*/
     };
 
     $scope.otherBoardsTasks = [{}];

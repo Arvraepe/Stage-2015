@@ -190,7 +190,7 @@ angular.module('stageprojectApp')
       var task = {
         task: taskInfo
       };
-      taskRequestFactory.changeState({
+      taskRequestFactory.updateTask({
         data: task,
         success: function (response) {
           $scope.task = response.data.task;
