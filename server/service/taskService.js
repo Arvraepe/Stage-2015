@@ -144,7 +144,7 @@ exports.getTask = function (taskId, userId, callback) {
 exports.updateTask = function (oldTask, task, userId, callback) {
     task = filterTask(task);
     if (oldTask.creator == userId || oldTask.assignee == userId) {
-        boardService.getStates(task.boardId, function (err, states) {
+        boardService.getStates(oldTask.boardId, function (err, states) {
             var messages = validator.validateNewTask(task, states);
             if (messages.length > 0) callback(messages);
             else {
