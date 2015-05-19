@@ -60,7 +60,7 @@ exports.makeUpdateProjectNotifications = function (oldProject, oldCollaborators,
     async.parallel(tasks, function (err, results) {
         var removeNotifications = [];
         results.forEach(function (user) {
-            var notification = makeUpdateProjectNotification(makeSubjectDescriptor(user._id, project._id), " has been removed from the " + project.name + " project");
+            var notification = makeUpdateProjectNotification(makeSubjectDescriptor(user._id, project._id), " has been removed from the <strong>" + project.name + "</strong> project");
             removeNotifications.push(notification)
         });
         addNotifications(removeNotifications);
@@ -68,7 +68,7 @@ exports.makeUpdateProjectNotifications = function (oldProject, oldCollaborators,
 };
 
 exports.makeNewProjectNotifications = function(project) {
-    var createNotifications = [makeCreateProjectNotification(project.leader, project._id, " has created the " + project.name + " project.")];
+    var createNotifications = [makeCreateProjectNotification(project.leader, project._id, " has created the <strong>" + project.name + "</strong> project.")];
     project.collaborators.forEach(function (collab) {
         createNotifications.push(makeJoinNotification(project, collab));
     });
@@ -80,7 +80,7 @@ exports.makeJoinNotification = function(project, userId) {
 };
 
 exports.makeChangeLeaderNotification = function(project) {
-    create(makeUpdateProjectNotification(makeSubjectDescriptor(project.leader._id, project._id), " has been promoted to leader of the " + project.name + " project."));
+    create(makeUpdateProjectNotification(makeSubjectDescriptor(project.leader._id, project._id), " has been promoted to leader of the <strong>" + project.name + "</strong> project."));
 };
 
 exports.getNotificationsByUserId = function (userId, limit, timeStamp, callback) {
@@ -119,7 +119,7 @@ exports.getNotificationsByBoard = function(boardId, limit, userId, callback) {
 
 exports.makeCreateBoardNotification = function(board, userId) {
     projectService.getProjectDesc(board.projectId, userId, function(err, project) {
-        create(makeCreateBoardNotification(userId, board.projectId, board._id, " has created the " + board.name + " board in the " + project.name + " project"));
+        create(makeCreateBoardNotification(userId, board.projectId, board._id, " has created the <strong>" + board.name + "</strong> board in the <strong>" + project.name + "</strong> project"));
     });
 };
 
@@ -148,9 +148,9 @@ exports.makeCreateTaskNotification = function(task, userId) {
     ], function(err, results) {
         var project = results[0], board = results[1];
         var notifications = [];
-        var description = " has created a new task on the " + board.name + " board in the " + project.name + " project.";
+        var description = " has created a new task on the <strong>" + board.name + "</strong> board in the <strong>" + project.name + "</strong> project.";
         notifications.push(makeCreateTaskNotification(userId, project._id, board._id, task._id, description));
-        notifications.push(makeCreateTaskNotification(task.assignee._id, project._id, board._id, task._id, " has been assigned to the " + task.identifier + " task"));
+        notifications.push(makeCreateTaskNotification(task.assignee._id, project._id, board._id, task._id, " has been assigned to the <strong>" + task.identifier + "</strong> task"));
         addNotifications(notifications);
     });
 };
@@ -203,7 +203,7 @@ exports.makeSwitchBoardNotification = function(task, newId, userId) {
 };
 
 function makeJoinNotification(project, userId) {
-    return makeCreateProjectNotification(userId, project._id, " has been added to the " + project.name + " project.");
+    return makeCreateProjectNotification(userId, project._id, " has been added to the <strong>" + project.name + "</strong> project.");
 }
 
 function populateNotifications(notifications, callback) {
@@ -254,78 +254,78 @@ function addNotifications(notifications) {
 }
 
 function createUpdateNameProjectNotification(oldName, project) {
-    var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader._id, project._id), " has changed the name of the  " + oldName + " project to " + project.name);
+    var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader._id, project._id), " has changed the name of the <strong>" + oldName + "</strong> project to <strong>" + project.name + "</strong>");
     create(notification);
 }
 
 function createUpdateDescriptionProjectNotification(project) {
-    var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader._id, project._id), " has changed the description of the " + project.name + " project");
+    var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader._id, project._id), " has changed the description of the <strong>" + project.name + "</strong> project");
     create(notification);
 }
 
 function createUpdateDeadlineProjectNotification(oldDeadline, project) {
-    var description = oldDeadline != undefined ? " has moved the deadline from " + oldDeadline.toISOString().slice(0, 10) + " to " + project.deadline.toISOString().slice(0, 10) + " on the " + project.name + " project" : " has set a deadline on the " + project.name + " project to " + project.deadline.toISOString().slice(0, 10);
+    var description = oldDeadline != undefined ? " has moved the deadline from " + oldDeadline.toISOString().slice(0, 10) + " to <strong>" + project.deadline.toISOString().slice(0, 10) + "</strong> on the <strong>" + project.name + "</strong> project" : " has set a deadline on the <strong>" + project.name + "</strong> project to <strong>" + project.deadline.toISOString().slice(0, 10) + "</strong>";
     var notification = makeUpdateProjectNotification(makeSubjectDescriptor(project.leader._id, project._id), description);
     create(notification);
 }
 
 function createBoardNameNotification(oldname, board, projectName, userId) {
-    var description = " has changed the name of the " + oldname + " board to " + board.name + " in the " + projectName + " project";
+    var description = " has changed the name of the <strong>" + oldname + "</strong> board to <strong>" + board.name + "</strong> in the <strong>" + projectName + "</strong> project";
     var notification = makeUpdateBoardNotification(userId, board.projectId, board._id, description);
     create(notification);
 }
 
 function createBoardDescriptionNotification(projectName, board, userId) {
-    var description = " has changed the description of the " + board.name + " board in the " + projectName + " project.";
+    var description = " has changed the description of the <strong>" + board.name + "</strong> board in the <strong>" + projectName + "</strong> project.";
     var notification = makeUpdateBoardNotification(userId, board.projectId, board._id, description);
     create(notification);
 }
 
 function createBoardDeadlineNotification(oldDeadline, board, projectName, userId) {
-    var description = oldDeadline != undefined ? " has moved the deadline from " + oldDeadline.toISOString().slice(0, 10) + " to " + board.deadline.toISOString().slice(0, 10) + " on the " + board.name + " board in the " + projectName + "project" : " has set a deadline on the " + board.name + " board to " + project.deadline.toISOString().slice(0, 10) + " in the " + projectName + " project";
+    var description = oldDeadline != undefined ? " has moved the deadline from " + oldDeadline.toISOString().slice(0, 10) + " to <strong>" + board.deadline.toISOString().slice(0, 10) + "</strong> on the <strong>" + board.name + "</strong> board in the <strong>" + projectName + "</strong> project" : " has set a deadline on the <strong>" + board.name + "</strong> board to <strong>" + project.deadline.toISOString().slice(0, 10) + "</strong> in the <strong>" + projectName + "</strong> project";
     var notification = makeUpdateBoardNotification(userId, board.projectId, board._id, description);
     create(notification);
 }
 
 function createTaskTitleNotification(oldname, task, projectName, boardName, userId) {
-    var description = " has changed the name of the " + oldname + " task to " + task.title + " on the " + boardName + " board in the " + projectName + " project.";
+    var description = " has changed the name of the <strong>" + oldname + "</strong> task to <strong>" + task.title + "</strong> on the <strong>" + boardName + "</strong> board in the <strong>" + projectName + "</strong> project.";
     var notification = makeUpdateTaskNotification(userId, task.projectId, task.boardId, task._id, description);
     create(notification);
 }
 
 function createTaskDescriptionNotification(task, projectName, boardName, userId) {
-    var description = " has changed the description of the " + task.identifier + " task on the " + boardName + " board in the " + projectName + " project.";
+    var description = " has changed the description of the <strong>" + task.identifier + "</strong> task on the <strong>" + boardName + "</strong> board in the <strong>" + projectName + "</strong> project.";
     var notification = makeUpdateTaskNotification(userId, task.projectId, task.boardId, task._id, description);
     create(notification);
 }
 
 function createTaskImportantNotification(task, projectName, boardName, userid) {
     var description = task.important ? " has flagged the " + task.identifier + " task as important" : " has flagged the " + task.identifier + " task as unimportant";
-    description += " on the " + boardName + " board in the " + projectName + " project.";
+    description += " on the <strong>" + boardName + "</strong> board in the <strong>" + projectName + "</strong> project.";
     var notification = makeUpdateTaskNotification(userid, task.projectId, task.boardId, task._id, description);
     create(notification);
 }
 
 function createTaskDeadlineNotification(oldDeadline, task, projectName, boardName, userId) {
-    var description = oldDeadline != undefined ? " has moved the deadline from " + oldDeadline.toISOString().slice(0, 10) + " to " + task.deadline.toISOString().slice(0, 10) + " on the " + boardName + " board in the " + projectName + " project. " : " has set a deadline on the " + boardName + " board in the " + projectName + " project to " + task.deadline.toISOString().slice(0, 10);
+    var description = oldDeadline != undefined ? " has moved the deadline from " + oldDeadline.toISOString().slice(0, 10) + " to <strong>" + task.deadline.toISOString().slice(0, 10) + "</strong> on the <strong>" + boardName + "</strong> board in the <strong>" + projectName + "</strong> project. " : " has set a deadline on the <strong>" + boardName + "</strong> board in the <strong>" + projectName + "</strong> project to <strong>" + task.deadline.toISOString().slice(0, 10) + "</strong>";
     var notification = makeUpdateTaskNotification(userId, task.projectId, task.boardId, task._id, description);
     create(notification);
 }
 
 function createTaskAssigneeNotification(task, projectName, boardName) {
-    var description = " has been assigned to the " + task.identifier + " task on the " + boardName + " board in the " + projectName + " project.";
+    var description = " has been assigned to the <strong>" + task.identifier + "</strong> task on the <strong>" + boardName + "</strong> board in the <strong>" + projectName + "</strong> project.";
     var notification = makeUpdateTaskNotification(task.assignee._id, task.projectId, task.boardId, task._id, description);
     create(notification);
 }
 
 function createTaskStateNotification(oldState, task, projectName, boardName, userId) {
-    var description = " has changed the state of the " + task.identifier + " task from " + oldState + " to " + task.state + " on the " + boardName + " board in the " + projectName + " project."
+    var description = " has changed the state of the <strong>" + task.identifier + "</strong> task from <strong>" + oldState + "</strong> to <strong>" + task.state + "</strong> on the <strong>" + boardName + "</strong> board in the <strong>" + projectName + "</strong> project.";
     var notification = makeUpdateTaskNotification(userId, task.projectId, task.boardId, task._id, description);
     create(notification);
 }
 
 function createTaskChangeBoardNotification(task, oldBoard, newBoard, projectName, userId) {
-    var description = " has moved the " + task.identifier + " task from the " + oldBoard.name + " board to the " + newBoard.name + "board in the " + projectName + " project.";
+    var description = " has moved the <strong>" + task.identifier + "</strong> task from the <strong>" + oldBoard.name + "</strong> board to the <strong>" + newBoard.name + "</strong> board in the <strong>" + projectName + "</strong> project.";
     var notifications = [];
     notifications.push(makeUpdateTaskNotification(userId, task.projectId, oldBoard._id, task._id, description));
     notifications.push(makeUpdateTaskNotification(userId, task.projectId, newBoard._id, task._id, description));

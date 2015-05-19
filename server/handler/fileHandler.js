@@ -32,5 +32,5 @@ exports.deleteFile = function(user, callback) {
     var filename = imageUrl[imageUrl.length-1];
     if(filename != "profilepicture.png") {
         fs.unlink(config.imagePath + filename, callback);
-    }
+    } else callback();
 };
