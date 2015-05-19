@@ -141,10 +141,10 @@ exports.getTask = function (taskId, userId, callback) {
     ], callback);
 };
 
-exports.updateTask = function (task, userId, callback) {
+exports.updateTask = function (oldTask, task, userId, callback) {
     task = filterTask(task);
-    if (task.creator == userId || task.assignee == userId) {
-        boardService.getStates(task.boardId, function (err, states) {
+    if (oldTask.creator == userId || oldTask.assignee == userId) {
+        boardService.getStates(oldTask.boardId, function (err, states) {
             var messages = validator.validateNewTask(task, states);
             if (messages.length > 0) callback(messages);
             else {
@@ -285,24 +285,34 @@ exports.updateTaskStates = function (boardId, oldState, newState, callback) {
 exports.changeState = function(userId, oldTask, task, callback) {
     async.waterfall([
         function(callback) {
-            projectService.checkAuthority(oldTask.projectId, userId, callback);
+            async.parallel([
+                function(callback) {
+                    projectService.checkAuthority(oldTask.projectId, userId, callback);
+                },
+                function(callback) {
+                    boardService.getStates(oldTask.boardId, callback);
+                }
+            ], callback)
         },
-        function(authorized, callback) {
-            if(authorized) {
+        function(results, callback) {
+            if(results[0] && results[1].states.indexOf(task.state) > -1) {
                 oldTask.state = task.state;
                 taskRepo.findOneAndUpdate({ _id: oldTask._id }, oldTask, callback);
-            } else  callback(new Error('You have no rights within this project.'));
+            } else  {
+                var message = results[0] ? 'The new state of the task must be a state that exists within the board' : 'You have no rights within this project.';
+                callback(new Error(message));
+            }
         }
     ], callback)
 };
 
 function createComment(taskId, userId, comment, callback) {
-    var comment = {
+    var newComment = {
         userId: userId,
         comment: comment,
         timeStamp: new Date()
     };
-    taskRepo.addComment(taskId, comment, function (err, newComment) {
+    taskRepo.addComment(taskId, newComment, function (err, newComment) {
         callback(err, newComment);
     });
 }
