@@ -62,15 +62,28 @@
       <label class="col-md-3 control-label">Collaborators</label>
 
       <div class="col-md-9">
-        <ui-select multiple tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|ENTER|TAB"
-                   ng-model="project.collaborators" ng-disabled="disabled"
+        <ui-select multiple tagging="tagTransform" theme="bootstrap" tagging-label="false" tagging-tokens=",|ENTER|TAB"
+                   ng-model="collaborators.collabs" ng-disabled="disabled"
                    search-enabled="true" theme="bootstrap">
-          <ui-select-match placeholder="Invite collaborators" style="padding-left:9px;">{{$item}}</ui-select-match>
-          <ui-select-choices repeat="username in allUsernames"
+          <ui-select-match placeholder="Invite collaborators" style="padding-left:9px;">{{$item.name}} &lt;{{$item.username}}&gt;</ui-select-match>
+          <ui-select-choices repeat="collab in allUsernames"
                              refresh="getUsers($select.search)" refresh-delay="0">
-            {{username}}
+            {{collab.name}} <small>{{collab.username}}</small>
           </ui-select-choices>
         </ui-select>
+
+        <!--<ui-select multiple tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|TAB|ENTER"
+                   ng-model="project.collaborators" ng-disabled="disabled"
+                   search-enabled="true" theme="bootstrap">
+          <ui-select-match placeholder="Invite collaborators" style="padding-left:9px;">{{$item.firstname}} {{$item.lastname}} &lt;{{$item.username}}&gt; </ui-select-match>
+          <ui-select-choices repeat="collab in collaborators"
+                             refresh="getUsers($select.search)" refresh-delay="0">
+            {{collab.name}}
+            <small>
+              {{collab.username}}
+            </small>
+          </ui-select-choices>
+        </ui-select>-->
       </div>
     </div>
     <div class="form-group">

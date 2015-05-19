@@ -45,7 +45,7 @@
                   <img ng-src="{{notification.subjectDescriptor.user.imageUrl}}" alt="profilepic" class="smallAvatar avatarPlacement">
                 </div>
                 <div class="col-md-11 col-md-height col-middle noPaddingLeft">
-                  <span class="notificationUser">{{notification.subjectDescriptor.user.firstname}} {{notification.subjectDescriptor.user.lastname}}</span> {{notification.description}}
+                  <span class="notificationUser">{{notification.subjectDescriptor.user.firstname}} {{notification.subjectDescriptor.user.lastname}}</span> <span ng-bind-html="notification.description"></span>
                   <div>
                     <span style="font-style: italic" am-time-ago="notification.timeStamp"></span>
                   </div>

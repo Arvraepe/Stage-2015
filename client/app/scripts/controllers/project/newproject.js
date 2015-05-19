@@ -12,6 +12,7 @@ angular.module('stageprojectApp')
 
     $scope.project = {};
     $scope.project.collaborators = [];
+    $scope.collaborators = {};
     $scope.project.standardStates = [
       'Not Started',
       'In Progress',
@@ -46,7 +47,7 @@ angular.module('stageprojectApp')
           success: function (response) {
             $scope.allUsernames = [];
             angular.forEach(response.data.users, function (user) {
-              $scope.allUsernames.push(user.username);
+              $scope.allUsernames.push(user);
             });
           },
           error: function (error) {
@@ -60,6 +61,9 @@ angular.module('stageprojectApp')
 
     $scope.createProject = function (project) {
       if ($scope.newprojectForm.$valid) {
+        angular.forEach($scope.collaborators.collabs, function (collab) {
+          $scope.project.collaborators.push(collab.username);
+        });
         projectRequestFactory.createProject({
           data: project,
           success: function (response) {
@@ -78,5 +82,11 @@ angular.module('stageprojectApp')
       $modalInstance.dismiss('cancel');
     };
 
+    $scope.tagTransform = function (text) {
+      var item = {
+        username : text
+      };
+      return item;
+    }
 
   }]);

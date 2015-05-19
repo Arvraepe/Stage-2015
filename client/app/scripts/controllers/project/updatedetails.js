@@ -15,8 +15,8 @@ angular.module('stageprojectApp')
     function fillCollaborators() {
       $scope.project.collaborators = [];
       angular.forEach(project.collaborators, function (collab) {
-        $scope.collaborators.push(collab.username);
-        $scope.project.collaborators.push(collab.username);
+        $scope.collaborators.push(collab);
+        $scope.project.collaborators.push(collab);
       });
     }
 
@@ -44,6 +44,17 @@ angular.module('stageprojectApp')
 
     $scope.updateProject = function (project) {
       if ($scope.updateProjectForm.$valid) {
+        var collabs = angular.copy($scope.project.collaborators);
+        $scope.project.collaborators = [];
+        angular.forEach(collabs, function (collab) {
+          if(collab.username){
+            $scope.project.collaborators.push(collab.username);
+          }
+          else{
+            $scope.project.collaborators.push(collab);
+          }
+
+        });
         project.leader = loginFactory.getUser()._id;
         projectRequestFactory.updateProject({
           data: project,
@@ -87,7 +98,15 @@ angular.module('stageprojectApp')
         status:''
       }
         ];
+    };
+
+    $scope.tagTransform = function (text) {
+      var item = {
+        username : text
+      };
+      return item;
     }
+
 
 
   });
