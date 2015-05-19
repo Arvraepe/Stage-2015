@@ -26,3 +26,9 @@ exports.createFile = function(file, name, callback) {
         }
     });
 };
+
+exports.deleteFile = function(user, callback) {
+    var imageUrl = user.imageUrl.split("/");
+    var filename = imageUrl[imageUrl.length-1];
+    fs.unlink(config.imagePath + filename, callback);
+};

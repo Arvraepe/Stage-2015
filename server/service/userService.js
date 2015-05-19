@@ -117,19 +117,32 @@ exports.updateUser = function (params, calback) {
 
 exports.upload = function (req, callback) {
     var token = req.params.data;
-    authService.verifyToken(token, function (err, decoded) {
-        if (err) callback(err);
-        userRepo.findUserById(decoded, function (err, user) {
-            if (err) callback(err);
-            fileHandler.createFile(req.files.file, user.username, function (err, ext) {
-                if (err)callback(err);
-                userRepo.findOneAndUpdate(decoded, {imageUrl: config.imageUrl + user.username + ext}, function (err, updatedUser) {
-                    if (err) callback(err);
-                    callback(null, filterUser(updatedUser));
-                })
+    var uid = uuid.v1();
+    async.waterfall([
+        function(callback) {
+            authService.verifyToken(token, callback);
+        },
+        function(userId, callback) {
+            userRepo.findUserById(userId, callback)
+        },
+        function(user, callback) {
+            async.parallel([
+                function(callback) {
+                    fileHandler.createFile(req.files.file, uid, callback);
+                },
+                function(callback) {
+                    fileHandler.deleteFile(user, callback);
+                }
+            ], function(err, results) {
+                callback(err, results[0], user);
             });
-        });
-    });
+        },
+        function(ext, user, callback) {
+            userRepo.findOneAndUpdate(user._id, {imageUrl: config.imageUrl + uid + ext}, callback);
+        }
+    ], function(err, result) {
+        callback(err, filterUser(result));
+    })
 };
 
 exports.getUserFromToken = function (token, callback) {
