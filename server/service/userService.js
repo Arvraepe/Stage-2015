@@ -462,7 +462,7 @@ function uniqueUserArray(arr) {
         var temp = null;
         uniqueArr.forEach(function(uniqueUser) {
             if(uniqueUser.email == user.email) {
-                temp = uniqueUser;
+                temp = filterName(uniqueUser);
             }
         });
         if (temp == null)uniqueArr.push(user);

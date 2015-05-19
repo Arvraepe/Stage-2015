@@ -253,15 +253,17 @@ exports.switchBoard = function (newTask, userId, callback) {
         },
         function (results, callback) {
             var task = results[0], board = results[1];
-            notifications.makeSwitchBoardNotification(task, newTask.boardId, userId);
             var update = {};
-            if ((task.creator == userId || task.assignee == userId) && task.projectId == board.projectId) {
-                update.boardId = newTask.boardId;
-                update.state = board.states[0];
-                taskRepo.findOneAndUpdate({_id: newTask._id}, update, function (err, task) {
-                    callback(err, board);
-                });
-            } else callback(new Error('You do not have the right to change this task.'));
+            projectService.checkAuthority(task.projectId, userId, function(err, authorized) {
+                if(authorized) {
+                    notifications.makeSwitchBoardNotification(task, newTask.boardId, userId);
+                    update.boardId = newTask.boardId;
+                    update.state = board.states[0];
+                    taskRepo.findOneAndUpdate({_id: newTask._id}, update, function (err, task) {
+                        callback(err, board);
+                    });
+                }  else callback(new Error('You do not have the right to change this task.'));
+            });
         }
     ], callback);
 };
