@@ -304,6 +304,8 @@ exports.changeState = function(userId, oldTask, task, callback) {
                 var message = results[0] ? 'The new state of the task must be a state that exists within the board' : 'You have no rights within this project.';
                 callback(new Error(message));
             }
+        }, function(task, callback) {
+            userService.populateTask(task, callback);
         }
     ], callback)
 };

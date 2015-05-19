@@ -147,6 +147,7 @@ function makeUpdateTaskNotification(req, res, next) {
 }
 
 function changeState(req, res, next) {
+    var oldState;
     async.waterfall([
         function(callback) {
             async.parallel([
@@ -157,6 +158,7 @@ function changeState(req, res, next) {
                     taskService.getTaskById(req.params.task._id, callback)
                 }
             ], function(err, result) {
+                oldState = result[1].state;
                 req.userId = result[0];
                 req.oldTask = result[1];
                 callback(err, result);
@@ -166,6 +168,7 @@ function changeState(req, res, next) {
             taskService.changeState(results[0], results[1], req.params.task, callback)
         }
     ],function(err, task) {
+        req.oldTask.state = oldState;
         req.newTask = task;
         res.send(errorHandler.handleResult(err, { task: task }, 'Task updated.'));
         return next();
