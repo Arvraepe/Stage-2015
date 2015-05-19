@@ -1,5 +1,5 @@
 .recentNotification{
-  margin:10px 5px;
+  margin: 10px auto;
   border: #e7e7e7 solid 2px;
   border-radius:4px;
   padding:10px;
@@ -15,5 +15,6 @@
 }
 
 .notificationsDiv{
-  padding-right:4px;
+  /*padding-right:4px;*/
+  margin:0 auto;
 }

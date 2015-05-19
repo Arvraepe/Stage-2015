@@ -10,7 +10,7 @@
 angular.module('stageprojectApp')
   .controller('TaskCtrl', function ($scope, $routeParams, taskRequestFactory, projectRequestFactory, $modal, $location, $anchorScroll, notificationFactory) {
     $scope.task = {};
-    $scope.visible = true;
+    $scope.assigneeVisible = true;
     $scope.isCollapsed = false;
     $scope.editable=false;
     $scope.booleanArray = [];
@@ -186,7 +186,7 @@ angular.module('stageprojectApp')
       console.log(assignee);
       $scope.task.assignee =assignee;
       $scope.updateTask();
-      $scope.visible = true;
+      $scope.assigneeVisible = true;
     };
 
     $scope.saveTitle = function ($event) {

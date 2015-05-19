@@ -21,7 +21,7 @@
 <div class="col-md-9 noPaddingLeft boardDescription">
   {{board.description}}
 </div>
-<div class="col-md-12" ng-show="dragging">
+<div class="col-md-12 parentCenter" ng-show="dragging">
   <div class="col-md-4 noPaddingLeft dropzone stateLayout" ui-sortable="dropzoneFields" ng-model="dropzoneFields">
     <div ng-repeat="item in dropzoneFields track by $index"></div>
   </div>
@@ -31,7 +31,7 @@
 
 
 
-<div class="col-md-12 noPaddingLeft noPaddingRight row boardMargin well wellPaddingVertical">
+<div class="col-md-12 noPaddingLeft noPaddingRight boardMargin well" style="border: #e5e5e5 2px solid">
   <div class="stateLayout" ng-repeat="state in board.states" ng-model="state"
        ng-class="{'boardRightBorder': ($index+1)!=board.states.length}"
        ng-style="{'width':columnWidth}">
@@ -44,7 +44,7 @@
        ng-style="{'width':columnWidth, 'min-height':height}">
 
     <div ng-repeat="task in state.tasks">
-      <div class="panel panel-warning">
+      <div class="panel" ng-class="task.important? 'panel-danger' : 'panel-warning'">
         <div class="panel-heading">
           <div class="panel-title">
             <a ng-href="#/project/{{board.projectId}}/task/{{task._id}}">{{task.identifier}} <span

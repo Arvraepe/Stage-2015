@@ -146,19 +146,6 @@ angular.module('stageprojectApp')
     }
 
 
-    function updateTaskStatus(task) {
-      angular.forEach($scope.board.states, function (state) {
-        angular.forEach(state.tasks, function (stateTask, index, array) {
-            if (stateTask._id === task._id) {
-              array.splice(index,1);
-            }
-          }
-        );
-        if(task.state == state.name){
-          state.tasks.push(task);
-        }
-      })
-    }
 
     $scope.stateSortOptions={
       start: function (e, ui) {
@@ -247,7 +234,7 @@ angular.module('stageprojectApp')
           taskRequestFactory.changeState({
             data:taskInformation,
             success:function(response){
-              notificationFactory.createNotification(response);
+
             },
             error: function (error) {
               console.log(error);

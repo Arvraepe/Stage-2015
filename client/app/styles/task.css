@@ -2,7 +2,7 @@
   margin: 12px 0;
 }
 
-h4 {
+/*h4 {
   position: relative;
 
 }
@@ -26,6 +26,9 @@ h4:before {
 }
 h4:before {
   left: 0;
+}*/
+.commentSection{
+  margin-top:15px;
 }
 
 .comment{

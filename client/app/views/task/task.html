@@ -7,14 +7,17 @@
 </ol>
 
 <div class="col-md-12 noPaddingLeft noPaddingRight">
-  <h2 class="taskTitle" >
+  <h2 class="taskTitle">
 
     <span ng-show="titleVisible">{{task.title|capitalize}}</span>
+
     <form class="form-inline" ng-submit="changeTitle(task.title)" ng-show="!titleVisible">
-      <input  type="text" ng-model="task.title" class="form-control">
+      <input type="text" ng-model="task.title" class="form-control">
       <button type="submit" class="btn btn-success"><i class="fa fa-floppy-o"></i> Save</button>
     </form>
-    <button ng-show="titleVisible" class="btn btn-primary marginEditButtonTask" ng-show="(isAssignee() || isCreator())" ng-click="titleVisible=!titleVisible"><i class="fa fa-pencil"></i> Edit</button>
+    <button ng-show="titleVisible" class="btn btn-primary marginEditButtonTask" ng-show="(isAssignee() || isCreator())"
+            ng-click="titleVisible=!titleVisible"><i class="fa fa-pencil"></i> Edit
+    </button>
 
     <span ng-if="task.deadline" class="lazyTime">- due:
       <span ng-if="lazyDate >0" am-time-ago="task.deadline" ng-class="{'deadlineClose':lazyDate>0}"></span>
@@ -35,18 +38,53 @@
     {{task.description}}
   </div>
 
-  <div>
-    <label>Status: </label>
-    {{task.state}}
+  <div class="row">
+    <div class="col-md-1">
+      <label>Status: </label>
+    </div>
+    <div class="col-md-3">
+      <span ng-show="stateVisible" ng-mouseenter="stateVisible = !stateVisible">{{task.state}}</span>
+      <ui-select ng-show="!stateVisible" ng-change="changeState(task.state)" tagging theme="bootstrap"
+                 tagging-label="false" tagging-tokens=",|ENTER|TAB" ng-mouseleave="changeState(task.state)"
+                 ng-model="task.state" ng-disabled="stateVisible" title="Assignee "
+                 search-enabled="true" required>
+        <ui-select-match placeholder="State">{{$select.selected}}</ui-select-match>
+        <ui-select-choices repeat="state in boardStates">
+          {{state}}
+        </ui-select-choices>
+      </ui-select>
+    </div>
   </div>
-  <div>
-    <label>Assignee: </label>
-    {{task.assignee.firstname}} {{task.assignee.lastname}} <img ng-src="{{task.assignee.imageUrl}}" alt="profilepic" class="smallerAvatar">
+  <div class="row">
+    <div class="col-md-1">
+      <label>Assignee: </label>
+    </div>
+    <div class="col-md-3">
+    <span ng-show="assigneeVisible"
+          ng-mouseenter="(isAssignee() || isCreator())? assigneeVisible = !assigneeVisible: null">
+      <img ng-src="{{task.assignee.imageUrl}}" alt="profilepic" class="smallerAvatar"> {{task.assignee.firstname}} {{task.assignee.lastname}} </span>
+
+
+      <ui-select ng-if="isAssignee() || isCreator()" ng-show="!assigneeVisible" ng-mouseleave="changeAssignee(task.assignee)"
+                 ng-change="changeAssignee(task.assignee)" tagging theme="bootstrap"
+                 tagging-label="false" tagging-tokens=",|ENTER|TAB"
+                 ng-model="task.assignee" ng-disabled="assigneeVisible" title="Assignee "
+                 search-enabled="true" required>
+        <ui-select-match placeholder="Assignee">{{$select.selected.firstname}}</ui-select-match>
+        <ui-select-choices repeat="collab in collaborators">
+          {{collab.firstname}}
+        </ui-select-choices>
+      </ui-select>
+    </div>
   </div>
-  <div>
-    <label>Creator: </label>
-    {{task.creator.firstname}} {{task.creator.lastname}} <img ng-src="{{task.creator.imageUrl}}" alt="profilepic" class="smallerAvatar">
+  <div class="row">
+    <label class="col-md-1">Creator: </label>
+
+    <div class="col-md-3">
+      <img ng-src="{{task.creator.imageUrl}}" alt="profilepic" class="smallerAvatar"> {{task.creator.firstname}} {{task.creator.lastname}}
+    </div>
   </div>
+
 
   <div ng-show="newCommentVisible">
     <text-angular ta-toolbar="[['h1','h2','h3'],['bold','italics','underline'],['ul','ol'],['taskFind']]"
@@ -57,10 +95,9 @@
   </div>
 
 
-
-  <div ng-if="task.comments.length > 0">
-    <h4 style="margin-bottom:20px;">
-      <span>Comments</span>
+  <div ng-if="task.comments.length > 0" class="commentSection">
+    <h4>Comments
+      <hr/>
     </h4>
 
     <div ng-repeat="comment in task.comments">

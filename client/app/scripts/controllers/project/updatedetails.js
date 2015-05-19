@@ -32,7 +32,7 @@ angular.module('stageprojectApp')
           success: function (response) {
             $scope.collaborators = [];
             angular.forEach(response.data.users, function (user) {
-              $scope.collaborators.push(user.username);
+              $scope.collaborators.push(user);
             });
           },
           error: function (error) {
