@@ -195,6 +195,14 @@ angular.module('stageprojectApp')
       }
     };
 
+    $scope.setAssigneeVisibility = function () {
+      $scope.assigneeVisible = true;
+    };
+
+    $scope.setStateVisiblity = function () {
+      $scope.stateVisible = true;
+    };
+
     $scope.changeState = function () {
       $scope.updateTask();
       $scope.stateVisible=true;

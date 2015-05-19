@@ -52,10 +52,13 @@
         <ui-select multiple tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|TAB|ENTER"
                    ng-model="project.collaborators" ng-disabled="disabled"
                    search-enabled="true" theme="bootstrap">
-          <ui-select-match placeholder="Invite collaborators" style="padding-left:9px;">{{$item.firstname}} {{$item.lastname}}</ui-select-match>
+          <ui-select-match placeholder="Invite collaborators" style="padding-left:9px;">{{$item.firstname}} {{$item.lastname}} &lt;{{$item.username}}&gt; </ui-select-match>
           <ui-select-choices repeat="collab in collaborators"
                              refresh="getUsers($select.search)" refresh-delay="0">
-            {{collab.firstname}} {{collab.lastname}}
+            {{collab.name}}
+            <small>
+              {{collab.username}}
+            </small>
           </ui-select-choices>
         </ui-select>
       </div>
