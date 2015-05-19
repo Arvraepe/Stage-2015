@@ -77,7 +77,7 @@ function updateTask(req, res, next) {
         },
         function(results, callback) {
             req.userId = results[0]; req.oldTask = results[1];
-            taskService.updateTask(req.params.task, results[0], callback);
+            taskService.updateTask(results[1], req.params.task, results[0], callback);
         }
     ], function(err, task) {
         req.newTask = task;
