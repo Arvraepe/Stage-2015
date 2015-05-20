@@ -8,13 +8,13 @@
  * Controller of the stageprojectApp
  */
 angular.module('stageprojectApp')
-  .controller('BoardCtrl', function ($scope, $routeParams, boardRequestFactory, $modal, taskRequestFactory, notificationFactory, columnHeightFactory, $interval,$q) {
+  .controller('BoardCtrl', function ($scope, $routeParams, boardRequestFactory, $modal, taskRequestFactory, notificationFactory, columnHeightFactory, $interval, $q) {
     $scope.board = {};
     $scope.amountOfStates = 0;
     $scope.columnWidth = 0;
     $scope.arrowIsHidden = [];
-    $scope.dragging=false;
-    $scope.dropzoneFields =[];
+    $scope.dragging = false;
+    $scope.dropzoneFields = [];
 
     function calculateTimeDifference() {
       var now = moment();
@@ -146,8 +146,7 @@ angular.module('stageprojectApp')
     }
 
 
-
-    $scope.stateSortOptions={
+    $scope.stateSortOptions = {
       start: function (e, ui) {
 
       },
@@ -162,15 +161,15 @@ angular.module('stageprojectApp')
     $scope.taskSortOptions = {
       placeholder: 'app',
       connectWith: '.stateLayout',
-      start: function (e,ui) {
+      start: function (e, ui) {
         $scope.$apply(function () {
-          $scope.dragging=true;
+          $scope.dragging = true;
         });
         $('.dropzone').sortable('refresh');
 
       },
-      stop: function (e,ui) {
-        if(ui.item.sortable.droptarget == undefined ){
+      stop: function (e, ui) {
+        if (ui.item.sortable.droptarget == undefined) {
           $scope.$apply($scope.dragging = false);
           return;
         }
@@ -178,68 +177,70 @@ angular.module('stageprojectApp')
           // run code when item is dropped in the dropzone
           $scope.$apply($scope.dragging = false);
         }
-        else{
+        else {
           $scope.$apply($scope.dragging = false);
         }
       },
       update: function (e, ui) {
-        var uiStuff = ui;
-        var taskModel = ui.item.sortable.model;
-        if (ui.item.sortable.droptarget[0].classList[2] === "dropzone"){
-          var cancelMethod = ui.item.sortable.cancel;
-          var size={};
-          var modalInstance = $modal.open({
-            templateUrl: 'views/board/changeboard.html',
-            controller: 'ChangeBoardCtrl',
-            size: size,
-            resolve: {
-              board: function () {
-                return $scope.board;
-              },
-              ui: function () {
-                return uiStuff
+        if (ui.sender !== null) {
+          var uiStuff = ui;
+          var taskModel = ui.item.sortable.model;
+          if (ui.item.sortable.droptarget[0].classList[2] === "dropzone") {
+            var cancelMethod = ui.item.sortable.cancel;
+            var size = {};
+            var modalInstance = $modal.open({
+              templateUrl: 'views/board/changeboard.html',
+              controller: 'ChangeBoardCtrl',
+              size: size,
+              resolve: {
+                board: function () {
+                  return $scope.board;
+                },
+                ui: function () {
+                  return uiStuff
+                }
               }
-            }
-          });
-          modalInstance.result.then(function (board) {
-            taskModel.boardId = board._id;
+            });
+            modalInstance.result.then(function (board) {
+              taskModel.boardId = board._id;
+              var taskInformation = {
+                task: {
+                  _id: taskModel._id,
+                  boardId: taskModel.boardId
+                }
+              };
+              taskRequestFactory.updateTask({
+                data: taskInformation,
+                success: function (response) {
+                  notificationFactory.createNotification(response);
+                },
+                error: function (error) {
+                  console.log(error);
+                }
+              })
+
+            }, function (lala) {
+              console.log(lala);
+            })
+          }
+          else if (ui.item.sortable.droptarget[0].classList[1] === "boardView") {
+            taskModel.state = ui.item.sortable.droptarget[0].title;
             var taskInformation = {
               task: {
-                _id : taskModel._id,
-                boardId : taskModel.boardId
+                _id: taskModel._id,
+                state: taskModel.state
               }
             };
-            taskRequestFactory.updateTask({
-              data:taskInformation,
-              success:function(response){
-                notificationFactory.createNotification(response);
+            taskRequestFactory.changeState({
+              data: taskInformation,
+              success: function (response) {
+
               },
               error: function (error) {
                 console.log(error);
               }
-            })
-
-          }, function (lala) {
-            console.log(lala);
-          })
-        }
-        else if(ui.item.sortable.droptarget[0].classList[1] === "boardView"){
-          taskModel.state = ui.item.sortable.droptarget[0].title;
-          var taskInformation = {
-            task: {
-              _id : taskModel._id,
-              state : taskModel.state
-            }
-          };
-          taskRequestFactory.changeState({
-            data:taskInformation,
-            success:function(response){
-
-            },
-            error: function (error) {
-              console.log(error);
-            }
-          });
+            });
+          }
         }
       }
     };

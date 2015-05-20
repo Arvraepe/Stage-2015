@@ -5,7 +5,7 @@
   </ol>
   <div class="col-md-9 noPaddingLeft">
     <h2>{{project.name}}
-     <span class="lazyTime">- due:
+     <span class="lazyTime" ng-if="project.deadline">- due:
     <span ng-if="lazyDate >0" am-time-ago="project.deadline" ng-class="{'deadlineClose':lazyDate>0}"></span>
     <span ng-if="lazyDate <0" am-time-ago="project.deadline" ng-class="{'deadlineOver': lazyDate <0}"></span>
   </span>
