@@ -105,6 +105,10 @@ app.config(function ($routeProvider, $locationProvider, USERROLES) {
         authorizedRoles: [USERROLES.user]
       }
     })
+    .when('/landingPage', {
+      templateUrl: 'views/landingpage.html',
+      controller: 'LandingpageCtrl'
+    })
     .otherwise({
       redirectTo: '/'
     });

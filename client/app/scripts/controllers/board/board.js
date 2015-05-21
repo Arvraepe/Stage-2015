@@ -182,7 +182,7 @@ angular.module('stageprojectApp')
         }
       },
       update: function (e, ui) {
-        if (ui.sender !== null) {
+        if (ui.sender !== null || ui.item.sortable.droptarget[0].classList[2] === "dropzone") {
           var uiStuff = ui;
           var taskModel = ui.item.sortable.model;
           if (ui.item.sortable.droptarget[0].classList[2] === "dropzone") {

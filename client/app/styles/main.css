@@ -150,6 +150,16 @@ h2 {
   color: #777;
 }
 
+.hive5Logo{
+  height:59px;
+  width:125px;
+  margin-top:-5px;
+}
+
+.navbar-brand{
+  padding: 0 15px;
+}
+
 .loginFrontPage {
   margin-right: 43px;
 }
