@@ -126,7 +126,7 @@ exports.upload = function (req, callback) {
             userRepo.findUserById(userId, callback)
         },
         function(user, callback) {
-            async.parallel([
+            async.series([
                 function(callback) {
                     fileHandler.createFile(req.files.file, uid, callback);
                 },
@@ -239,7 +239,7 @@ exports.confirmEmails = function (emails, callback) {
 exports.findCollaborators = function (users, callback) {
     var tasks = [];
     users.forEach(function (entry) {
-        if (entry.indexOf("@") > -1) {
+        if (entry instanceof String && entry.indexOf("@") > -1) {
             tasks.push(function (cb) {
                 userRepo.findUserByEmail(entry, cb);
             });
@@ -254,7 +254,7 @@ exports.findCollaborators = function (users, callback) {
         var result = [];
         results.forEach(function (entry) {
             if (entry == null) {
-                if (users[counter].indexOf("@") > -1) {
+                if (users[counter] instanceof String && users[counter].indexOf("@") > -1) {
                     result.push({exists: false, email: users[counter]});
                 } else {
                     result.push({exists: false, message: users[counter] + ' does not exist'});

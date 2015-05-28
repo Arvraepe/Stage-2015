@@ -8,5 +8,6 @@
   "supportedImages" : ["jpg", "png", "gif", "bmp"],
   "imageUrl" : "http://localhost:6543/avatars/",
   "imagePath" : "./public/avatars/",
-  "defaultImage" : "profilepicture.png"
+  "defaultImage" : "profilepicture.png",
+  "logo" : "hive5-blauw-donker.png"
 }

@@ -34,3 +34,12 @@ exports.deleteFile = function(user, callback) {
         fs.unlink(config.imagePath + filename, callback);
     } else callback();
 };
+
+exports.getBase64Img = function(fileName, callback) {
+    var fileExt = fileName.split(".");
+    fileExt = fileExt[fileExt.length-1];
+    fs.readFile(config.imagePath + fileName, function(err, data) {
+        var base64Data = new Buffer(data).toString('base64');
+        callback(err, base64Data, fileExt);
+    })
+};

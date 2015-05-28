@@ -65,10 +65,18 @@ exports.checkAndAddCollabs = function (project, usersExist, callback) {
     async.parallel(tasks, function (err, results) {
         var users = []; // this will contain all the existing users which will be added to the project
         var projectId = '';
-        var leaderEntry = {};
+        var leaderEntry = {}, toDelete= [];
+        results.forEach(function(entry, index, arr) {
+            results.forEach(function(entry2, index2) {
+                if(entry2.add!=undefined && index != index2 && entry2.add.equals(entry.add)) {
+                    arr.splice(index, 1);
+                }
+            });
+        });
         results.forEach(function (entry) {
             if (entry.add != undefined) { // this is a user that exists
                 if (entry.add != entry.leader) { // add to the users array
+                    //
                     users.push(entry.add);
                     projectId = entry.projectId; //set the projectId, will be the same value for every entry that has 'add' property
                 } else {//leader tried to add himself as a collaborator, this is not possible.
