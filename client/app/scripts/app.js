@@ -122,10 +122,15 @@ app.config(function(uiSelectConfig) {
 app.config(function (datepickerConfig) {
   console.log(datepickerConfig);
   datepickerConfig.maxDate = "2020-01-01";
+  datepickerConfig.minDate = datepickerConfig.minDate ? null : new Date();
+  datepickerConfig.formatYear = 'yy';
+  datepickerConfig.startingDay = 1;
+  //datepickerConfig.dateDisabled=
 });
 app.config(function (datepickerPopupConfig) {
   console.log(datepickerPopupConfig);
-  datepickerPopupConfig.datepickerPopup= "'dd-MM-yyyy'";
+  datepickerPopupConfig.datepickerPopup = 'dd-MMMM-yyyy';
+  // dattepickerPop
 
 });
 

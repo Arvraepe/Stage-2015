@@ -34,12 +34,6 @@ angular.module('stageprojectApp')
       })
     };
 
-    $scope.dateFormat = 'dd-MMMM-yyyy';
-    $scope.minDate = $scope.minDate ? null : new Date();
-    $scope.dateOptions = {
-      formatYear: 'yy',
-      startingDay: 1
-    };
     $scope.disabledTime = function (date, mode) {
       return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
     };

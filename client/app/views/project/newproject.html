@@ -92,9 +92,8 @@
       <div class="col-md-9">
         <p class="input-group">
           <input type="text" class="form-control"  ng-model="project.deadline"
-                 is-open="opened" min-date="minDate"
-                  datepicker-options="dateOptions" date-disabled="disabledTime(date,mode)"
-                 close-text="Close"/>
+                 is-open="opened" datepicker-popup
+                 datepicker-options close-text="Close"/>
           <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="open($event)"><i
                   class="glyphicon glyphicon-calendar"></i></button>

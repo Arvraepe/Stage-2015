@@ -36,7 +36,8 @@
         <p class="help-block" ng-if="updateTaskForm.taskDescriptionField.$error.required">This field can't be
           empty.</p>
 
-        <p class="help-block" ng-if="updateTaskForm.taskDescriptionField.$error.minlength">The description of a task needs to
+        <p class="help-block" ng-if="updateTaskForm.taskDescriptionField.$error.minlength">The description of a task
+          needs to
           have at least 5
           characters.</p>
 
@@ -52,7 +53,8 @@
         <ui-select tagging theme="bootstrap" tagging-label="false" tagging-tokens=",|ENTER|TAB"
                    ng-model="task.assignee" ng-disabled="disabled" title="Choose a collaborator"
                    search-enabled="true">
-          <ui-select-match placeholder="Assignee">{{$select.selected.firstname}} {{$select.selected.lastname}}</ui-select-match>
+          <ui-select-match placeholder="Assignee">{{$select.selected.firstname}} {{$select.selected.lastname}}
+          </ui-select-match>
           <ui-select-choices repeat="collab in collaborators">
             {{collab.firstname}} {{collab.lastname}}
           </ui-select-choices>
@@ -77,6 +79,7 @@
 
     <div class="form-group">
       <label class="col-md-3 control-label">High Priority</label>
+
       <div class="col-md-9">
         <input type="checkbox" ng-model="task.important" style="margin-top:9px;">
       </div>
@@ -87,9 +90,9 @@
 
       <div class="col-md-9">
         <p class="input-group">
-          <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="task.deadline"
-                 is-open="opened" min-date="minDate"
-                 max-date="'2015-06-22'" datepicker-options="dateOptions"
+          <input type="text" class="form-control" datepicker-popup ng-model="task.deadline"
+                 is-open="opened"
+                 datepicker-options
                  close-text="Close"/>
           <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="open($event)"><i

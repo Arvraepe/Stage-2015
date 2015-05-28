@@ -36,14 +36,6 @@ angular.module('stageprojectApp')
 
     };
 
-
-    $scope.dateFormat = 'dd-MMMM-yyyy';
-    $scope.minDate = $scope.minDate ? null : new Date();
-    $scope.dateOptions = {
-      formatYear: 'yy',
-      startingDay: 1
-    };
-
     $scope.open = function ($event) {
       $event.preventDefault();
       $event.stopPropagation();
