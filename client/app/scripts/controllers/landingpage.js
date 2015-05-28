@@ -7,7 +7,7 @@
  * # LandingpageCtrl
  * Controller of the clientApp
  */
-angular.module('clientApp')
+angular.module('stageprojectApp')
   .controller('LandingpageCtrl', function ($scope) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',

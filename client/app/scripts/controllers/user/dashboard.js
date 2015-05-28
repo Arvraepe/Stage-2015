@@ -126,17 +126,20 @@ angular.module('stageprojectApp')
 
     function makeNotificationLink(notifications) {
       angular.forEach(notifications, function (notification) {
-        switch (notification.subjectType.toUpperCase()) {
-          case 'PROJECT':
-            notification.link = '/project/' + notification.subjectDescriptor.projectId;
-            break;
-          case 'TASK':
-            notification.link = '/project/' + notification.subjectDescriptor.projectId + '/task/' + notification.subjectDescriptor.taskId;
-            break;
-          case 'BOARD':
-            notification.link = '/project/' + notification.subjectDescriptor.projectId + '/board/' + notification.subjectDescriptor.boardId;
-            break;
+        if(notifation.valid){
+          switch (notification.subjectType.toUpperCase()) {
+            case 'PROJECT':
+              notification.link = '/project/' + notification.subjectDescriptor.projectId;
+              break;
+            case 'TASK':
+              notification.link = '/project/' + notification.subjectDescriptor.projectId + '/task/' + notification.subjectDescriptor.taskId;
+              break;
+            case 'BOARD':
+              notification.link = '/project/' + notification.subjectDescriptor.projectId + '/board/' + notification.subjectDescriptor.boardId;
+              break;
+          }
         }
+
       })
     }
 

@@ -23,7 +23,8 @@ var app = angular.module('stageprojectApp', [
   'ui.sortable',
   'angularMoment',
   'textAngular',
-  'infinite-scroll'
+  'infinite-scroll',
+  'ngImgCrop'
 ]);
 
 app.config(function ($routeProvider, $locationProvider, USERROLES) {

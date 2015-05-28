@@ -209,7 +209,7 @@ angular.module('stageprojectApp')
                   boardId: taskModel.boardId
                 }
               };
-              taskRequestFactory.updateTask({
+              taskRequestFactory.switchBoard({
                 data: taskInformation,
                 success: function (response) {
                   notificationFactory.createNotification(response);

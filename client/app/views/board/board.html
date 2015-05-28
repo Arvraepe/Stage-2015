@@ -10,7 +10,7 @@
     <span ng-if="lazyDate <0" am-time-ago="board.deadline" ng-class="{'deadlineOver': lazyDate <0}"></span>
   </span>
 
-    <div class="pull-right col-md-3 noPaddingRight ">
+    <div class="pull-right col-md-3 noPaddingRight">
       <button type="button" ng-if="isLeader()" ng-click="openEditBoardModal()"
               class="btn btn-primary pull-right btnMarginLeft"><i class="fa fa-pencil"> Edit board</i></button>
       <button type="button" class="btn btn-success pull-right" ng-click="openCreateTaskModal()"><i
@@ -22,7 +22,7 @@
   <div class="col-md-9 noPaddingLeft boardDescription">
     {{board.description}}
   </div>
-  <div class="col-md-12 parentCenter" ng-show="dragging">
+  <div class="col-md-12 parentCenter" ng-show="dragging" ng-if="projectboards.length>0">
     <div class="col-md-4 noPaddingLeft dropzone stateLayout" ui-sortable="dropzoneFields" ng-model="dropzoneFields">
       <div ng-repeat="item in dropzoneFields track by $index"></div>
     </div>

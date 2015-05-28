@@ -38,6 +38,7 @@ module.exports = function(config) {
       'app/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
       'app/bower_components/jquery-ui/jquery-ui.js',
       'app/bower_components/angular-ui-sortable/sortable.js',
+      'app/bower_components/ngImgCrop/compile/minified/ng-img-crop.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

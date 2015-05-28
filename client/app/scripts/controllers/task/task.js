@@ -204,7 +204,24 @@ angular.module('stageprojectApp')
     };
 
     $scope.changeState = function () {
-      $scope.updateTask();
+      var task = {
+        _id : $scope.task._id,
+        state : $scope.task.state
+      };
+      var taskInfo = {
+        task : task
+      };
+
+      taskRequestFactory.changeState({
+        data: taskInfo,
+        success: function (response) {
+          $scope.task = response.data.task;
+          notificationFactory.createNotification(response);
+        },
+        error: function (error) {
+          console.log(error);
+        }
+      });
       $scope.stateVisible=true;
     };
 

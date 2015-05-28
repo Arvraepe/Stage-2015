@@ -146,16 +146,28 @@
 }
 
 .logos_paddingupdown{
-  padding-top: 30px;
+  padding-top: 35px;
   padding-bottom: 60px;
   text-align: center;
   position: relative;
 }
 
+.first_row{
+  padding-bottom:20px;
+}
+
 .partnerImageLogo{
-  width:100%;
+  width:75%;
   height:11%;
   vertical-align: middle;
+  margin:0 auto;
+}
+
+.IntoData{
+  height:9%;
+  width:75%;
+  vertical-align: middle;
+  margin:0 auto;
 }
 
 .commentDiv{
@@ -272,8 +284,8 @@
   background: #fff;
   font-size: 20px;
   font-weight: bold;
-  color: #4d8c5a;
-  border: 2px solid #5b9a68;
+  color: #336FA8;
+  border: 2px solid #336FA8;
   font-family: 'open sans', sans-serif;
   padding: 20px 35px;
   text-align: center;
