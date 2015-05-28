@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.0.0",
+  "version": "0.12.1",
   "description": "",
   "main": "server.js",
   "dependencies": {
@@ -19,5 +19,8 @@
     "start": "node server.js"
   },
   "author": "",
-  "license": "BSD-2-Clause"
+  "license": "BSD-2-Clause",
+  "engines": {
+    "node": "0.12.1"
+  }
 }

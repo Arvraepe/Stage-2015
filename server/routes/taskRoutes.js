@@ -17,7 +17,7 @@ exports.registerRoutes = function(app) {
     app.put('/task/comment', updateComment);
     app.del('/task/comment', deleteComment);
     app.put('/task/switchboard', switchBoard);
-    app.put('task/changestate', changeState, makeUpdateTaskNotification)
+    app.put('/task/changestate', changeState, makeUpdateTaskNotification)
 };
 
 function createTask(req, res, next) {
