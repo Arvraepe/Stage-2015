@@ -21,7 +21,9 @@ angular.module('stageprojectApp')
     $scope.allUsernames = [];
 
 
+/*
     $scope.dateFormat = 'dd-MMMM-yyyy';
+*/
     $scope.minDate = $scope.minDate ? null : new Date();
     $scope.dateOptions = {
       formatYear: 'yy',

@@ -1,7 +1,7 @@
-<div ng-init="getProjectInfo()">
+<div ng-init="getProjectInfo()" class="container noPaddingSides">
   <ol class="breadcrumb breadCrumb">
     <li><a ng-href="#/dashboard">Dashboard</a></li>
-    <li class="active">Project</li>
+    <li class="active">{{project.name}}</li>
   </ol>
   <div class="col-md-9 noPaddingLeft">
     <h2>{{project.name}}
@@ -71,7 +71,7 @@
           <div class="row">
             <div class="col-md-6">
               <div style="padding-top:6px">
-                Details
+                <span class="panelHeadingText"><i class="fa fa-info-circle"></i> Details</span>
               </div>
 
             </div>
@@ -100,11 +100,10 @@
       <div class="panel-heading">
         <div class="panel-title">
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-8">
               <div style="padding-top:6px">
-                Collaborators
+                <span class="panelHeadingText"><i class="fa fa-users"></i> Collaborators</span>
               </div>
-
             </div>
           </div>
         </div>

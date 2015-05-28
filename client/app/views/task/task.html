@@ -1,146 +1,153 @@
 <link rel="stylesheet" href="../../styles/task.css">
-<ol class="breadcrumb breadCrumb" data-ng-init="getTaskInfo()">
-  <li><a ng-href="#/dashboard">Dashboard</a></li>
-  <li><a ng-href="#/project/{{task.projectId}}">Project</a></li>
-  <li><a ng-href="#/project/{{task.projectId}}/board/{{task.boardId}}">Board</a></li>
-  <li class="active">{{task.title|capitalize}}</li>
-</ol>
+<div class="container noPaddingSides">
 
-<div class="col-md-12 noPaddingLeft noPaddingRight">
-  <h2 class="taskTitle">
 
-    <span ng-show="titleVisible">{{task.title|capitalize}}</span>
+  <ol class="breadcrumb breadCrumb" data-ng-init="getTaskInfo()">
+    <li><a ng-href="#/dashboard">Dashboard</a></li>
+    <li><a ng-href="#/project/{{task.projectId}}">Project</a></li>
+    <li><a ng-href="#/project/{{task.projectId}}/board/{{task.boardId}}">Board</a></li>
+    <li class="active">{{task.title|capitalize}}</li>
+  </ol>
 
-    <form class="form-inline" ng-submit="changeTitle(task.title)" ng-show="!titleVisible">
-      <input type="text" ng-model="task.title" class="form-control">
-      <button type="submit" class="btn btn-success"><i class="fa fa-floppy-o"></i> Save</button>
-    </form>
-    <button ng-show="titleVisible" class="btn btn-primary marginEditButtonTask" ng-show="(isAssignee() || isCreator())"
-            ng-click="titleVisible=!titleVisible"><i class="fa fa-pencil"></i> Edit
-    </button>
+  <div class="col-md-12 noPaddingLeft noPaddingRight">
+    <h2 class="taskTitle">
+
+      <span ng-show="titleVisible">{{task.title|capitalize}}</span>
+
+      <form class="form-inline" ng-submit="changeTitle(task.title)" ng-show="!titleVisible">
+        <input type="text" ng-model="task.title" class="form-control">
+        <button type="submit" class="btn btn-success"><i class="fa fa-floppy-o"></i> Save</button>
+      </form>
+      <button ng-show="titleVisible" class="btn btn-primary marginEditButtonTask"
+              ng-show="(isAssignee() || isCreator())"
+              ng-click="titleVisible=!titleVisible"><i class="fa fa-pencil"></i> Edit
+      </button>
 
     <span ng-if="task.deadline" class="lazyTime">- due:
       <span ng-if="lazyDate >0" am-time-ago="task.deadline" ng-class="{'deadlineClose':lazyDate>0}"></span>
       <span ng-if="lazyDate <0" am-time-ago="task.deadline" ng-class="{'deadlineOver': lazyDate <0}"></span>
     </span>
 
-    <div class="pull-right">
-      <button type="button" ng-click="newCommentVisible=true" class="btn btn-success"><i class="fa fa-comment-o"></i>
-        Comment
-      </button>
-      <button type="button" ng-click="openUpdateTaskModal()" class="btn btn-primary"><i
-        class="fa fa-pencil"></i> Update
-      </button>
-    </div>
-  </h2>
+      <div class="pull-right">
+        <button type="button" ng-click="newCommentVisible=true" class="btn btn-success"><i class="fa fa-comment-o"></i>
+          Comment
+        </button>
+        <button type="button" ng-click="openUpdateTaskModal()" class="btn btn-primary"><i
+          class="fa fa-pencil"></i> Update
+        </button>
+      </div>
+    </h2>
 
-  <div class="taskDescription">
-    {{task.description}}
-  </div>
+    <div class="taskDescription">
+      {{task.description}}
+    </div>
 
-  <div class="row">
-    <div class="col-md-1">
-      <label>Status: </label>
+    <div class="row">
+      <div class="col-md-1">
+        <label>Status: </label>
+      </div>
+      <div class="col-md-3">
+        <span ng-show="stateVisible" ng-mouseenter="stateVisible = !stateVisible">{{task.state}}</span>
+        <ui-select ng-show="!stateVisible" ng-change="changeState(task.state)" tagging theme="bootstrap"
+                   tagging-label="false" tagging-tokens=",|ENTER|TAB" ng-mouseleave="setStateVisiblity()"
+                   ng-model="task.state" ng-disabled="stateVisible" title="Assignee "
+                   search-enabled="true" required>
+          <ui-select-match placeholder="State">{{$select.selected}}</ui-select-match>
+          <ui-select-choices repeat="state in boardStates">
+            {{state}}
+          </ui-select-choices>
+        </ui-select>
+      </div>
     </div>
-    <div class="col-md-3">
-      <span ng-show="stateVisible" ng-mouseenter="stateVisible = !stateVisible">{{task.state}}</span>
-      <ui-select ng-show="!stateVisible" ng-change="changeState(task.state)" tagging theme="bootstrap"
-                 tagging-label="false" tagging-tokens=",|ENTER|TAB" ng-mouseleave="setStateVisiblity()"
-                 ng-model="task.state" ng-disabled="stateVisible" title="Assignee "
-                 search-enabled="true" required>
-        <ui-select-match placeholder="State">{{$select.selected}}</ui-select-match>
-        <ui-select-choices repeat="state in boardStates">
-          {{state}}
-        </ui-select-choices>
-      </ui-select>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-1">
-      <label>Assignee: </label>
-    </div>
-    <div class="col-md-3">
+    <div class="row">
+      <div class="col-md-1">
+        <label>Assignee: </label>
+      </div>
+      <div class="col-md-3">
     <span ng-show="assigneeVisible"
           ng-mouseenter="(isAssignee() || isCreator())? assigneeVisible = !assigneeVisible: null">
       <img ng-src="{{task.assignee.imageUrl}}" alt="profilepic" class="smallerAvatar"> {{task.assignee.firstname}} {{task.assignee.lastname}} </span>
 
 
-      <ui-select ng-if="isAssignee() || isCreator()" ng-show="!assigneeVisible" ng-mouseleave="setAssigneeVisibility()"
-                 ng-change="changeAssignee(task.assignee)" tagging theme="bootstrap"
-                 tagging-label="false" tagging-tokens=",|ENTER|TAB"
-                 ng-model="task.assignee" ng-disabled="assigneeVisible" title="Assignee "
-                 search-enabled="true" required>
-        <ui-select-match placeholder="Assignee">{{$select.selected.firstname}}</ui-select-match>
-        <ui-select-choices repeat="collab in collaborators">
-          {{collab.firstname}}
-        </ui-select-choices>
-      </ui-select>
+        <ui-select ng-if="isAssignee() || isCreator()" ng-show="!assigneeVisible"
+                   ng-mouseleave="setAssigneeVisibility()"
+                   ng-change="changeAssignee(task.assignee)" tagging theme="bootstrap"
+                   tagging-label="false" tagging-tokens=",|ENTER|TAB"
+                   ng-model="task.assignee" ng-disabled="assigneeVisible" title="Assignee "
+                   search-enabled="true" required>
+          <ui-select-match placeholder="Assignee">{{$select.selected.firstname}}</ui-select-match>
+          <ui-select-choices repeat="collab in collaborators">
+            {{collab.firstname}}
+          </ui-select-choices>
+        </ui-select>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <label class="col-md-1">Creator: </label>
+    <div class="row" ng-style="task.comments.length==0? {'margin-bottom':'90px'}:null">
+      <label class="col-md-1">Creator: </label>
 
-    <div class="col-md-3">
-      <img ng-src="{{task.creator.imageUrl}}" alt="profilepic" class="smallerAvatar"> {{task.creator.firstname}} {{task.creator.lastname}}
-    </div>
-  </div>
-
-
-  <div ng-show="newCommentVisible">
-    <text-angular ta-toolbar="[['h1','h2','h3'],['bold','italics','underline'],['ul','ol'],['taskFind']]"
-                  ng-model="comment" id="editor"></text-angular>
-    <button type="button" class="btn btn-success commentCommitButton" ng-click="createComment(comment)"><i
-      class="fa fa-plus-circle"></i> Comment
-    </button>
-  </div>
-
-
-  <div ng-if="task.comments.length > 0" class="commentSection">
-    <h4>Comments
-      <hr/>
-    </h4>
-
-    <div ng-repeat="comment in task.comments">
-      <div class="comment">
-        <div class="commentHeader row">
-          <div class="col-md-4 noPaddingLeft">
-            <img ng-src="{{comment.user.imageUrl}}" alt="profilepic" class="smallerAvatar"> {{comment.user.firstname}}
-            {{comment.user.lastname}}
-          </div>
-          <div class="col-md-8 text-right commentDate noPaddingRight">
-            <span class="commentTimestamp">{{comment.timeStamp|date:'dd MMM yyyy HH:mm'}}</span>
-            <button ng-if="isCommentCreator(comment)" type="button" class="btn btn-primary btn-xs"
-                    ng-click="editText($index)"><i class="fa fa-pencil"></i> Edit
-            </button>
-            <button ng-if="isCommentCreator(comment)||isCreator()" type="button" class="btn btn-danger btn-xs"
-                    ng-click="deleteComment(comment)"><i class="fa fa-trash"></i> Delete
-            </button>
-
-
-          </div>
-        </div>
-
-        <div ta-bind ng-model="comment.comment" class="commentBody" ng-hide="booleanArray[$index]">{{comment.comment}}
-        </div>
-        <div ng-show="booleanArray[$index]" class="editComment">
-          <div class="pull-right">
-            <button type="button" ng-click="booleanArray[$index]=false" class="btn btn-default btn-sm"
-                    style="margin-top:5px;"><i class="fa fa-times"></i></button>
-          </div>
-          <text-angular ta-toolbar="[['h1','h2','h3'],['bold','italics','underline'],['ul','ol'],['taskFind']]"
-                        ng-model="commentEdit"></text-angular>
-          <button type="button" ng-click="editComment(comment,commentEdit, $index)"
-                  class="btn btn-success editCommentCommitButton"><i class="fa fa-plus-circle"></i> Save
-          </button>
-        </div>
-
-
+      <div class="col-md-3">
+        <img ng-src="{{task.creator.imageUrl}}" alt="profilepic" class="smallerAvatar"> {{task.creator.firstname}}
+        {{task.creator.lastname}}
       </div>
     </div>
 
+
+    <div ng-show="newCommentVisible">
+      <text-angular ta-toolbar="[['h1','h2','h3'],['bold','italics','underline'],['ul','ol'],['taskFind']]"
+                    ng-model="comment" id="editor"></text-angular>
+      <button type="button" class="btn btn-success commentCommitButton" ng-click="createComment(comment)"><i
+        class="fa fa-plus-circle"></i> Comment
+      </button>
+    </div>
+
+
+    <div ng-if="task.comments.length > 0" class="commentSection">
+      <h4>Comments
+        <hr/>
+      </h4>
+
+      <div ng-repeat="comment in task.comments">
+        <div class="comment">
+          <div class="commentHeader row">
+            <div class="col-md-4 noPaddingLeft">
+              <img ng-src="{{comment.user.imageUrl}}" alt="profilepic" class="smallerAvatar"> {{comment.user.firstname}}
+              {{comment.user.lastname}}
+            </div>
+            <div class="col-md-8 text-right commentDate noPaddingRight">
+              <span class="commentTimestamp">{{comment.timeStamp|date:'dd MMM yyyy HH:mm'}}</span>
+              <button ng-if="isCommentCreator(comment)" type="button" class="btn btn-primary btn-xs"
+                      ng-click="editText($index)"><i class="fa fa-pencil"></i> Edit
+              </button>
+              <button ng-if="isCommentCreator(comment)||isCreator()" type="button" class="btn btn-danger btn-xs"
+                      ng-click="deleteComment(comment)"><i class="fa fa-trash"></i> Delete
+              </button>
+
+
+            </div>
+          </div>
+
+          <div ta-bind ng-model="comment.comment" class="commentBody" ng-hide="booleanArray[$index]">{{comment.comment}}
+          </div>
+          <div ng-show="booleanArray[$index]" class="editComment">
+            <div class="pull-right">
+              <button type="button" ng-click="booleanArray[$index]=false" class="btn btn-default btn-sm"
+                      style="margin-top:5px;"><i class="fa fa-times"></i></button>
+            </div>
+            <text-angular ta-toolbar="[['h1','h2','h3'],['bold','italics','underline'],['ul','ol'],['taskFind']]"
+                          ng-model="commentEdit"></text-angular>
+            <button type="button" ng-click="editComment(comment,commentEdit, $index)"
+                    class="btn btn-success editCommentCommitButton"><i class="fa fa-plus-circle"></i> Save
+            </button>
+          </div>
+
+
+        </div>
+      </div>
+
+    </div>
+
+
   </div>
-
-
 </div>
 <!--
 <div class="col-md-3 noPaddingRight">

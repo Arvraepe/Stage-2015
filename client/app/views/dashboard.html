@@ -1,22 +1,28 @@
-<div ng-init="getProjectsForUser() "></div>
+<div ng-init="getProjectsForUser() " class="container noPaddingSides">
 <div class="col-md-9 noPaddingLeft dashboardHeader">
   <div class="dashboard-panel-left">
     <button type="button" ng-click="openModal()" class="btn btn-success"><i
       class="fa fa-plus-circle " style="vertical-align: middle;"></i> <span>New project</span></button>
-    <a ng-href="#/invitecoworkers"><button type="button" class="btn btn-default"><i
-      class="fa fa-user-plus " style="vertical-align: middle;"></i> <span>Invite people</span></button></a>
+    <a ng-href="#/invitecoworkers">
+      <button type="button" class="btn btn-default"><i
+        class="fa fa-user-plus " style="vertical-align: middle;"></i> <span>Invite people</span></button>
+    </a>
   </div>
 </div>
 
 <div class="col-md-9 noPaddingLeft">
   <div infinite-scroll="loadMoreNotifications()">
-    <div ng-repeat="notification in notifications|orderBy:'timeStamp':true" class="notificationLayout" ng-click="notificationRead(notification.link)">
+    <div ng-repeat="notification in notifications|orderBy:'timeStamp':true" class="notificationLayout"
+         ng-click="notificationRead(notification.link)">
       <div class="row-same-height">
         <div class="col-md-1 col-md-height col-middle">
-          <img ng-src="{{notification.subjectDescriptor.user.imageUrl}}" alt="profilepic" class="smallAvatar notificationAvatar">
+          <img ng-src="{{notification.subjectDescriptor.user.imageUrl}}" alt="profilepic"
+               class="smallAvatar notificationAvatar">
         </div>
         <div class="col-md-11 col-md-height col-middle">
-        <span class="notificationUser">{{notification.subjectDescriptor.user.firstname}} {{notification.subjectDescriptor.user.lastname}}</span><span ng-bind-html="notification.description"></span>
+          <span class="notificationUser">{{notification.subjectDescriptor.user.firstname}} {{notification.subjectDescriptor.user.lastname}}</span><span
+          ng-bind-html="notification.description"></span>
+
           <div>
             <span style="font-style:italic;" am-time-ago="notification.timeStamp"></span>
           </div>
@@ -33,17 +39,18 @@
   <div class="panel panel-default col-md-12 pull-right panelNoPadding">
     <div class="panel-heading">
       <div class="panel-title">
-        {{title}}
+        <i class="fa fa-files-o"></i><span class="panelHeadingText"> {{title}}
       <span class="dropdown pull-right" dropdown style="font-size: 16px;">
-      <a href class="dropdown-toggle" dropdown-toggle style="color:#333">
-        <i class="fa fa-cog fa-"></i>
-      </a>
-      <ul class="dropdown-menu">
-        <li><a href ng-click="showAllProjects()">All my projects</a></li>
-        <li><a href ng-click="showMyLeaderProjects()">Projects I own</a></li>
-        <li><a href ng-click="showMyCollaborationProjects()">Projects as collaborator</a></li>
-      </ul>
+      <a href class="dropdown-toggle panelHeadingText" dropdown-toggle >
+        <i class="fa fa-cog fa-"></i></a>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href ng-click="showAllProjects()">All my projects</a></li>
+          <li><a href ng-click="showMyLeaderProjects()">Projects I own</a></li>
+          <li><a href ng-click="showMyCollaborationProjects()">Projects as collaborator</a></li>
+        </ul>
       </span>
+        </span>
       </div>
 
     </div>
@@ -51,16 +58,19 @@
       <div class="panelPadding" ng-if="projectsToShow.length == 0">You have no projects yet.</div>
       <ul class="nav nav-pills nav-stacked projectsList">
         <li ng-repeat="project in projectsToShow | startFrom:currentPage*pageSize | limitTo:pageSize">
-          <a ng-href="#/project/{{project._id}}">{{project.name}}<span class="badge dashboardBadge pull-right"><i class="fa fa-user"></i> {{project.collaborators.length + 1}}</span></a>
+          <a ng-href="#/project/{{project._id}}">{{project.name}}<span class="badge dashboardBadge pull-right"><i
+            class="fa fa-user"></i> {{project.collaborators.length + 1}}</span></a>
         </li>
       </ul>
-        <button type="button" class="btn btn-default pull-left projectsPadding" ng-hide="currentPage==0" ng-click="currentPage=currentPage-1">&lt;&lt;</button>
-        <button type="button" class="btn btn-default pull-right projectsPadding" ng-hide="currentPage >= projectsToShow.length/pageSize -1" ng-click="currentPage = currentPage+1">&gt;&gt;</button>
+      <button type="button" class="btn btn-default pull-left projectsPadding" ng-hide="currentPage==0"
+              ng-click="currentPage=currentPage-1">&lt;&lt;</button>
+      <button type="button" class="btn btn-default pull-right projectsPadding"
+              ng-hide="currentPage >= projectsToShow.length/pageSize -1" ng-click="currentPage = currentPage+1">
+        &gt;&gt;</button>
 
     </div>
   </div>
 </div>
-
-
+</div>
 
 

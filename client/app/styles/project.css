@@ -3,6 +3,7 @@
   border: #e7e7e7 solid 2px;
   border-radius:4px;
   padding:10px;
+  background-color: #fff;
 }
 
 .avatarPlacement{
@@ -17,4 +18,8 @@
 .notificationsDiv{
   /*padding-right:4px;*/
   margin:0 auto;
+}
+
+.panelHeadingText{
+  color:#4f4f4f;
 }

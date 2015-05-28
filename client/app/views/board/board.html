@@ -1,76 +1,75 @@
-<ol class="breadcrumb breadCrumb" data-ng-init="getBoardInfo()">
-  <li><a ng-href="#/dashboard">Dashboard</a></li>
-  <li><a ng-href="#/project/{{board.projectId}}">Project</a></li>
-  <li class="active">{{board.name|capitalize}}</li>
-</ol>
-<h2>{{board.name|capitalize}}
+<div class="container noPaddingSides">
+  <ol class="breadcrumb breadCrumb" data-ng-init="getBoardInfo()">
+    <li><a ng-href="#/dashboard">Dashboard</a></li>
+    <li><a ng-href="#/project/{{board.projectId}}">Project</a></li>
+    <li class="active">{{board.name|capitalize}}</li>
+  </ol>
+  <h2>{{board.name|capitalize}}
   <span ng-if="board.deadline" class="lazyTime">- due:
     <span ng-if="lazyDate >0" am-time-ago="board.deadline" ng-class="{'deadlineClose':lazyDate>0}"></span>
     <span ng-if="lazyDate <0" am-time-ago="board.deadline" ng-class="{'deadlineOver': lazyDate <0}"></span>
   </span>
 
-  <div class="pull-right col-md-3 noPaddingRight ">
-    <button type="button" ng-if="isLeader()" ng-click="openEditBoardModal()"
-            class="btn btn-primary pull-right btnMarginLeft"><i class="fa fa-pencil"> Edit board</i></button>
-    <button type="button" class="btn btn-success pull-right" ng-click="openCreateTaskModal()"><i
-      class="fa fa-plus-circle"></i> Task
-    </button>
+    <div class="pull-right col-md-3 noPaddingRight ">
+      <button type="button" ng-if="isLeader()" ng-click="openEditBoardModal()"
+              class="btn btn-primary pull-right btnMarginLeft"><i class="fa fa-pencil"> Edit board</i></button>
+      <button type="button" class="btn btn-success pull-right" ng-click="openCreateTaskModal()"><i
+        class="fa fa-plus-circle"></i> Task
+      </button>
+    </div>
+  </h2>
+
+  <div class="col-md-9 noPaddingLeft boardDescription">
+    {{board.description}}
   </div>
-</h2>
-
-<div class="col-md-9 noPaddingLeft boardDescription">
-  {{board.description}}
-</div>
-<div class="col-md-12 parentCenter" ng-show="dragging">
-  <div class="col-md-4 noPaddingLeft dropzone stateLayout" ui-sortable="dropzoneFields" ng-model="dropzoneFields">
-    <div ng-repeat="item in dropzoneFields track by $index"></div>
-  </div>
-</div>
-
-
-
-
-
-<div class="col-md-12 noPaddingLeft noPaddingRight boardMargin well" style="border: #e5e5e5 2px solid">
-  <div class="stateLayout" ng-repeat="state in board.states" ng-model="state"
-       ng-class="{'boardRightBorder': ($index+1)!=board.states.length}"
-       ng-style="{'width':columnWidth}">
-    <div style="margin-bottom:20px" class="stateHeader">
-      {{state.name}}
+  <div class="col-md-12 parentCenter" ng-show="dragging">
+    <div class="col-md-4 noPaddingLeft dropzone stateLayout" ui-sortable="dropzoneFields" ng-model="dropzoneFields">
+      <div ng-repeat="item in dropzoneFields track by $index"></div>
     </div>
   </div>
-  <div class="stateLayout boardView" ng-repeat="state in board.states" ui-sortable="taskSortOptions" ng-model="state.tasks" title="{{state.name}}"
-       ng-class="{'boardRightBorder': ($index+1)!=board.states.length}" column-height
-       ng-style="{'width':columnWidth, 'min-height':height}">
 
-    <div ng-repeat="task in state.tasks">
-      <div class="panel" ng-class="task.important? 'panel-danger' : 'panel-warning'">
-        <div class="panel-heading">
-          <div class="panel-title">
-            <a ng-href="#/project/{{board.projectId}}/task/{{task._id}}">{{task.identifier}} <span
-              class="pull-right" ng-if="task.important"><i class="fa fa-flag"></i>
+
+  <div class="col-md-12 noPaddingLeft noPaddingRight boardMargin well" style="border: #e5e5e5 2px solid">
+    <div class="stateLayout" ng-repeat="state in board.states" ng-model="state"
+         ng-class="{'boardRightBorder': ($index+1)!=board.states.length}"
+         ng-style="{'width':columnWidth}">
+      <div style="margin-bottom:20px" class="stateHeader">
+        {{state.name}}
+      </div>
+    </div>
+    <div class="stateLayout boardView" ng-repeat="state in board.states" ui-sortable="taskSortOptions"
+         ng-model="state.tasks" title="{{state.name}}"
+         ng-class="{'boardRightBorder': ($index+1)!=board.states.length}" column-height
+         ng-style="{'width':columnWidth, 'min-height':height}">
+
+      <div ng-repeat="task in state.tasks">
+        <div class="panel" ng-class="task.important? 'panel-danger' : 'panel-warning'">
+          <div class="panel-heading">
+            <div class="panel-title">
+              <a ng-href="#/project/{{board.projectId}}/task/{{task._id}}">{{task.identifier}} <span
+                class="pull-right" ng-if="task.important"><i class="fa fa-flag"></i>
               </span></a>
+            </div>
           </div>
-        </div>
-        <div class="panel-body">
-          <div class="row">
-            <div class="col-md-2">
-              <img ng-src="{{task.assignee.imageUrl}}" alt="afbeelding" class="smallAvatar">
-            </div>
-            <div class="col-md-10">
-              <span class="taskTitle">{{task.title}}</span>
-            </div>
-            <div class="col-md-10">
-              <span class="assignedTo">Assigned to: {{task.assignee.firstname}} {{task.assignee.lastname}}</span>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-md-2">
+                <img ng-src="{{task.assignee.imageUrl}}" alt="afbeelding" class="smallAvatar">
+              </div>
+              <div class="col-md-10">
+                <span class="taskTitle">{{task.title}}</span>
+              </div>
+              <div class="col-md-10">
+                <span class="assignedTo">Assigned to: {{task.assignee.firstname}} {{task.assignee.lastname}}</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
   </div>
-
 </div>
-
 <!--
 <div class="col-md-12 noPaddingLeft noPaddingRight row">
   <div ng-repeat="state in board.states" class="stateLayout"

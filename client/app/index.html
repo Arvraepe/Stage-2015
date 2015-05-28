@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="styles/whhg.css">
   <link rel="stylesheet" href="styles/board.css">
   <link rel="stylesheet" href="styles/dashboard.css">
+  <link rel="stylesheet" href="styles/landingpage.css">
 <!--
   <link rel="stylesheet" href="styles/task.css">
 -->
@@ -37,8 +38,8 @@
 <![endif]-->
 
 <!-- Add your site or application content here -->
-<div class="header">
-  <div class="navbar navbar-default container" role="navigation">
+<div class="header heading">
+  <div class="navbar navbar-default" role="navigation">
     <div class="container">
       <div class="navbar-header">
 
@@ -49,9 +50,9 @@
           <span class="icon-bar"></span>
         </button>
 
-        <a class="navbar-brand" ng-href="#/"><img src="images/hive5-blauw-donker.png" alt="logo" class="hive5Logo"></a>
+        <a class="navbar-brand" ng-href="#/" style="margin-left:-45px;"><img src="images/hive5-blauw-donker.png" alt="logo" class="hive5Logo"></a>
       </div>
-      <div class="navbar-right">
+      <div class="navbar-right" ng-style="isAuthorized(userRoles.user)? {'margin-right':'-60px'} : {'margin-right':'-73px'}">
         <div class="welcomeUser normalFontColor" ng-if="isAuthorized(userRoles.user)">
           <span ng-show="requestsBusy>0"><i class="fa fa-spinner fa-pulse"></i></span>
           Hi, {{currentUser.firstname}} {{currentUser.lastname}}
@@ -115,9 +116,10 @@
   </div>
 </div>
 
-<div class="container panelNoPadding">
-  <div ng-view=""></div>
-</div>
+<!--<div class="container panelNoPadding">
+</div>-->
+<div ng-view=""></div>
+
 <div login-dialog ng-if="!isLoginPage"></div>
 
 <div class="footer">

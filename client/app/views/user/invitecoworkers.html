@@ -1,65 +1,74 @@
-<div class="row">
-  <div class="col-md-3">
-  </div>
-  <div class="col-md-6">
-    <h2>Invite collaborators</h2>
-  </div>
-  <div class="col-md-3">
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-3">
-  </div>
-  <div class="col-md-6 formBackground">
-    <form class="col-md-12 form-horizontal" name="inviteCoworkersForm"
-          ng-submit="inviteCoworkersForm.$valid && invite(coworkersToInvite)" novalidate>
-      <div ng-repeat="coworker in coworkersToInvite">
-        <ng-form name="addCoworkerForm" style="padding-bottom: 10px;">
-          <div class="form-group" show-errors="{showSuccess: true}">
-            <label class="col-md-4">Email {{$index+1}}</label>
+<div class="container noPaddingSides">
 
-            <div class="col-md-6 pull-right" >
-              <input type="email" name="emailField" class="form-control" ng-model="coworker.email"
-                     ng-pattern="/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/"
-                     placeholder="Please enter a valid email." unique-email=""
-                     required>
+  <div class="row">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-6">
+      <h2>Invite collaborators</h2>
+    </div>
+    <div class="col-md-3">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-6 formBackground">
+      <form class="col-md-12 form-horizontal" name="inviteCoworkersForm"
+            ng-submit="inviteCoworkersForm.$valid && invite(coworkersToInvite)" novalidate>
+        <div ng-repeat="coworker in coworkersToInvite">
+          <ng-form name="addCoworkerForm" style="padding-bottom: 10px;">
+            <div class="form-group" show-errors="{showSuccess: true}">
+              <label class="col-md-4">Email {{$index+1}}</label>
 
-              <p class="help-block" ng-if="addCoworkerForm.emailField.$error.required">Email is required.</p>
-              <p class="help-block" ng-if="addCoworkerForm.emailField.$error.unique">A user has already registered using this email.</p>
+              <div class="col-md-6 pull-right">
+                <input type="email" name="emailField" class="form-control" ng-model="coworker.email"
+                       ng-pattern="/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/"
+                       placeholder="Please enter a valid email." unique-email=""
+                       required>
+
+                <p class="help-block" ng-if="addCoworkerForm.emailField.$error.required">Email is required.</p>
+
+                <p class="help-block" ng-if="addCoworkerForm.emailField.$error.unique">A user has already registered
+                  using this email.</p>
 
 
-              <p class="help-block" ng-if="addCoworkerForm.emailField.$error.pattern">Enter a valid email.</p>
+                <p class="help-block" ng-if="addCoworkerForm.emailField.$error.pattern">Enter a valid email.</p>
+              </div>
             </div>
-          </div>
-        </ng-form>
-
-      </div>
-
-      <div class="col-md-6 formButtonsNoPadding pull-right">
-        <div class="col-md-12 blockNoPadding">
-          <div class="pull-left col-md-6">
-            <button class="btn btn-primary col-md-12" ng-click="addCoworker()" type="button">
-              <i class="fa fa-plus-square"></i> Add</button>
-          </div>
-          <div class="pull-right col-md-6" style="padding-right: 0">
-            <button class="btn btn-success btn-block" type="submit" value="Invite"><i class="fa fa-envelope-o"></i> Invite </button>
-
-          </div>
-
+          </ng-form>
 
         </div>
-      </div>
 
-      <!--<div class="col-md-6 formButtonsNoPadding form-group" >
-        <div class="pull-right col-md-12" style="display:block; padding-right:0px">
-          <button class="btn col-md-12 btn-success" type="submit" value="Invite"><i class="fa fa-envelope-o"></i> Invite </button>
+        <div class="col-md-6 formButtonsNoPadding pull-right">
+          <div class="col-md-12 blockNoPadding">
+            <div class="pull-left col-md-6">
+              <button class="btn btn-primary col-md-12" ng-click="addCoworker()" type="button">
+                <i class="fa fa-plus-square"></i> Add
+              </button>
+            </div>
+            <div class="pull-right col-md-6" style="padding-right: 0">
+              <button class="btn btn-success btn-block" type="submit" value="Invite"><i class="fa fa-envelope-o"></i>
+                Invite
+              </button>
 
+            </div>
+
+
+          </div>
         </div>
-      </div>-->
-    </form>
 
+        <!--<div class="col-md-6 formButtonsNoPadding form-group" >
+          <div class="pull-right col-md-12" style="display:block; padding-right:0px">
+            <button class="btn col-md-12 btn-success" type="submit" value="Invite"><i class="fa fa-envelope-o"></i> Invite </button>
+
+          </div>
+        </div>-->
+      </form>
+
+    </div>
+    <div class="col-md-3">
+    </div>
   </div>
-  <div class="col-md-3">
-  </div>
+
+
 </div>
-

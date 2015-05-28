@@ -1,9 +1,18 @@
+.heading{
+  padding:0;
+}
+
 .img-center{
   display:block;
   border-radius: 10px;
   height: 180px;
   width: 180px;
   margin-left:auto;
+}
+
+.fluidCont{
+  padding-right: 0;
+  padding-left: 0;
 }
 
 .smallAvatar{
@@ -48,6 +57,11 @@
 
 .noPaddingLeft{
   padding-left:0
+}
+
+.noPaddingSides{
+  padding-left:0;
+  padding-right:0;
 }
 
 .panelPadding{
@@ -277,12 +291,12 @@ body {
 }
 
 /* Custom page header */
-.header {
+/*.header {
   margin-bottom: 10px;
   padding-left: 10px;
   padding-right: 10px;
   padding-top: 10px;
-}
+}*/
 /* Make the masthead heading the same height as the navigation */
 .header h3 {
   margin-top: 0;
@@ -334,12 +348,12 @@ body {
     padding-right: 0;
   }
   /* Space out the masthead */
-  .header {
+ /* .header {
     margin-bottom: 30px;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 20px;
-  }
+  }*/
   /* Remove the bottom border on the jumbotron for visual effect */
   .jumbotron {
     border-bottom: 0;

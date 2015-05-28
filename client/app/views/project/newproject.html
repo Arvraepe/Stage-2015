@@ -91,9 +91,9 @@
 
       <div class="col-md-9">
         <p class="input-group">
-          <input type="text" class="form-control" datepicker-popup="{{dateFormat}}" ng-model="project.deadline"
+          <input type="text" class="form-control"  ng-model="project.deadline"
                  is-open="opened" min-date="minDate"
-                 max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabledTime(date,mode)"
+                  datepicker-options="dateOptions" date-disabled="disabledTime(date,mode)"
                  close-text="Close"/>
           <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="open($event)"><i
